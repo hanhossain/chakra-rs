@@ -3,7 +3,10 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Core/Assertions.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
 
+// TODO (hanhossain): I think this can be removed
 // This class saves the FPU control word, and sets it to the default value.
 // The default value will prevent all floating point exceptions other than
 // those because of denormal operand from being generated.

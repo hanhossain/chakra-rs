@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Memory/ArenaAllocator.h"
+
 namespace JsUtil
 {
     template<class T, class TAllocator = ArenaAllocator>

@@ -4,6 +4,12 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Common/NumberUtilitiesBase.h"
+#include "Core/Assertions.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
+#include "palrt.h"
+#include "sal.h"
+
+#include <cstdint>
 
 enum class LikelyNumberType
 {
@@ -15,7 +21,8 @@ enum class LikelyNumberType
 
 namespace Js
 {
-    class NumberConstants : public NumberConstantsBase
+class ScriptContext;
+class NumberConstants : public NumberConstantsBase
     {
     public:
         // Our float tagging scheme relies on NaNs to be of this value - changing the NaN value

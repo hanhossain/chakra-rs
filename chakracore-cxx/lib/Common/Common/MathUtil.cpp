@@ -2,8 +2,11 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include <random>
 #include "MathUtil.h"
+
+#include "Exceptions/Throw.h"
+
+#include <random>
 
 uint32_t
 Math::NextPowerOf2(uint32_t n)

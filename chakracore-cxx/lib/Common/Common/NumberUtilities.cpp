@@ -4,8 +4,12 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Common/UInt32Math.h"
 #include "Common/NumberUtilities.inl"
-#include <intsafe.h>
+
+#include "Codex/Utf8Codex.h"
+
+#include "Core/Assertions.h"
 #include "Core/JitHelperUtils.h"
+#include <intsafe.h>
 
 using namespace Js;
 

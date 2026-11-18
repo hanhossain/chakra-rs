@@ -15,8 +15,14 @@
 #include "specstrings.h"    // for IN, etc.
 
 #include <limits.h>
+#include <cstdint>
+#include <cstddef>
 
 #define INTSAFE_E_ARITHMETIC_OVERFLOW       (static_cast<int32_t>(0x80070216L))  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
+
+#ifndef S_OK
+#define S_OK                             (0x00000000)
+#endif
 
 //
 // We make some assumptions about the sizes of various types. Let's be

@@ -3,10 +3,9 @@
 // Copyright (c) ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#pragma once
 
-#ifndef NUMBER_UTIL_INLINE
-#define NUMBER_UTIL_INLINE
-#endif
+#include "NumberUtilities.h"
 
 // Attempt to pun int/float without address-taking.
 // This helps compilers.
@@ -38,7 +37,7 @@
 
 namespace Js
 {
-    NUMBER_UTIL_INLINE uint32_t &NumberUtilities::LuHiDbl(double &dbl)
+    uint32_t &NumberUtilities::LuHiDbl(double &dbl)
     {
 #if defined(__BIG_ENDIAN__)
         return ((uint32_t *)&dbl)[0];
@@ -47,7 +46,7 @@ namespace Js
 #endif //!BIG_ENDIAN
     }
 
-    NUMBER_UTIL_INLINE uint32_t &NumberUtilities::LuLoDbl(double &dbl)
+    uint32_t &NumberUtilities::LuLoDbl(double &dbl)
     {
 #if defined(__BIG_ENDIAN__)
         return ((uint32_t *)&dbl)[1];
@@ -56,7 +55,7 @@ namespace Js
 #endif //!BIG_ENDIAN
     }
 
-    NUMBER_UTIL_INLINE int64_t NumberUtilities::TryToInt64(double T1)
+    int64_t NumberUtilities::TryToInt64(double T1)
     {
         int64_t T4_64;
 #if defined(_M_ARM32_OR_ARM64)
@@ -98,7 +97,7 @@ namespace Js
     }
 
     // Returns true <=> TryToInt64() call resulted in a valid value.
-    NUMBER_UTIL_INLINE bool NumberUtilities::IsValidTryToInt64(long value)
+    bool NumberUtilities::IsValidTryToInt64(long value)
     {
 #if defined(_M_ARM32_OR_ARM64)
         return value != Pos_InvalidInt64 && value != Neg_InvalidInt64;
@@ -107,7 +106,7 @@ namespace Js
 #endif
     }
 
-    NUMBER_UTIL_INLINE bool NumberUtilities::IsNan(double value)
+    bool NumberUtilities::IsNan(double value)
     {
         const unsigned long nCompare = ToSpecial(value);
         // NaN is a range of values; all bits on the exponent are 1's
@@ -117,13 +116,13 @@ namespace Js
         return isNan;
     }
 
-    NUMBER_UTIL_INLINE bool NumberUtilities::IsNegative(double value)
+    bool NumberUtilities::IsNegative(double value)
     {
         unsigned long nCompare = ToSpecial(value);
         return nCompare & 0x8000000000000000ull;
     }
 
-    NUMBER_UTIL_INLINE bool NumberUtilities::IsSpecial(double value, unsigned long nSpecial)
+    bool NumberUtilities::IsSpecial(double value, unsigned long nSpecial)
     {
         // Perform a bitwise comparison using unsigned long instead of a double comparison, since that
         // would trigger FPU exceptions, etc.
@@ -131,7 +130,7 @@ namespace Js
         return nCompare == nSpecial;
     }
 
-    NUMBER_UTIL_INLINE unsigned long NumberUtilities::ToSpecial(double value)
+    unsigned long NumberUtilities::ToSpecial(double value)
     {
 #if defined(_AMD64_)
         return _mm_cvtsi128_si64(_mm_castpd_si128(_mm_set_sd(value)));
@@ -142,7 +141,7 @@ namespace Js
 #endif
     }
 
-    NUMBER_UTIL_INLINE uint32_t NumberUtilities::ToSpecial(float value)
+    uint32_t NumberUtilities::ToSpecial(float value)
     {
 #if defined(_AMD64_) || _M_IX86_FP >= 2 || defined(__AVX__)
         return _mm_cvtsi128_si32(_mm_castps_si128(_mm_set_ss(value)));
@@ -153,7 +152,7 @@ namespace Js
 #endif
     }
 
-    NUMBER_UTIL_INLINE float NumberUtilities::ReinterpretBits(int value)
+    float NumberUtilities::ReinterpretBits(int value)
     {
 #if defined(_AMD64_) || _M_IX86_FP >= 2 || defined(__AVX__)
         return _mm_cvtss_f32(_mm_castsi128_ps(_mm_cvtsi32_si128(value)));
@@ -164,7 +163,7 @@ namespace Js
 #endif
     }
 
-    NUMBER_UTIL_INLINE double NumberUtilities::ReinterpretBits(long value)
+    double NumberUtilities::ReinterpretBits(long value)
     {
 #if defined(_AMD64_)
         return _mm_cvtsd_f64(_mm_castsi128_pd(_mm_cvtsi64_si128(value)));
@@ -175,7 +174,7 @@ namespace Js
 #endif
     }
 
-    NUMBER_UTIL_INLINE bool NumberUtilities::IsFloat32NegZero(float value)
+    bool NumberUtilities::IsFloat32NegZero(float value)
     {
         uint32_t nCompare = ToSpecial(value);
         return nCompare == NumberConstants::k_Float32NegZero;

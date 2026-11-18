@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "IntMathCommon.h"
+#include "Common/MathUtil.h"
 
 class Int32Math: public IntMathCommon<int32_t>
 {

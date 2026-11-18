@@ -32,7 +32,9 @@ Revision History:
 
 /******************* HRESULTs *********************************************/
 
+#ifndef S_OK
 #define S_OK                             (0x00000000)
+#endif
 #define S_FALSE                          (0x00000001)
 
 #define E_NOTIMPL                        (0x80004001)

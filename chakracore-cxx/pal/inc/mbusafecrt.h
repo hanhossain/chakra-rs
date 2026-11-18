@@ -57,10 +57,8 @@ extern errno_t strncpy_s( char* outDest, size_t inDestBufferSize, const char* in
 extern errno_t wcsncpy_s( char16_t* outDest, size_t inDestBufferSize, const char16_t* inSrc, size_t inCount );
 
 extern errno_t _itoa_s( int inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _itow_s( int inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 
 extern errno_t _ltoa_s( long inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _ltow_s( long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 
 extern errno_t _ultoa_s( unsigned long inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
 extern errno_t _ultow_s( unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );

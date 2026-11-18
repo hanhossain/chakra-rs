@@ -209,9 +209,10 @@ endif (IS_64BIT_BUILD)
 
 if (DISABLE_JIT)
     set(BuildJIT 0)
-    add_definitions(-DDISABLE_JIT=1)
+    add_compile_definitions(DISABLE_JIT=1 ENABLE_NATIVE_CODEGEN=0)
 else ()
     set(BuildJIT 1)
+    add_compile_definitions(ENABLE_NATIVE_CODEGEN=1)
 endif ()
 
 enable_language(ASM)
