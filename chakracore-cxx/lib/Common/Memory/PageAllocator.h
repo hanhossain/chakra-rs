@@ -10,6 +10,7 @@
 #include "Memory/VirtualAllocWrapper.h"
 #include "DataStructures/DList.h"
 #include "DataStructures/BitVector.h"
+#include "DataStructures/FixedBitVector.h"
 #include "Core/SysInfo.h"
 
 namespace Memory

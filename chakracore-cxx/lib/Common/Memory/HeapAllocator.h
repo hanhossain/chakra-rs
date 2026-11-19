@@ -6,6 +6,7 @@
 #include "Exceptions/Throw.h"
 #include "Exceptions/ReportError.h"
 #include "Core/AllocSizeMath.h"
+#include <cstddef>
 
 #define HeapNew(T, ...) AllocatorNew(HeapAllocator, &HeapAllocator::Instance, T, __VA_ARGS__)
 #define HeapNewZ(T, ...) AllocatorNewZ(HeapAllocator, &HeapAllocator::Instance, T, __VA_ARGS__)
@@ -220,19 +221,19 @@ public:
 };
 } // namespace Memory
 
-typedef NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;
+typedef Memory::NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;
 
 //----------------------------------------
 // HeapAllocator overrides
 //----------------------------------------
 inline void
-operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*)(size_t))
+operator delete(void * obj, Memory::HeapAllocator * alloc, char * (Memory::HeapAllocator::*)(size_t))
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
-operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*)(size_t), size_t)
+operator delete(void * obj, Memory::HeapAllocator * alloc, char * (Memory::HeapAllocator::*)(size_t), size_t)
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
@@ -242,33 +243,33 @@ operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*)(siz
 //----------------------------------------
 template <>
 _Ret_maybenull_ inline void *
-operator new(size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t))
+operator new(size_t byteSize, Memory::NoThrowHeapAllocator * alloc, char * (Memory::NoThrowHeapAllocator::*AllocFunc)(size_t))
 {
     return ::operator new(byteSize, alloc, true, AllocFunc);
 }
 
 template <>
 _Ret_maybenull_ inline void *
-operator new[](size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t))
+operator new[](size_t byteSize, Memory::NoThrowHeapAllocator * alloc, char * (Memory::NoThrowHeapAllocator::*AllocFunc)(size_t))
 {
     return ::operator new[](byteSize, alloc, true, AllocFunc);
 }
 
 template <>
 _Ret_maybenull_ inline void *
-operator new(size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
+operator new(size_t byteSize, Memory::NoThrowHeapAllocator * alloc, char * (Memory::NoThrowHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     return ::operator new(byteSize, alloc, true, AllocFunc, plusSize);
 }
 
 inline void
-operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*)(size_t))
+operator delete(void * obj, Memory::NoThrowHeapAllocator * alloc, char * (Memory::NoThrowHeapAllocator::*)(size_t))
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
-operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*)(size_t), size_t)
+operator delete(void * obj, Memory::NoThrowHeapAllocator * alloc, char * (Memory::NoThrowHeapAllocator::*)(size_t), size_t)
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
@@ -276,7 +277,7 @@ operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAll
 
 template <>
 _Ret_notnull_ inline void *
-operator new(size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t))
+operator new(size_t byteSize, Memory::NoCheckHeapAllocator * alloc, char * (Memory::NoCheckHeapAllocator::*AllocFunc)(size_t))
 {
     Assert(byteSize != 0);
     void * buffer = (alloc->*AllocFunc)(byteSize);
@@ -286,7 +287,7 @@ operator new(size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapA
 
 template <>
 _Ret_notnull_ inline void *
-operator new(size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
+operator new(size_t byteSize, Memory::NoCheckHeapAllocator * alloc, char * (Memory::NoCheckHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     Assert(byteSize != 0);
     Assert(plusSize != 0);
@@ -296,20 +297,20 @@ operator new(size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapA
 
 
 _Ret_notnull_ inline void *
-operator new[](size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t))
+operator new[](size_t byteSize, Memory::NoCheckHeapAllocator * alloc, char * (Memory::NoCheckHeapAllocator::*AllocFunc)(size_t))
 {
     void * buffer = (alloc->*AllocFunc)(byteSize);
     return buffer;
 }
 
 inline void
-operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*)(size_t))
+operator delete(void * obj, Memory::NoCheckHeapAllocator * alloc, char * (Memory::NoCheckHeapAllocator::*)(size_t))
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
-operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*)(size_t), size_t)
+operator delete(void * obj, Memory::NoCheckHeapAllocator * alloc, char * (Memory::NoCheckHeapAllocator::*)(size_t), size_t)
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }

@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "DataStructures/CharacterBuffer.h"
+#include "Memory/ArenaAllocator.h"
 
 namespace Js
 {

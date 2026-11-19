@@ -4,6 +4,10 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "Core/Assertions.h"
+
+#include <cstddef>
+
 namespace Memory
 {
     struct _write_barrier_policy;

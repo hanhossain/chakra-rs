@@ -8,6 +8,8 @@
 
 #pragma once
 #include "Common/UInt32Math.h"
+#include "Memory/RecyclerPointers.h"
+#include "Memory/HeapAllocator.h"
 
 #ifdef DIAG_MEM
 extern int listFreeAmount;
@@ -122,5 +124,5 @@ namespace JsUtil
             }
         }
     };
-    typedef GrowingArray<uint32_t, HeapAllocator> GrowingUint32HeapArray;
+    typedef GrowingArray<uint32_t, Memory::HeapAllocator> GrowingUint32HeapArray;
 }

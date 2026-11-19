@@ -4,6 +4,10 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonTypedefs.h"
+#include "DataStructures/Comparer.h"
+#include "Memory/RecyclerPointers.h"
+
 namespace JsUtil
 {
     static const charcount_t MAX_FAST_HASH_LENGTH = 256;

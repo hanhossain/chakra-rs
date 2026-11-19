@@ -5,6 +5,7 @@
 #pragma once
 
 #include "DataStructures/BitVector.h"
+#include "DataStructures/FixedBitVector.h"
 
 namespace Memory
 {

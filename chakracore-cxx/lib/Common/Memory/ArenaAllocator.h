@@ -5,6 +5,7 @@
 #pragma once
 #include "Memory/PageAllocator.h"
 #include "Memory/MemoryTracking.h"
+#include "DataStructures/SparseBitVector.h"
 
 namespace Memory
 {
