@@ -12,6 +12,11 @@
 
 #pragma once
 
+#include "Common/MathUtil.h"
+#include "Core/Api.h"
+#include "Exceptions/Throw.h"
+#include "DataStructures/ImmutableList.h"
+
 struct _SIMDValue;
 typedef _SIMDValue SIMDValue;
 
@@ -215,7 +220,7 @@ namespace Js
     // A buffer builder which contains a list of buffer builders
     struct BufferBuilderList : BufferBuilder
     {
-        regex::ImmutableList<BufferBuilder*> * list;
+        regex::ImmutableList<BufferBuilder *> * list;
         BufferBuilderList(const char16_t* clue)
             : BufferBuilder(clue), list(nullptr)
         { }

@@ -5,6 +5,10 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/BitVector.h"
+#include "DataStructures/UnitBitVector.h"
+#include "DataStructures/FixedBitVectorEnumerator.h"
+
 #define FOREACH_BITSET_IN_FIXEDBV(index, bv) \
 { \
     BVIndex index; \

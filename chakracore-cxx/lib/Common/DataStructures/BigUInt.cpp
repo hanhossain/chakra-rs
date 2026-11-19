@@ -3,12 +3,14 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "DataStructures/BigUInt.h"
-#include "Common/NumberUtilitiesBase.h"
 #include "Common/NumberUtilities.h"
+#include "Common/NumberUtilitiesBase.h"
+#include "Core/Api.h"
+#include "Codex/Utf8Codex.h"
 
 namespace Js
 {
-    BigUInt & BigUInt::operator= (BigUInt &bi)
+    BigUInt & BigUInt::operator= (BigUInt &)
     {
         AssertMsg(false, "can't assign BigInts");
         return *this;

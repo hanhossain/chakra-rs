@@ -4,6 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/BitVector.h"
+#include "Core/Output.h"
+#include "Memory/RecyclerPointers.h"
+#include "PlatformAgnostic/CommonPal.h"
+#include "pal_mstypes.h"
 
 #define FOREACH_BITSET_IN_UNITBV(index, bv, BVUnitT) \
 { \

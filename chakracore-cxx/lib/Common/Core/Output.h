@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Core/ConfigFlagsTable.h"
+
+#include <cstdarg>
 #include <mutex>
 
 // xplat-todo: error: ISO C++ forbids forward references to 'enum' types

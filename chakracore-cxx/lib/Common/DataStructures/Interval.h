@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Memory/RecyclerPointers.h"
+
 namespace regex
 {
     struct Interval

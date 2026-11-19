@@ -5,8 +5,18 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/Comparer.h"
+#include "DataStructures/Option.h"
+#include "Memory/Allocator.h"
+
+#include <cstddef>
+#include <string>
+
 #define IfNullThrowOutOfMemory(result) if(result == nullptr) { Js::Throw::OutOfMemory(); }
 
+namespace Memory {
+class ArenaAllocator;
+}
 namespace regex
 {
     template<class T>
@@ -20,7 +30,7 @@ namespace regex
 
     public:
         // Delete all the nodes in the list (if any).
-        void FreeList(ArenaAllocator * a)
+        void FreeList(Memory::ArenaAllocator * a)
         {
             auto nextToDelete = this->next;
             Adelete(a, this);
@@ -29,7 +39,7 @@ namespace regex
 
         // Info:        Return a list with the given value prepended to this one.
         // Parameters:  value - the value to prepend
-        ImmutableList<T> * Prepend(T value, ArenaAllocator * a)
+        ImmutableList<T> * Prepend(T value, Memory::ArenaAllocator * a)
         {
             return Anew(a, ImmutableList, value, this);
         }
@@ -38,7 +48,7 @@ namespace regex
         //              It is required that the tail passed is empty if this is empty list otherwise its the last node of this list
         // Parameters:  value - the value to append
         //              tail - last node of the new list
-        ImmutableList<T> * Append(T value, ArenaAllocator * a, ImmutableList<T> **tail)
+        ImmutableList<T> * Append(T value, Memory::ArenaAllocator * a, ImmutableList<T> **tail)
         {
 #if DBG
             Assert(tail != nullptr);
@@ -69,7 +79,7 @@ namespace regex
         // Info:        Return a list with the given array prepended to this one.
         // Parameters:  arr - the array to prepend
         //              count - the elements in the array
-        ImmutableList<T> * PrependArray(T * arr, size_t count, ArenaAllocator * a)
+        ImmutableList<T> * PrependArray(T * arr, size_t count, Memory::ArenaAllocator * a)
         {
             Assert(count > 0);
 
@@ -90,7 +100,7 @@ namespace regex
         // Parameters:  arr - the array to append
         //              count - the elements in the array
         //              tail - last node of the new list
-        ImmutableList<T> * AppendArrayToCurrentList(T * arr, size_t count, ArenaAllocator * a, ImmutableList<T> **tail)
+        ImmutableList<T> * AppendArrayToCurrentList(T * arr, size_t count, Memory::ArenaAllocator * a, ImmutableList<T> **tail)
         {
             auto out = this;
             for(size_t i=0; i<count; i++)
@@ -148,7 +158,7 @@ namespace regex
         // Info:        Return a new list by calling function f called on each element of this list
         // Parameters:  f - the mapping function
         template<class TOut, class F>
-        ImmutableList<TOut> * Select(F f, ArenaAllocator * a)
+        ImmutableList<TOut> * Select(F f, Memory::ArenaAllocator * a)
         {
             auto out = ImmutableList<TOut>::Empty();
             auto tail = out;
@@ -186,7 +196,7 @@ namespace regex
         // Info:        Return a new list by calling function f called on each element of this list. Remove any elements where f returned nullptr.
         // Parameters:  f - the mapping function
         template<class TOut, class F>
-        ImmutableList<TOut> * SelectNotNull(F f, ArenaAllocator * a)
+        ImmutableList<TOut> * SelectNotNull(F f, Memory::ArenaAllocator * a)
         {
             auto out = ImmutableList<TOut>::Empty();
             auto tail = out;
@@ -361,7 +371,7 @@ namespace regex
         }
 
         // Info:        Return this list reversed
-        ImmutableList<T> * Reverse(ArenaAllocator * a)
+        ImmutableList<T> * Reverse(Memory::ArenaAllocator * a)
         {
             auto out = ImmutableList<T>::Empty();
             auto current = this;
@@ -391,7 +401,7 @@ namespace regex
         // Info:        Filter this list by removing the elements where function f returns false
         // Parameters:  f - the predicate function to filter by
         template<class F>
-        ImmutableList<T> * Where(F f, ArenaAllocator * a)
+        ImmutableList<T> * Where(F f, Memory::ArenaAllocator * a)
         {
             auto out = ImmutableList<T>::Empty();
             auto tail = out;
@@ -448,7 +458,7 @@ namespace regex
         // Parameters:  wf - the predicate function to filter by
         //              f - the mapping function
         template<class TOut, class selectF, class whereF>
-        ImmutableList<TOut> * WhereSelect(whereF wf, selectF sf, ArenaAllocator * a)
+        ImmutableList<TOut> * WhereSelect(whereF wf, selectF sf, Memory::ArenaAllocator * a)
         {
             auto out = ImmutableList<TOut>::Empty();
             auto tail = out;
@@ -754,7 +764,7 @@ namespace regex
 
         // Info:        Return a list containing the given single value
         // Parameters:  value - the value
-        static ImmutableList<T> * OfSingle(T value, ArenaAllocator * a)
+        static ImmutableList<T> * OfSingle(T value, Memory::ArenaAllocator * a)
         {
             return Anew(a, ImmutableList, value, nullptr);
         }
@@ -765,7 +775,7 @@ namespace regex
         //              to group into an intermediate hash table.
         // Parameters:  equals - the value
         template<class FEquals>
-        ImmutableList<ImmutableList<T> *> * GroupBy(FEquals equals, ArenaAllocator * a)
+        ImmutableList<ImmutableList<T> *> * GroupBy(FEquals equals, Memory::ArenaAllocator * a)
         {
             auto out = ImmutableList<ImmutableList<T>*>::Empty();
 
@@ -800,7 +810,7 @@ namespace regex
         // Info:        Create groups where FEquals returns true for sets of adjacent element. If the list is sorted, this is equivalent to GroupBy.
         // Parameters:  equals - the value
         template<class FEquals>
-        ImmutableList<ImmutableList<T>*> * GroupByAdjacentOnCurrentList(FEquals equals, ArenaAllocator * a)
+        ImmutableList<ImmutableList<T>*> * GroupByAdjacentOnCurrentList(FEquals equals, Memory::ArenaAllocator * a)
         {
             auto out = ImmutableList<ImmutableList<T>*>::Empty();
             auto tail = out;
@@ -833,7 +843,7 @@ namespace regex
     // Info:        Return a list containing the given single value
     // Parameters:  value - the value
     template<typename T>
-    ImmutableList<const T *> * ToImmutableList(const T * value, ArenaAllocator * a)
+    ImmutableList<const T *> * ToImmutableList(const T * value, Memory::ArenaAllocator * a)
     {
         return ImmutableList<const T *>::OfSingle(value,a);
     }
