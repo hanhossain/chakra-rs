@@ -165,13 +165,6 @@ static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::u
 #endif
         }
 
-        if (!threadContext->IsRentalThreadingEnabledInJSRT()
-            || Js::Configuration::Global.flags.DisableRentalThreading
-            )
-        {
-            threadContext->SetIsThreadBound();
-        }
-
         if (attributes & JsRuntimeAttributeAllowScriptInterrupt)
         {
             threadContext->SetThreadContextFlag(ThreadContextFlagCanDisableExecution);

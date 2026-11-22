@@ -3750,10 +3750,6 @@ Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)
     return dumper.Dump();
 }
 
-void ThreadContext::SetAutoProxyName(const char16_t* objectName)
-{
-    recyclableData->autoProxyName = objectName;
-}
 //
 // Regex helpers
 //
@@ -3846,44 +3842,6 @@ void InterruptPoller::CheckInterruptPoll()
     }
 }
 
-
-void InterruptPoller::GetStatementCount(uint32_t *pluHi, uint32_t *pluLo)
-{
-    uint32_t resetTick = this->lastResetTick;
-    uint32_t pollTick = this->lastPollTick;
-    uint32_t elapsed;
-
-    elapsed = pollTick - resetTick;
-
-    unsigned long statements = static_cast<unsigned long>(elapsed) * InterruptPoller::TicksToStatements;
-    *pluLo = static_cast<uint32_t>(statements);
-    *pluHi = static_cast<uint32_t>(statements >> 32);
-}
-
-void ThreadContext::DisableExecution()
-{
-    Assert(TestThreadContextFlag(ThreadContextFlagCanDisableExecution));
-    // Hammer the stack limit with a value that will cause script abort on the next stack probe.
-    this->SetStackLimitForCurrentThread(Js::Constants::StackLimitForScriptInterrupt);
-
-    return;
-}
-
-void ThreadContext::EnableExecution()
-{
-    Assert(this->GetStackProber());
-    // Restore the normal stack limit.
-    this->SetStackLimitForCurrentThread(this->GetStackProber()->GetScriptStackLimit());
-
-    // It's possible that the host disabled execution after the script threw an exception
-    // of it's own, so we shouldn't clear that. Only exceptions for script termination
-    // should be cleared.
-    if (GetRecordedException() == GetPendingTerminatedErrorObject())
-    {
-        SetRecordedException(NULL);
-    }
-}
-
 bool ThreadContext::TestThreadContextFlag(ThreadContextFlags contextFlag) const
 {
     return (this->threadContextFlags & contextFlag) != 0;
@@ -3894,17 +3852,7 @@ void ThreadContext::SetThreadContextFlag(ThreadContextFlags contextFlag)
     this->threadContextFlags = static_cast<ThreadContextFlags>(this->threadContextFlags | contextFlag);
 }
 
-void ThreadContext::ClearThreadContextFlag(ThreadContextFlags contextFlag)
-{
-    this->threadContextFlags = static_cast<ThreadContextFlags>(this->threadContextFlags & ~contextFlag);
-}
-
 // Despite the name, callers expect this to return the highest propid + 1.
-
-uint ThreadContext::GetHighestPropertyNameIndex() const
-{
-    return propertyMap->GetLastIndex() + 1 + Js::InternalPropertyIds::Count;
-}
 
 AutoTagNativeLibraryEntry::AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, const char16_t * name, void* addr)
 {

@@ -62,7 +62,6 @@ public:
     virtual ~InterruptPoller() { }
 
     void CheckInterruptPoll();
-    void GetStatementCount(uint32_t *pluHi, uint32_t *pluLo);
     void ResetStatementCount() { lastResetTick = lastPollTick; }
     void StartScript() { lastResetTick = lastPollTick = ::GetTickCount(); }
     void EndScript() { lastResetTick = lastPollTick = 0;}
@@ -683,6 +682,7 @@ public:
 
     void SetCurrentThreadId(uint32_t threadId) { this->currentThreadId = threadId; }
     uint32_t GetCurrentThreadId() const { return this->currentThreadId; }
+    // Rental threading is always enabled for JSRT. Maybe that means not thread bound?
     void SetIsThreadBound()
     {
         this->isThreadBound = true;
@@ -690,7 +690,6 @@ public:
     bool IsJSRT() const { return !this->isThreadBound; }
     bool IsThreadBound() const override { return this->isThreadBound; }
     void SetStackProber(StackProber * stackProber);
-    static uint32_t GetStackLimitForCurrentThreadOffset() { return offsetof(ThreadContext, stackLimitForCurrentThread); }
 
     template <class Fn>
     Js::ImplicitCallFlags TryWithDisabledImplicitCall(Fn fn)
@@ -714,9 +713,6 @@ public:
     {
         return &this->stackLimitForCurrentThread;
     }
-
-    // This is always on for JSRT APIs.
-    bool IsRentalThreadingEnabledInJSRT() const { return true; }
 
     IActiveScriptProfilerHeapEnum* GetHeapEnum();
     void SetHeapEnum(IActiveScriptProfilerHeapEnum* newHeapEnum);
@@ -912,9 +908,6 @@ private:
         typename WriteBarrierFieldTypeTraits<SymbolRegistrationMap*>::Type symbolRegistrationMap;
 
         typename WriteBarrierFieldTypeTraits<uint>::Type constructorCacheInvalidationCount;
-
-        // use for autoProxy called from Debug.setAutoProxyName. we need to keep the buffer from GetSz() alive.
-        typename WriteBarrierFieldTypeTraits<const char16_t*>::Type autoProxyName;
     };
 
     static ThreadContext * globalListLast;
@@ -1221,8 +1214,6 @@ public:
     }
 
     Js::Var GetMemoryStat(Js::ScriptContext* scriptContext);
-    void SetAutoProxyName(const char16_t* objectName);
-    const char16_t* GetAutoProxyName() const { return recyclableData->autoProxyName; }
     Js::PropertyId handlerPropertyId = Js::Constants::NoProperty;
 
     uint GetScriptContextCount() const { return this->scriptContextCount; }
@@ -1360,7 +1351,6 @@ public:
     void InvalidatePropertyRecord(const Js::PropertyRecord * propertyRecord);
     Js::PropertyId GetNextPropertyId();
     Js::PropertyId GetMaxPropertyId();
-    uint GetHighestPropertyNameIndex() const;
 
     void SetThreadServiceWrapper(ThreadServiceWrapper*);
     ThreadServiceWrapper* GetThreadServiceWrapper();
@@ -1861,11 +1851,8 @@ public:
     {
         return this->GetStackLimitForCurrentThread() == Js::Constants::StackLimitForScriptInterrupt;
     }
-    void DisableExecution();
-    void EnableExecution();
     bool TestThreadContextFlag(ThreadContextFlags threadContextFlag) const;
     void SetThreadContextFlag(ThreadContextFlags threadContextFlag);
-    void ClearThreadContextFlag(ThreadContextFlags threadContextFlag);
 
     void SetForceOneIdleCollection();
 

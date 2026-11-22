@@ -2019,28 +2019,6 @@ namespace Js
         return name;
     }
 
-    PropertyId JavascriptProxy::EnsureHandlerPropertyId(ScriptContext* scriptContext)
-    {
-        ThreadContext* threadContext = scriptContext->GetThreadContext();
-        if (threadContext->handlerPropertyId == Js::Constants::NoProperty)
-        {
-            const char16_t* autoProxyName;
-
-            if (threadContext->GetAutoProxyName() != nullptr)
-            {
-                autoProxyName = threadContext->GetAutoProxyName();
-            }
-            else
-            {
-                autoProxyName = u"__msTestHandler";
-            }
-
-            threadContext->handlerPropertyId = threadContext->GetOrAddPropertyRecordBind(
-                JsUtil::CharacterBuffer<char16_t>(autoProxyName, static_cast<charcount_t>(std::u16string(autoProxyName).length())))->GetPropertyId();
-        }
-        return threadContext->handlerPropertyId;
-    }
-
     Var JavascriptProxy::ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         PROBE_STACK(GetScriptContext(), Js::Constants::MinStackDefault);
