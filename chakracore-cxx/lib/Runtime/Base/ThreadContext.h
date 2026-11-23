@@ -1982,39 +1982,3 @@ public:
 };
 
 extern void(*InitializeAdditionalProperties)(ThreadContext *threadContext);
-
-// This is for protecting a region of code, where we can't recover and be consistent upon failures (mainly due to OOM and SO).
-// FailFast on that.
-class AutoDisableInterrupt
-{
-public:
-    AutoDisableInterrupt(ThreadContext *threadContext, bool explicitCompletion = true)
-        : m_operationCompleted(false), m_interruptDisableState(false), m_threadContext(threadContext), m_explicitCompletion(explicitCompletion)
-    {
-        if (m_threadContext->HasInterruptPoller())
-        {
-            m_interruptDisableState = m_threadContext->GetInterruptPoller()->IsDisabled();
-            m_threadContext->GetInterruptPoller()->SetDisabled(true);
-        }
-    }
-    ~AutoDisableInterrupt()
-    {
-        if (m_threadContext->HasInterruptPoller())
-        {
-            m_threadContext->GetInterruptPoller()->SetDisabled(m_interruptDisableState);
-        }
-
-        if (m_explicitCompletion && !m_operationCompleted)
-        {
-            AssertOrFailFast(false);
-        }
-    }
-    void RequireExplicitCompletion() { m_explicitCompletion = true; }
-    void Completed() { m_operationCompleted = true; }
-
-private:
-    ThreadContext * m_threadContext;
-    bool m_operationCompleted;
-    bool m_interruptDisableState;
-    bool m_explicitCompletion;
-};

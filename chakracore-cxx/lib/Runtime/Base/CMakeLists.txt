@@ -32,6 +32,7 @@ add_library (Chakra.Runtime.Base OBJECT
     JsReentLock.cpp
     AutoReentrancySafeRegion.cpp
     AutoReentrancyHandler.cpp
+    AutoDisableInterrupt.cpp
 )
 
 target_include_directories (Chakra.Runtime.Base PUBLIC

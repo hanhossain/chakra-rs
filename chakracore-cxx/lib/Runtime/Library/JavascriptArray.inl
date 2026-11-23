@@ -8,6 +8,7 @@
 #define Assert_FailFast(x) if (!(x)) { Assert(x); Js::Throw::FatalInternalError(); }
 #include "JavascriptArray.h"
 #include "SparseArraySegment.h"
+#include "Base/AutoDisableInterrupt.h"
 
 namespace Js
 {

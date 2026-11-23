@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include <memory>
 
+#include "Base/AutoDisableInterrupt.h"
+
 namespace Js
 {
     long RefCountedBuffer::AddRef()
