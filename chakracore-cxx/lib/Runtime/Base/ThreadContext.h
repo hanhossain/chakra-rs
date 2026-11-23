@@ -7,6 +7,7 @@
 #include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"
 #include "Library/DelayFreeArrayBufferHelper.h"
+#include "Base/AutoReentrancyHandler.h"
 
 #include <memory>
 
@@ -631,8 +632,6 @@ m_ESSharedArrayBuffer= COMPILE_DISABLE_ESSharedArrayBuffer? false : true;
         }
     }
 };
-
-class AutoReentrancyHandler;
 
 class ThreadContext :
     public DefaultRecyclerCollectionWrapper,
@@ -2018,23 +2017,4 @@ private:
     bool m_operationCompleted;
     bool m_interruptDisableState;
     bool m_explicitCompletion;
-};
-
-class AutoReentrancyHandler
-{
-    ThreadContext * m_threadContext;
-    bool m_savedReentrancySafeOrHandled;
-
-public:
-    AutoReentrancyHandler(ThreadContext * threadContext)
-    {
-        m_threadContext = threadContext;
-        m_savedReentrancySafeOrHandled = threadContext->GetReentrancySafeOrHandled();
-        threadContext->SetReentrancySafeOrHandled(true);
-    }
-
-    ~AutoReentrancyHandler()
-    {
-        m_threadContext->SetReentrancySafeOrHandled(m_savedReentrancySafeOrHandled);
-    }
 };

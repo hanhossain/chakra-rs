@@ -31,6 +31,7 @@ add_library (Chakra.Runtime.Base OBJECT
     jitprofiling.cpp
     JsReentLock.cpp
     AutoReentrancySafeRegion.cpp
+    AutoReentrancyHandler.cpp
 )
 
 target_include_directories (Chakra.Runtime.Base PUBLIC
