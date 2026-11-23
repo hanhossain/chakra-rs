@@ -1980,5 +1980,3 @@ public:
         }
     }
 };
-
-extern void(*InitializeAdditionalProperties)(ThreadContext *threadContext);

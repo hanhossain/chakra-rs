@@ -32,19 +32,6 @@ constexpr unsigned int ConstructorCacheInvalidationThreshold = 500;
 /// Compact inline cache invalidation lists if their utilization falls below this threshold
 constexpr int InlineCacheInvalidationListCompactionThreshold = 4;
 
-/*
- * When we aren't adding any additional properties
- */
-void DefaultInitializeAdditionalProperties(ThreadContext *threadContext)
-{
-
-}
-
-/*
- *
- */
-void (*InitializeAdditionalProperties)(ThreadContext *threadContext) = DefaultInitializeAdditionalProperties;
-
 std::recursive_mutex ThreadContext::s_csThreadContext;
 size_t ThreadContext::processNativeCodeSize = 0;
 ThreadContext * ThreadContext::globalListFirst = nullptr;
@@ -672,7 +659,6 @@ void ThreadContext::InitializePropertyMaps()
         memset(propertyNamesDirect, 0, 128*sizeof(Js::PropertyRecord *));
 
         Js::JavascriptLibrary::InitializeProperties(this);
-        InitializeAdditionalProperties(this);
 
         //Js::JavascriptLibrary::InitializeDOMProperties(this);
     }
