@@ -80,6 +80,20 @@ ThreadContext::RecyclableData::RecyclableData(Recycler *const recycler) :
 {
 }
 
+void ThreadContext::ShutdownThreads() {
+#if ENABLE_NATIVE_CODEGEN
+    if (jobProcessor) {
+        jobProcessor->Close();
+    }
+#endif
+    if (this->recycler != nullptr) {
+        this->recycler->ShutdownThread();
+    }
+}
+
+DateTime::HiResTimer *ThreadContext::GetHiResTimer() { return &hTimer; }
+ArenaAllocator *ThreadContext::GetThreadAlloc() { return &threadAlloc; }
+std::recursive_mutex &ThreadContext::GetMutex() { return s_csThreadContext; }
 ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback, bool enableExperimentalFeatures) :
     currentThreadId(::GetCurrentThreadId()),
     stackLimitForCurrentThread(0),
@@ -296,6 +310,7 @@ void ThreadContext::GlobalInitialize()
     }
 }
 
+uint32_t ThreadContext::GetNextPolymorphicCacheState() { return ++polymorphicCacheState; }
 ThreadContext::~ThreadContext()
 {
     if (isJsrtRuntime_) {
@@ -465,7 +480,8 @@ void ThreadContext::CloseForJSRT()
     ShutdownThreads();
 }
 
-ThreadContext* ThreadContext::GetContextForCurrentThread()
+ThreadConfiguration const *ThreadContext::GetConfig() const { return &configuration; }
+ThreadContext * ThreadContext::GetContextForCurrentThread()
 {
     ThreadContextTLSEntry * tlsEntry = ThreadContextTLSEntry::GetEntryForCurrentThread();
     if (tlsEntry != nullptr)
@@ -474,7 +490,16 @@ ThreadContext* ThreadContext::GetContextForCurrentThread()
     }
     return nullptr;
 }
+Recycler *ThreadContext::GetRecycler() { return recycler; }
 
+#ifdef __x86_64__
+Js::Amd64ContextsManager *ThreadContext::GetAmd64ContextsManager() { return &amd64ContextsManager; }
+#endif
+
+uint ThreadContext::GetScriptSiteHolderCount() { return activeScriptSiteCount; }
+uint ThreadContext::IncrementActiveScriptSiteCount() { return ++activeScriptSiteCount; }
+uint ThreadContext::DecrementActiveScriptSiteCount() { return --activeScriptSiteCount; }
+ThreadContext *ThreadContext::GetThreadContextList() { return globalListFirst; }
 void ThreadContext::ValidateThreadContext()
     {
 #if DBG
@@ -496,6 +521,7 @@ void ThreadContext::ValidateThreadContext()
 
 #endif
 }
+bool ThreadContext::IsInScript() const { return callRootLevel != 0; }
 
 class AutoRecyclerPtr
 {
@@ -934,6 +960,9 @@ ThreadContext::GetOrAddPropertyRecordImpl(JsUtil::CharacterBuffer<char16_t> prop
     return propertyRecord;
 }
 
+const Js::PropertyRecord *ThreadContext::GetOrAddPropertyRecordBind(JsUtil::CharacterBuffer<char16_t> propertyName) {
+    return GetOrAddPropertyRecordImpl(propertyName, true);
+}
 void ThreadContext::AddBuiltInPropertyRecord(const Js::PropertyRecord *propertyRecord)
 {
     this->AddPropertyRecordInternal(propertyRecord);
@@ -1079,6 +1108,9 @@ ThreadContext::ForceCleanPropertyMap()
 {
     // No-op now that we no longer use weak refs
 }
+const Js::PropertyRecord *ThreadContext::GetOrAddPropertyRecord(JsUtil::CharacterBuffer<char16_t> propertyName) {
+    return GetOrAddPropertyRecordImpl(propertyName, false);
+}
 
 #if ENABLE_NATIVE_CODEGEN
 JsUtil::JobProcessor *
@@ -1102,8 +1134,10 @@ ThreadContext::GetJobProcessor()
     }
     return jobProcessor;
 }
+Js::Var *ThreadContext::GetBailOutRegisterSaveSpace() const { return bailOutRegisterSaveSpace; }
 #endif
 
+Js::ScriptEntryExitRecord *ThreadContext::GetScriptEntryExit() const { return entryExitRecord; }
 void
 ThreadContext::RegisterCodeGenRecyclableData(Js::CodeGenRecyclableData *const codeGenRecyclableData)
 {
@@ -1130,8 +1164,13 @@ ThreadContext::UnregisterCodeGenRecyclableData(Js::CodeGenRecyclableData *const 
     // main thread.
     recyclableData->codeGenRecyclableDatas.UnlinkPartial(codeGenRecyclableData);
 }
-
-
+#if ENABLE_NATIVE_CODEGEN
+intptr_t ThreadContext::GetBailOutRegisterSaveSpaceAddr() const { return (intptr_t)bailOutRegisterSaveSpace; }
+#endif
+void ThreadContext::ResetFunctionCount() {
+    Assert(this->GetScriptSiteHolderCount() == 0);
+    this->functionCount = 0;
+}
 
 uint
 ThreadContext::EnterScriptStart(Js::ScriptEntryExitRecord * record, bool doCleanup)
@@ -1265,6 +1304,10 @@ ThreadContext::EnterScriptEnd(Js::ScriptEntryExitRecord * record, bool doCleanup
         PHASE_PRINT_TRACE1(Js::DisposePhase, u"[Dispose] NeedDispose in EnterScriptEnd: %d\n", this->recycler->NeedDispose());
         this->recycler->FinishDisposeObjectsNow<FinishDispose>();
     }
+}
+void *ThreadContext::GetTryHandlerAddrOfReturnAddr() const { return this->tryHandlerAddrOfReturnAddr; }
+void ThreadContext::SetTryHandlerAddrOfReturnAddr(void *addrOfReturnAddr) {
+    this->tryHandlerAddrOfReturnAddr = addrOfReturnAddr;
 }
 
 void
@@ -1694,6 +1737,7 @@ ThreadContext::PopInterpreterFrame()
     this->leafInterpreterFrame = interpreterFrame->GetPreviousFrame();
     return interpreterFrame;
 }
+Js::InterpreterStackFrame *ThreadContext::GetLeafInterpreterFrame() const { return leafInterpreterFrame; }
 
 BOOL
 ThreadContext::ExecuteRecyclerCollectionFunctionCommon(Recycler * recycler, CollectionFunction function, CollectionFlags flags)
@@ -1890,6 +1934,7 @@ Js::TypeId ThreadContext::CreateTypeId()
 {
     return nextTypeId = static_cast<Js::TypeId>(nextTypeId + 1);
 }
+Js::TypeId ThreadContext::GetNextTypeId() const { return nextTypeId; }
 
 Js::TempArenaAllocatorObject *
 ThreadContext::GetTemporaryAllocator(const char16_t* name)
@@ -2080,6 +2125,7 @@ ThreadContext::UnregisterScriptContext(Js::ScriptContext *scriptContext)
     scriptContext->next = nullptr;
     scriptContextCount--;
 }
+void ThreadContext::SetNoScriptScope(bool noScriptScope) { this->noScriptScope = noScriptScope; }
 
 ThreadContext::CollectCallBack *
 ThreadContext::AddRecyclerCollectCallBack(RecyclerCollectCallBackFunction callback, void * context)
@@ -2278,9 +2324,27 @@ ThreadContext::PostSweepRedeferralCallBack()
     this->UpdateRedeferralState();
 }
 
-bool
-ThreadContext::DoTryRedeferral() const
-{
+uint ThreadContext::PeekNewFunctionNumber() { return functionCount + 1; }
+uint ThreadContext::NewSourceInfoNumber() { return ++sourceInfoCount; }
+void ThreadContext::AddCodeSize(size_t newCode) {
+    ::InterlockedExchangeAdd(&nativeCodeSize, newCode);
+    ::InterlockedExchangeAdd(&processNativeCodeSize, newCode);
+}
+void ThreadContext::AddSourceSize(size_t newCode) { sourceCodeSize += newCode; }
+void ThreadContext::SubCodeSize(size_t deadCode) {
+    Assert(nativeCodeSize >= deadCode);
+    Assert(processNativeCodeSize >= deadCode);
+    ::InterlockedExchangeSubtract(&nativeCodeSize, deadCode);
+    ::InterlockedExchangeSubtract(&processNativeCodeSize, deadCode);
+}
+void ThreadContext::SubSourceSize(size_t deadCode) {
+    Assert(sourceCodeSize >= deadCode);
+    sourceCodeSize -= deadCode;
+}
+size_t ThreadContext::GetCodeSize() const { return nativeCodeSize; }
+size_t ThreadContext::GetProcessCodeSize() { return processNativeCodeSize; }
+size_t ThreadContext::GetSourceSize() const { return sourceCodeSize; }
+bool ThreadContext::DoTryRedeferral() const {
     if (PHASE_FORCE1(Js::RedeferralPhase) || PHASE_STRESS1(Js::RedeferralPhase))
     {
         return true;
@@ -2773,6 +2837,14 @@ ThreadContext::ClearEquivalentTypeCaches()
 #endif
 }
 
+bool ThreadContext::IsNoScriptScope() const { return this->noScriptScope; }
+void ThreadContext::SetPendingFinallyException(Js::JavascriptExceptionObject *exceptionObj) {
+    recyclableData->pendingFinallyException = exceptionObj;
+}
+Js::JavascriptExceptionObject *ThreadContext::GetPendingFinallyException() const {
+    return recyclableData->pendingFinallyException;
+}
+
 Js::EntryPointInfo **
 ThreadContext::RegisterEquivalentTypeCacheEntryPoint(Js::EntryPointInfo * entryPoint)
 {
@@ -3010,6 +3082,14 @@ ThreadContext::IsInlineCacheInList(const Js::InlineCache* inlineCache, const Inl
     return false;
 }
 #endif
+
+ThreadContext::AutoDisableExpiration::AutoDisableExpiration(ThreadContext *threadContext)
+    : _threadContext(threadContext), _oldExpirationDisabled(threadContext->disableExpiration) {
+    _threadContext->disableExpiration = true;
+}
+ThreadContext::AutoDisableExpiration::~AutoDisableExpiration() {
+    _threadContext->disableExpiration = _oldExpirationDisabled;
+}
 
 #if ENABLE_NATIVE_CODEGEN
 ThreadContext::PropertyGuardEntry*
@@ -3543,6 +3623,34 @@ void ThreadContext::DoInvalidateProtoTypePropertyCaches(const Js::PropertyId pro
         });
 }
 
+uint ThreadContext::GetCallRootLevel() const { return callRootLevel; }
+PageAllocator *ThreadContext::GetPageAllocator() { return &pageAllocator; }
+AllocationPolicyManager *ThreadContext::GetAllocationPolicyManager() const { return allocationPolicyManager; }
+
+#if ENABLE_NATIVE_CODEGEN
+PreReservedVirtualAllocWrapper *ThreadContext::GetPreReservedVirtualAllocator() { return &preReservedVirtualAllocator; }
+#if DYNAMIC_INTERPRETER_THUNK || defined(ASMJS_PLAT)
+CustomHeap::InProcCodePageAllocators *ThreadContext::GetThunkPageAllocators() { return &thunkPageAllocators; }
+#endif
+CustomHeap::InProcCodePageAllocators *ThreadContext::GetCodePageAllocators() { return &codePageAllocators; }
+#endif
+
+std::recursive_mutex &ThreadContext::GetFunctionBodyMutex() { return csFunctionBody; }
+Js::IsConcatSpreadableCache *ThreadContext::GetIsConcatSpreadableCache() { return &isConcatSpreadableCache; }
+void ThreadContext::SetAbnormalExceptionRecord(EXCEPTION_POINTERS *exceptionInfo) {
+    this->exceptionInfo = *exceptionInfo;
+}
+void ThreadContext::SetAbnormalExceptionCode(uint32_t exceptionInfo) { this->exceptionCode = exceptionInfo; }
+uint32_t ThreadContext::GetAbnormalExceptionCode() const { return this->exceptionCode; }
+void *ThreadContext::GetTridentLoadAddress() const { return tridentLoadAddress; }
+void ThreadContext::SetTridentLoadAddress(void *loadAddress) { tridentLoadAddress = loadAddress; }
+Js::NoSpecialPropertyThreadRegistry *ThreadContext::GetNoSpecialPropertyRegistry() {
+    return &this->noSpecialPropertyRegistry;
+}
+Js::OnlyWritablePropertyThreadRegistry *ThreadContext::GetOnlyWritablePropertyRegistry() {
+    return &this->onlyWritablePropertyRegistry;
+}
+Js::DelayedFreeArrayBuffer *ThreadContext::GetScanStackCallback() { return &this->delayFreeCallback; }
 BOOL ThreadContext::HasPreviousHostScriptContext()
 {
     return hostScriptContextStack->Count() != 0;
@@ -3570,8 +3678,14 @@ HostScriptContext* ThreadContext::PopHostScriptContext()
     // revisit the whole callRootLevel but probably not now.
     // Assert(HasPreviousHostScriptContext() || callRootLevel == 0);
 }
+void ThreadContext::SetInterruptPoller(InterruptPoller *poller) { interruptPoller = poller; }
 
-#if DBG || defined(PROFILE_EXEC)
+uint ThreadContext::GetScriptContextCount() const { return this->scriptContextCount; }
+Js::ScriptContext *ThreadContext::GetScriptContextList() const { return this->scriptContextList; }
+bool ThreadContext::WasAnyScriptContextEverRegistered() const { return this->scriptContextEverRegistered; }
+void ThreadContext::SetTopLevelScriptSite(ScriptSite *topScriptSite) { this->topLevelScriptSite = topScriptSite; }
+ScriptSite *ThreadContext::GetTopLevelScriptSite() const { return this->topLevelScriptSite; }
+
 bool
 ThreadContext::AsyncHostOperationStart(void * suspendRecord)
 {
@@ -3622,8 +3736,6 @@ ThreadContext::AsyncHostOperationEnd(bool wasInAsync, void * suspendRecord)
         }
     }
 }
-
-#endif
 
 #if DBG
 void ThreadContext::CheckJsReentrancyOnDispose()
@@ -3925,6 +4037,7 @@ ThreadServiceWrapper* ThreadContext::GetThreadServiceWrapper()
 {
     return threadServiceWrapper;
 }
+uint ThreadContext::NewFunctionNumber() { return ++functionCount; }
 
 void ThreadContext::SetDisableImplicitFlags(DisableImplicitFlags flags) { disableImplicitFlags = flags; }
 bool ThreadContext::IsDisableImplicitCall() const { return (disableImplicitFlags & DisableImplicitCallFlag) != 0; }
@@ -3945,6 +4058,14 @@ uint ThreadContext::GetRandomNumber()
 }
 bool ThreadContext::DoSpecialMarkOnScanStack() { return this->DoRedeferFunctionBodies(); }
 
+bool ThreadContext::DoInterruptProbe() const {
+    return (this->TestThreadContextFlag(ThreadContextFlagCanDisableExecution) &&
+            !PHASE_OFF1(Js::InterruptProbePhase)) ||
+        PHASE_ON1(Js::InterruptProbePhase);
+}
+bool ThreadContext::EvalDisabled() const { return this->TestThreadContextFlag(ThreadContextFlagEvalDisabled); }
+bool ThreadContext::NoJIT() const { return this->TestThreadContextFlag(ThreadContextFlagNoJIT); }
+bool ThreadContext::NoDynamicThunks() const { return this->TestThreadContextFlag(ThreadContextFlagNoDynamicThunks); }
 Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)
 {
     ScriptMemoryDumper dumper(scriptContext);
@@ -3975,6 +4096,8 @@ UnifiedRegex::StandardChars<char16_t>* ThreadContext::GetStandardChars(char16_t*
     return standardUnicodeChars;
 }
 
+InterruptPoller *ThreadContext::GetInterruptPoller() const { return interruptPoller; }
+BOOL ThreadContext::HasInterruptPoller() const { return interruptPoller != nullptr; }
 void ThreadContext::CheckScriptInterrupt()
 {
     if (TestThreadContextFlag(ThreadContextFlagCanDisableExecution))
@@ -4003,6 +4126,11 @@ void ThreadContext::CheckInterruptPoll()
             poller->CheckInterruptPoll();
         }
     }
+}
+bool ThreadContext::DoInterruptProbe(Js::FunctionBody *const func) const {
+    return (this->TestThreadContextFlag(ThreadContextFlagCanDisableExecution) &&
+            !PHASE_OFF(Js::InterruptProbePhase, func)) ||
+        PHASE_ON(Js::InterruptProbePhase, func);
 }
 
 void *
