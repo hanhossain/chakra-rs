@@ -30,6 +30,7 @@ add_library (Chakra.Runtime.Base OBJECT
     VTuneChakraProfile.cpp
     jitprofiling.cpp
     JsReentLock.cpp
+    AutoReentrancySafeRegion.cpp
 )
 
 target_include_directories (Chakra.Runtime.Base PUBLIC

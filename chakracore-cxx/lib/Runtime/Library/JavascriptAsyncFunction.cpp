@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include "Base/AutoReentrancySafeRegion.h"
+
 using namespace Js;
 
 FunctionInfo JavascriptAsyncFunction::functionInfo(
@@ -137,88 +139,87 @@ void JavascriptAsyncFunction::AsyncSpawnStep(
     Var reject)
 {
     ScriptContext* scriptContext = generator->GetScriptContext();
-    BEGIN_SAFE_REENTRANT_REGION(scriptContext->GetThreadContext())
-
-    JavascriptLibrary* library = scriptContext->GetLibrary();
-    Var undefinedVar = library->GetUndefined();
-
-    JavascriptExceptionObject* exception = nullptr;
-    RecyclableObject* result = nullptr;
-
-    try
     {
-        Var resultVar = CALL_FUNCTION(
-            scriptContext->GetThreadContext(),
-            stepFunction,
-            CallInfo(CallFlags_Value, 1),
-            undefinedVar);
+        AutoReentrancySafeRegion autoReentrancySafeRegion(scriptContext->GetThreadContext());
+        JavascriptLibrary* library = scriptContext->GetLibrary();
+        Var undefinedVar = library->GetUndefined();
 
-        result = VarTo<RecyclableObject>(resultVar);
-    }
-    catch (const JavascriptException& err)
-    {
-        exception = err.GetAndClear();
-    }
+        JavascriptExceptionObject* exception = nullptr;
+        RecyclableObject* result = nullptr;
 
-    if (exception != nullptr)
-    {
-        // If the generator threw an exception, reject the promise
-        JavascriptPromise::TryRejectWithExceptionObject(exception, reject, scriptContext);
-        return;
-    }
+        try
+        {
+            Var resultVar = CALL_FUNCTION(
+                scriptContext->GetThreadContext(),
+                stepFunction,
+                CallInfo(CallFlags_Value, 1),
+                undefinedVar);
 
-    Assert(result != nullptr);
+            result = VarTo<RecyclableObject>(resultVar);
+        }
+        catch (const JavascriptException& err)
+        {
+            exception = err.GetAndClear();
+        }
 
-    Var value = JavascriptOperators::GetProperty(result, PropertyIds::value, scriptContext);
+        if (exception != nullptr)
+        {
+            // If the generator threw an exception, reject the promise
+            JavascriptPromise::TryRejectWithExceptionObject(exception, reject, scriptContext);
+            return;
+        }
 
-    // If the generator is done, resolve the promise
-    if (generator->IsCompleted())
-    {
-        if (!JavascriptConversion::IsCallable(resolve))
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction);
+        Assert(result != nullptr);
 
-        CALL_FUNCTION(
-            scriptContext->GetThreadContext(),
-            VarTo<RecyclableObject>(resolve),
-            CallInfo(CallFlags_Value, 2),
+        Var value = JavascriptOperators::GetProperty(result, PropertyIds::value, scriptContext);
+
+        // If the generator is done, resolve the promise
+        if (generator->IsCompleted())
+        {
+            if (!JavascriptConversion::IsCallable(resolve))
+                JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedFunction);
+
+            CALL_FUNCTION(
+                scriptContext->GetThreadContext(),
+                VarTo<RecyclableObject>(resolve),
+                CallInfo(CallFlags_Value, 2),
+                undefinedVar,
+                value);
+
+            return;
+        }
+        else
+        {
+            Assert(JavascriptOperators::GetTypeId(result) == TypeIds_AwaitObject);
+        }
+
+
+        // Chain off the yielded promise and step again
+        auto* successFunction = library->CreateAsyncSpawnStepFunction(
+            EntryAsyncSpawnCallStepFunction,
+            generator,
             undefinedVar,
-            value);
+            resolve,
+            reject);
 
-        return;
+        auto* failFunction = library->CreateAsyncSpawnStepFunction(
+            EntryAsyncSpawnCallStepFunction,
+            generator,
+            undefinedVar,
+            resolve,
+            reject,
+            true);
+
+        auto* promise = JavascriptPromise::InternalPromiseResolve(value, scriptContext);
+        auto* unused = JavascriptPromise::UnusedPromiseCapability(scriptContext);
+
+        JavascriptPromise::PerformPromiseThen(
+            promise,
+            unused,
+            successFunction,
+            failFunction,
+            scriptContext);
     }
-    else
-    {
-        Assert(JavascriptOperators::GetTypeId(result) == TypeIds_AwaitObject);
-    }
-
-
-    // Chain off the yielded promise and step again
-    auto* successFunction = library->CreateAsyncSpawnStepFunction(
-        EntryAsyncSpawnCallStepFunction,
-        generator,
-        undefinedVar,
-        resolve,
-        reject);
-
-    auto* failFunction = library->CreateAsyncSpawnStepFunction(
-        EntryAsyncSpawnCallStepFunction,
-        generator,
-        undefinedVar,
-        resolve,
-        reject,
-        true);
-
-    auto* promise = JavascriptPromise::InternalPromiseResolve(value, scriptContext);
-    auto* unused = JavascriptPromise::UnusedPromiseCapability(scriptContext);
-    
-    JavascriptPromise::PerformPromiseThen(
-        promise,
-        unused,
-        successFunction,
-        failFunction,
-        scriptContext);
-
-    END_SAFE_REENTRANT_REGION
 }
 
 template<>

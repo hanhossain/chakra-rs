@@ -168,11 +168,6 @@ protected:
 
 #define END_SAFE_REENTRANT_CALL }
 
-#define BEGIN_SAFE_REENTRANT_REGION(threadContext) \
-    { \
-        AutoReentrancySafeRegion autoReentrancySafeRegion(threadContext);
-
-#define END_SAFE_REENTRANT_REGION }
 // Keep in sync with CollectGarbageCallBackFlags in scriptdirect.idl
 
 enum RecyclerCollectCallBackFlags
@@ -2041,24 +2036,5 @@ public:
     ~AutoReentrancyHandler()
     {
         m_threadContext->SetReentrancySafeOrHandled(m_savedReentrancySafeOrHandled);
-    }
-};
-
-class AutoReentrancySafeRegion
-{
-    ThreadContext * m_threadContext;
-    bool m_savedIsInReentrancySafeRegion;
-
-public:
-    AutoReentrancySafeRegion(ThreadContext * threadContext)
-    {
-        m_threadContext = threadContext;
-        m_savedIsInReentrancySafeRegion = threadContext->GetIsInReentrancySafeRegion();
-        threadContext->SetIsInReentrancySafeRegion(true);
-    }
-
-    ~AutoReentrancySafeRegion()
-    {
-        m_threadContext->SetIsInReentrancySafeRegion(m_savedIsInReentrancySafeRegion);
     }
 };
