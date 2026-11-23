@@ -1279,6 +1279,42 @@ ThreadContext::SetForceOneIdleCollection()
 }
 bool ThreadContext::IsInThreadServiceCallback() const { return threadService.IsInCallback(); }
 
+void ThreadContext::SetHasUnhandledException() { hasUnhandledException = true; }
+void ThreadContext::ResetHasUnhandledException() { hasUnhandledException = false; }
+void ThreadContext::SetUnhandledExceptionObject(Js::JavascriptExceptionObject *exceptionObject) {
+    recyclableData->unhandledExceptionObject = exceptionObject;
+}
+Js::JavascriptExceptionObject *ThreadContext::GetUnhandledExceptionObject() const {
+    return recyclableData->unhandledExceptionObject;
+}
+void ThreadContext::SaveTempUncaughtException(Js::JavascriptExceptionObject *exceptionObject) {
+    Js::JavascriptExceptionObject::Insert(&recyclableData->tempUncaughtException, exceptionObject);
+}
+void ThreadContext::ClearTempUncaughtException(Js::JavascriptExceptionObject *exceptionObject) {
+    Js::JavascriptExceptionObject::Remove(&recyclableData->tempUncaughtException, exceptionObject);
+}
+bool ThreadContext::HasCatchHandler() const { return hasCatchHandler; }
+void ThreadContext::SetHasCatchHandler(bool hasCatchHandler) { this->hasCatchHandler = hasCatchHandler; }
+bool ThreadContext::IsUserCode() const { return this->hasCatchHandlerToUserCode; }
+void ThreadContext::SetIsUserCode(bool set) { this->hasCatchHandlerToUserCode = set; }
+void ThreadContext::QueueFreeOldEntryPointInfoIfInScript(Js::FunctionEntryPointInfo *oldEntryPointInfo) {
+    if (this->IsInScript()) {
+        // Add it to the list only if it's not already in it
+        if (oldEntryPointInfo->nextEntryPoint == nullptr && !oldEntryPointInfo->IsCleanedUp()) {
+            oldEntryPointInfo->nextEntryPoint = recyclableData->oldEntryPointInfo;
+            recyclableData->oldEntryPointInfo = oldEntryPointInfo;
+        }
+    }
+}
+bool ThreadContext::IsOldEntryPointInfo(Js::ProxyEntryPointInfo *entryPointInfo) {
+    Js::FunctionEntryPointInfo *current = this->recyclableData->oldEntryPointInfo;
+    while (current != nullptr) {
+        if (current == entryPointInfo)
+            return true;
+        current = current->nextEntryPoint;
+    }
+    return false;
+}
 bool
 ThreadContext::IsOnStack(void const *ptr)
 {
@@ -1459,6 +1495,9 @@ ThreadContext::ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext)
     Assert(scriptContext->GetThreadContext() == GetContextForCurrentThread());
     scriptContext->GetThreadContext()->ProbeStack(size, scriptContext);
 }
+void ThreadContext::ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32_t u1, uint32_t u2) {
+    ProbeCurrentStack(size, scriptContext);
+}
 
 /* static */ void
 ThreadContext::ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext)
@@ -1572,6 +1611,66 @@ ThreadContext::LeaveScriptEnd(void * frameAddress)
         entryExitRecord->scriptContext->ProfileBegin(Js::RunPhase);
     }
 #endif
+}
+
+Js::Var ThreadContext::ExecuteImplicitCall(Js::RecyclableObject *function, Js::ImplicitCallFlags flags,
+                                           std::function<Js::Var()> implicitCall) {
+    AutoReentrancyHandler autoReentrancyHandler(this);
+
+    Js::FunctionInfo::Attributes attributes = Js::FunctionInfo::GetAttributes(function);
+
+    // we can hoist out const method if we know the function doesn't have side effect,
+    // and the value can be hoisted.
+    if (this->HasNoSideEffect(function, attributes)) {
+        // Has no side effect means the function does not change global value or
+        // will check for implicit call flags
+        Js::Var result = implicitCall();
+
+        // If the value is on stack we need to bailout so that it can be boxed.
+        // Instead of putting this in valueOf (or other builtins which have no side effect) adding
+        // the check here to cover any other scenario we might miss.
+        if (IsOnStack(result)) {
+            AddImplicitCallFlags(flags);
+        }
+        return result;
+    }
+
+    // Don't call the implicit call if disable implicit call
+    if (IsDisableImplicitCall()) {
+        AddImplicitCallFlags(flags);
+        // Return "undefined" just so we have a valid var, in case subsequent instructions are executed
+        // before we bail out.
+        return function->GetScriptContext()->GetLibrary()->GetUndefined();
+    }
+
+    if ((attributes & Js::FunctionInfo::HasNoSideEffect) != 0) {
+        // Has no side effect means the function does not change global value or
+        // will check for implicit call flags
+        Js::Var result = implicitCall();
+
+        // If the value is on stack we need to bailout so that it can be boxed.
+        // Instead of putting this in valueOf (or other builtins which have no side effect) adding
+        // the check here to cover any other scenario we might miss.
+        if (IsOnStack(result)) {
+            AddImplicitCallFlags(flags);
+        }
+        return result;
+    }
+
+    // Save and restore implicit flags around the implicit call
+    struct RestoreFlags {
+        ThreadContext *const ctx;
+        const Js::ImplicitCallFlags flags;
+        const Js::ImplicitCallFlags savedFlags;
+
+        RestoreFlags(ThreadContext *ctx, Js::ImplicitCallFlags flags)
+            : ctx(ctx), flags(flags), savedFlags(ctx->GetImplicitCallFlags()) {}
+
+        ~RestoreFlags() { ctx->SetImplicitCallFlags(static_cast<Js::ImplicitCallFlags>(savedFlags | flags)); }
+    };
+
+    RestoreFlags restoreFlags(this, flags);
+    return implicitCall();
 }
 
 // explicit instantiations
@@ -3430,6 +3529,7 @@ void ThreadContext::InvalidateAllProtoTypePropertyCaches()
         typesWithProtoPropertyCache.Clear();
     }
 }
+bool ThreadContext::HasUnhandledException() const { return hasUnhandledException; }
 
 void ThreadContext::DoInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId, TypeHashSet *const typeHashSet)
 {
@@ -3719,7 +3819,32 @@ const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16
 
     return propertyRecord;
 }
+void ThreadContext::ClearPendingSOError() { this->GetPendingSOErrorObject()->ClearError(); }
 
+void ThreadContext::ClearPendingOOMError() { this->GetPendingOOMErrorObject()->ClearError(); }
+Js::JavascriptExceptionObject *ThreadContext::GetPendingSOErrorObject() {
+    Assert(recyclableData->soErrorObject.IsPendingExceptionObject());
+    return &recyclableData->soErrorObject;
+}
+Js::JavascriptExceptionObject *ThreadContext::GetPendingOOMErrorObject() {
+    Assert(recyclableData->oomErrorObject.IsPendingExceptionObject());
+    return &recyclableData->oomErrorObject;
+}
+Js::JavascriptExceptionObject *ThreadContext::GetPendingTerminatedErrorObject() {
+    return &recyclableData->terminatedErrorObject;
+}
+Js::JavascriptExceptionObject *ThreadContext::GetRecordedException() { return recyclableData->exceptionObject; }
+bool ThreadContext::GetPropagateException() const { return recyclableData->propagateException; }
+void ThreadContext::SetHasThrownPendingException() {
+    Assert(this->IsInScript());
+    this->hasThrownPendingException = true;
+}
+bool *ThreadContext::GetHasBailedOutBitPtr() { return this->hasBailedOutBitPtr; }
+void ThreadContext::SetHasBailedOutBitPtr(bool *setValue) { this->hasBailedOutBitPtr = setValue; }
+void ThreadContext::SetRecordedException(Js::JavascriptExceptionObject *exceptionObject, bool propagateToDebugger) {
+    this->recyclableData->exceptionObject = exceptionObject;
+    this->recyclableData->propagateException = propagateToDebugger;
+}
 Js::ImplicitCallFlags *ThreadContext::GetAddressOfImplicitCallFlags() { return &implicitCallFlags; }
 DisableImplicitFlags *ThreadContext::GetAddressOfDisableImplicitFlags() { return &disableImplicitFlags; }
 Js::ImplicitCallFlags ThreadContext::GetImplicitCallFlags() const { return implicitCallFlags; }

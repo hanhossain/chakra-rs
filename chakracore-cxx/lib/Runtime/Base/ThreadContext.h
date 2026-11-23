@@ -1531,53 +1531,25 @@ public:
     void InternalInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId);
     void InvalidateAllProtoTypePropertyCaches();
 
-    BOOL HasUnhandledException() const { return hasUnhandledException; }
-    void SetHasUnhandledException() {hasUnhandledException = TRUE; }
-    void ResetHasUnhandledException() {hasUnhandledException = FALSE; }
-    void SetUnhandledExceptionObject(Js::JavascriptExceptionObject* exceptionObject) {recyclableData->unhandledExceptionObject  = exceptionObject; }
-    Js::JavascriptExceptionObject* GetUnhandledExceptionObject() const  { return recyclableData->unhandledExceptionObject; };
+    bool HasUnhandledException() const;
+    void SetHasUnhandledException();
+    void ResetHasUnhandledException();
+    void SetUnhandledExceptionObject(Js::JavascriptExceptionObject* exceptionObject);
+    Js::JavascriptExceptionObject* GetUnhandledExceptionObject() const;
 
     // To temporarily keep throwing exception object alive (thrown but not yet caught)
-    void SaveTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject)
-    {
-        Js::JavascriptExceptionObject::Insert(&recyclableData->tempUncaughtException, exceptionObject);
-    }
-    void ClearTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject)
-    {
-        Js::JavascriptExceptionObject::Remove(&recyclableData->tempUncaughtException, exceptionObject);
-    }
+    void SaveTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject);
+    void ClearTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject);
 
 public:
-    bool HasCatchHandler() const { return hasCatchHandler; }
-    void SetHasCatchHandler(bool hasCatchHandler) { this->hasCatchHandler = hasCatchHandler; }
+    bool HasCatchHandler() const;
+    void SetHasCatchHandler(bool hasCatchHandler);
 
-    bool IsUserCode() const { return this->hasCatchHandlerToUserCode; }
-    void SetIsUserCode(bool set) { this->hasCatchHandlerToUserCode = set; }
+    bool IsUserCode() const;
+    void SetIsUserCode(bool set);
 
-    void QueueFreeOldEntryPointInfoIfInScript(Js::FunctionEntryPointInfo* oldEntryPointInfo)
-    {
-        if (this->IsInScript())
-        {
-            // Add it to the list only if it's not already in it
-            if (oldEntryPointInfo->nextEntryPoint == nullptr && !oldEntryPointInfo->IsCleanedUp())
-            {
-                oldEntryPointInfo->nextEntryPoint = recyclableData->oldEntryPointInfo;
-                recyclableData->oldEntryPointInfo = oldEntryPointInfo;
-            }
-        }
-    }
-
-    bool IsOldEntryPointInfo(Js::ProxyEntryPointInfo* entryPointInfo)
-    {
-        Js::FunctionEntryPointInfo* current = this->recyclableData->oldEntryPointInfo;
-        while (current != nullptr)
-        {
-            if (current == entryPointInfo)
-                return true;
-            current = current->nextEntryPoint;
-        }
-        return false;
-    }
+    void QueueFreeOldEntryPointInfoIfInScript(Js::FunctionEntryPointInfo* oldEntryPointInfo);
+    bool IsOldEntryPointInfo(Js::ProxyEntryPointInfo* entryPointInfo);
 
     static bool IsOnStack(void const *ptr);
     bool IsStackAvailable(size_t size, bool* isInterrupt = nullptr);
@@ -1589,10 +1561,7 @@ public:
     void ProbeStack(size_t size);
     static void ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);
     static void ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext);
-    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32_t u1, uint32_t u2)
-    {
-        ProbeCurrentStack(size, scriptContext);
-    }
+    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32_t u1, uint32_t u2);
 
 #if ENABLE_PROFILE_INFO
     void EnsureSourceProfileManagersByUrlMap();
@@ -1604,64 +1573,18 @@ public:
     const Js::PropertyRecord* GetSymbolFromRegistrationMap(const char16_t* stringKey, charcount_t stringLength);
     const Js::PropertyRecord* AddSymbolToRegistrationMap(const char16_t* stringKey, charcount_t stringLength);
 
-    inline void ClearPendingSOError()
-    {
-        this->GetPendingSOErrorObject()->ClearError();
-    }
+    void ClearPendingSOError();
+    void ClearPendingOOMError();
+    Js::JavascriptExceptionObject *GetPendingSOErrorObject();
+    Js::JavascriptExceptionObject *GetPendingOOMErrorObject();
+    Js::JavascriptExceptionObject *GetPendingTerminatedErrorObject();
+    Js::JavascriptExceptionObject* GetRecordedException();
 
-    inline void ClearPendingOOMError()
-    {
-        this->GetPendingOOMErrorObject()->ClearError();
-    }
-
-    Js::JavascriptExceptionObject *GetPendingSOErrorObject()
-    {
-        Assert(recyclableData->soErrorObject.IsPendingExceptionObject());
-        return &recyclableData->soErrorObject;
-    }
-
-    Js::JavascriptExceptionObject *GetPendingOOMErrorObject()
-    {
-        Assert(recyclableData->oomErrorObject.IsPendingExceptionObject());
-        return &recyclableData->oomErrorObject;
-    }
-
-    Js::JavascriptExceptionObject *GetPendingTerminatedErrorObject()
-    {
-        return &recyclableData->terminatedErrorObject;
-    }
-
-    Js::JavascriptExceptionObject* GetRecordedException()
-    {
-        return recyclableData->exceptionObject;
-    }
-
-    bool GetPropagateException()
-    {
-        return recyclableData->propagateException;
-    }
-
-    void SetHasThrownPendingException()
-    {
-        Assert(this->IsInScript());
-        this->hasThrownPendingException = true;
-    }
-
-    bool * GetHasBailedOutBitPtr()
-    {
-        return this->hasBailedOutBitPtr;
-    }
-
-    void SetHasBailedOutBitPtr(bool *setValue)
-    {
-        this->hasBailedOutBitPtr = setValue;
-    }
-
-    void SetRecordedException(Js::JavascriptExceptionObject* exceptionObject, bool propagateToDebugger = false)
-    {
-        this->recyclableData->exceptionObject = exceptionObject;
-        this->recyclableData->propagateException = propagateToDebugger;
-    }
+    bool GetPropagateException() const;
+    void SetHasThrownPendingException();
+    bool * GetHasBailedOutBitPtr();
+    void SetHasBailedOutBitPtr(bool *setValue);
+    void SetRecordedException(Js::JavascriptExceptionObject* exceptionObject, bool propagateToDebugger = false);
 
     Js::ImplicitCallFlags * GetAddressOfImplicitCallFlags();
     DisableImplicitFlags * GetAddressOfDisableImplicitFlags();
@@ -1672,79 +1595,7 @@ public:
     void AddImplicitCallFlags(Js::ImplicitCallFlags flags);
     void CheckAndResetImplicitCallAccessorFlag();
 
-    template <class Fn>
-    Js::Var ExecuteImplicitCall(Js::RecyclableObject * function, Js::ImplicitCallFlags flags, Fn implicitCall)
-    {
-        AutoReentrancyHandler autoReentrancyHandler(this);
-
-        Js::FunctionInfo::Attributes attributes = Js::FunctionInfo::GetAttributes(function);
-
-        // we can hoist out const method if we know the function doesn't have side effect,
-        // and the value can be hoisted.
-        if (this->HasNoSideEffect(function, attributes))
-        {
-            // Has no side effect means the function does not change global value or
-            // will check for implicit call flags
-            Js::Var result = implicitCall();
-
-            // If the value is on stack we need to bailout so that it can be boxed.
-            // Instead of putting this in valueOf (or other builtins which have no side effect) adding
-            // the check here to cover any other scenario we might miss.
-            if (IsOnStack(result))
-            {
-                AddImplicitCallFlags(flags);
-            }
-            return result;
-        }
-
-        // Don't call the implicit call if disable implicit call
-        if (IsDisableImplicitCall())
-        {
-            AddImplicitCallFlags(flags);
-            // Return "undefined" just so we have a valid var, in case subsequent instructions are executed
-            // before we bail out.
-            return function->GetScriptContext()->GetLibrary()->GetUndefined();
-        }
-
-        if ((attributes & Js::FunctionInfo::HasNoSideEffect) != 0)
-        {
-            // Has no side effect means the function does not change global value or
-            // will check for implicit call flags
-            Js::Var result = implicitCall();
-
-            // If the value is on stack we need to bailout so that it can be boxed.
-            // Instead of putting this in valueOf (or other builtins which have no side effect) adding
-            // the check here to cover any other scenario we might miss.
-            if (IsOnStack(result))
-            {
-                AddImplicitCallFlags(flags);
-            }
-            return result;
-        }
-
-        // Save and restore implicit flags around the implicit call
-        struct RestoreFlags
-        {
-            ThreadContext * const ctx;
-            const Js::ImplicitCallFlags flags;
-            const Js::ImplicitCallFlags savedFlags;
-
-            RestoreFlags(ThreadContext *ctx, Js::ImplicitCallFlags flags) :
-                ctx(ctx),
-                flags(flags),
-                savedFlags(ctx->GetImplicitCallFlags())
-            {
-            }
-
-            ~RestoreFlags()
-            {
-                ctx->SetImplicitCallFlags(static_cast<Js::ImplicitCallFlags>(savedFlags | flags));
-            }
-        };
-
-        RestoreFlags restoreFlags(this, flags);
-        return implicitCall();
-    }
+    Js::Var ExecuteImplicitCall(Js::RecyclableObject *function, Js::ImplicitCallFlags flags, std::function<Js::Var()> implicitCall);
     bool HasNoSideEffect(Js::RecyclableObject * function) const;
     bool HasNoSideEffect(Js::RecyclableObject * function, Js::FunctionInfo::Attributes attr) const;
     bool RecordImplicitException();
