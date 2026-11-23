@@ -638,6 +638,7 @@ class ThreadContext :
     public JsUtil::DoublyLinkedListElement<ThreadContext>,
     public ThreadContextInfo
 {
+    struct PropertyGuardEntry;
 public:
     static void GlobalInitialize();
     static const uint32_t NoThread = 0xFFFFFFFF;
@@ -757,24 +758,6 @@ private:
 
     // The current heap enumeration object being used during enumeration.
     IActiveScriptProfilerHeapEnum* heapEnum;
-
-    struct PropertyGuardEntry
-    {
-    public:
-        typedef JsUtil::BaseHashSet<RecyclerWeakReference<Js::PropertyGuard>*, Recycler, PowerOf2SizePolicy> PropertyGuardHashSet;
-        // we do not have WeaklyReferencedKeyHashSet - hence use uint8_t as a dummy value.
-        typedef JsUtil::WeaklyReferencedKeyDictionary<Js::EntryPointInfo, uint8_t> EntryPointDictionary;
-        // The sharedGuard is strongly referenced and will be kept alive by ThreadContext::propertyGuards until it's invalidated or
-        // the property record itself is collected.  If the code using the guard needs access to it after it's been invalidated, it
-        // (the code) is responsible for keeping it alive.
-        // Each unique guard, is weakly referenced, such that it can be reclaimed if not referenced elsewhere even without being
-        // invalidated.  The entry of a unique guard is removed from the table once the corresponding cache is invalidated.
-        typename WriteBarrierFieldTypeTraits<Js::PropertyGuard*>::Type sharedGuard;
-        typename WriteBarrierFieldTypeTraits<PropertyGuardHashSet>::Type uniqueGuards;
-        typename WriteBarrierFieldTypeTraits<EntryPointDictionary*>::Type entryPoints;
-
-        PropertyGuardEntry(Recycler* recycler) : sharedGuard(nullptr), uniqueGuards(recycler), entryPoints(nullptr) {}
-    };
 
 public:
     typedef JsUtil::BaseHashSet<const Js::PropertyRecord *, HeapAllocator, PowerOf2SizePolicy, const Js::PropertyRecord *,
