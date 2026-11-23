@@ -6,6 +6,7 @@
 
 #include "Types/PathTypeHandler.h"
 #include "Types/SpreadArgument.h"
+#include "Base/JsReentLock.h"
 
 // TODO: Change this generic fatal error to the descriptive one.
 #define AssertAndFailFast(x) if (!(x)) { Assert(x); Js::Throw::FatalInternalError(); }

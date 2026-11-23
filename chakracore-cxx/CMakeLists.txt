@@ -31,7 +31,7 @@ else ()
     message(FATAL_ERROR "Unsupported target processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif ()
 
-add_compile_definitions(PROFILE_EXEC ENABLE_JS_REENTRANCY_CHECK)
+add_compile_definitions(PROFILE_EXEC)
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(CC_TARGET_OS_LINUX 1)

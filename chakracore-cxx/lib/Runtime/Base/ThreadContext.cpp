@@ -170,9 +170,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #ifdef ENABLE_DIRECTCALL_TELEMETRY
     , directCallTelemetry(this)
 #endif
-#if ENABLE_JS_REENTRANCY_CHECK
     , noJsReentrancy(false)
-#endif
     , emptyStringPropertyRecord(nullptr)
     , reentrancySafeOrHandled(false)
     , isInReentrancySafeRegion(false)
@@ -3872,33 +3870,3 @@ AutoTagNativeLibraryEntry::~AutoTagNativeLibraryEntry()
     Assert(threadContext->PeekNativeLibraryEntry() == &entry);
     threadContext->PopNativeLibraryEntry();
 }
-
-#if ENABLE_JS_REENTRANCY_CHECK
-#if DBG
-
-void JsReentLock::setObjectForMutation(Js::Var object)
-{
-    m_arrayObject = nullptr;
-
-    if (object != nullptr && Js::DynamicObject::IsAnyArray(object))
-    {
-        m_arrayObject = object;
-    }
-
-    // Don't care about any other objects for now
-}
-
-void JsReentLock::setSecondObjectForMutation(Js::Var object)
-{
-    m_arrayObject2 = nullptr;
-
-    if (object != nullptr && Js::DynamicObject::IsAnyArray(object))
-    {
-        m_arrayObject2 = object;
-    }
-
-    // Don't care about any other objects for now
-}
-
-#endif
-#endif

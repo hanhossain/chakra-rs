@@ -987,9 +987,7 @@ namespace Js
         if (scriptContext)
         {
             ThreadContext *threadContext = scriptContext->GetThreadContext();
-#if ENABLE_JS_REENTRANCY_CHECK
             threadContext->SetNoJsReentrancy(false);
-#endif
             if (fillExceptionContext)
             {
                 Assert(exceptionObject);

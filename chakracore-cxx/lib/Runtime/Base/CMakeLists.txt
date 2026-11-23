@@ -29,7 +29,8 @@ add_library (Chakra.Runtime.Base OBJECT
     Utf8SourceInfo.cpp
     VTuneChakraProfile.cpp
     jitprofiling.cpp
-    )
+    JsReentLock.cpp
+)
 
 target_include_directories (Chakra.Runtime.Base PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc

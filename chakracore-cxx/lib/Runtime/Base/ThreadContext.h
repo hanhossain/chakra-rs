@@ -920,9 +920,7 @@ private:
     bool hasThrownPendingException;
     bool * hasBailedOutBitPtr;
 
-#if ENABLE_JS_REENTRANCY_CHECK
     bool noJsReentrancy;
-#endif
 private:
     bool reentrancySafeOrHandled;
     bool isInReentrancySafeRegion;
@@ -1912,7 +1910,6 @@ private:
 private:
     JsUtil::BaseDictionary<Js::JavascriptMethod, uint, ArenaAllocator, PowerOf2SizePolicy> entryPointToBuiltInOperationIdCache;
 
-#if ENABLE_JS_REENTRANCY_CHECK
 public:
     void SetNoJsReentrancy(bool val) { noJsReentrancy = val; }
     bool GetNoJsReentrancy() { return noJsReentrancy; }
@@ -1923,9 +1920,6 @@ public:
             Js::Throw::FatalJsReentrancyError();
         }
     }
-#else
-    void AssertJsReentrancy() {}
-#endif
 
 public:
     void CheckAndResetReentrancySafeOrHandled()
@@ -2068,40 +2062,3 @@ public:
         m_threadContext->SetIsInReentrancySafeRegion(m_savedIsInReentrancySafeRegion);
     }
 };
-
-#if ENABLE_JS_REENTRANCY_CHECK
-class JsReentLock
-{
-    ThreadContext *m_threadContext;
-#if DBG
-    Js::Var m_arrayObject;
-    Js::Var m_arrayObject2; // This is for adding the second object in the mutation equation.
-#endif
-
-    bool m_savedNoJsReentrancy;
-
-public:
-    JsReentLock(ThreadContext *threadContext)
-#if DBG
-        : m_arrayObject(nullptr), m_arrayObject2(nullptr)
-#endif
-    {
-        m_savedNoJsReentrancy = threadContext->GetNoJsReentrancy();
-        threadContext->SetNoJsReentrancy(true);
-        m_threadContext = threadContext;
-    }
-
-    void unlock() { m_threadContext->SetNoJsReentrancy(m_savedNoJsReentrancy); }
-    void relock() { m_threadContext->SetNoJsReentrancy(true); }
-
-#if DBG
-    void setObjectForMutation(Js::Var object);
-    void setSecondObjectForMutation(Js::Var object);
-#endif
-
-    ~JsReentLock()
-    {
-        m_threadContext->SetNoJsReentrancy(m_savedNoJsReentrancy);
-    }
-};
-#endif

@@ -5,6 +5,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Base/JsReentLock.h"
+
 // To extract variadic args array after known args list:
 //      argx, callInfo, ...
 // NOTE: The last known arg name is hard-coded to "callInfo".
@@ -85,7 +87,7 @@ inline int _count_args(const T1&, const T2&, const T3&, const T4&, const T5&, Js
     CALL_ENTRYPOINT_NOASSERT(function->GetEntryPoint(), \
                     function, callInfo, ##__VA_ARGS__)
 
-#if DBG && ENABLE_JS_REENTRANCY_CHECK
+#if DBG
 #define SETOBJECT_FOR_MUTATION(reentrancyLock, arrayObject) reentrancyLock.setObjectForMutation(arrayObject)
 #define SET_SECOND_OBJECT_FOR_MUTATION(reentrancyLock, arrayObject) reentrancyLock.setSecondObjectForMutation(arrayObject)
 #else
@@ -93,7 +95,6 @@ inline int _count_args(const T1&, const T2&, const T3&, const T4&, const T5&, Js
 #define SET_SECOND_OBJECT_FOR_MUTATION(reentrancyLock, arrayObject) 
 #endif
 
-#if ENABLE_JS_REENTRANCY_CHECK
 #define JS_REENTRANCY_CHECK(threadContext, ...) \
     (threadContext->CheckAndResetReentrancySafeOrHandled(), \
     threadContext->AssertJsReentrancy(), \
@@ -127,30 +128,6 @@ inline int _count_args(const T1&, const T2&, const T3&, const T4&, const T5&, Js
     __VA_ARGS__;
 #define JS_REENTRANCY_LOCK(reentrancyLock, threadContext) \
     JsReentLock reentrancyLock(threadContext);
-#else
-#if DBG && ENABLE_NATIVE_CODEGEN
-#define CALL_FUNCTION(threadContext, function, callInfo, ...) \
-    (threadContext->CheckAndResetReentrancySafeOrHandled(),\
-    CheckIsExecutable(function, function->GetEntryPoint()), \
-    CALL_FUNCTION_NOASSERT(function, callInfo, ##__VA_ARGS__));
-#else
-#define CALL_FUNCTION(threadContext, function, callInfo, ...) \
-    (threadContext->CheckAndResetReentrancySafeOrHandled(),\
-    CALL_FUNCTION_NOASSERT(function, callInfo, ##__VA_ARGS__));
-#endif
-#define JS_REENTRANCY_CHECK(threadContext, ...) \
-    __VA_ARGS__;
-#define CALL_ENTRYPOINT(threadContext, entryPoint, function, callInfo, ...) \
-    (threadContext->CheckAndResetReentrancySafeOrHandled(), \
-    CALL_ENTRYPOINT_NOASSERT(entryPoint, function, callInfo, ##__VA_ARGS__));
-#define JS_REENTRANT(reentrancyLock, ...) \
-    __VA_ARGS__;
-#define JS_REENTRANT_NO_MUTATE(reentrancyLock, ...) \
-    __VA_ARGS__;
-#define JS_REENTRANT_UNLOCK(reentrancyLock, ...) \
-    __VA_ARGS__;
-#define JS_REENTRANCY_LOCK(reentrancyLock, threadContext)
-#endif // ENABLE_JS_REENTRANCY_CHECK
 
 /*
  * RUNTIME_ARGUMENTS is a simple wrapper around the variadic calling convention

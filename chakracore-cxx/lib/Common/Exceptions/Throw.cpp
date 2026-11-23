@@ -61,13 +61,11 @@ namespace Js {
         ReportFatalException(NULL, E_UNEXPECTED, Fatal_JsBuiltIn_Error, 0);
     }
 
-#if ENABLE_JS_REENTRANCY_CHECK
     void Throw::FatalJsReentrancyError()
     {
         AssertMsg(false, "Js reentrancy error!!");
         ReportFatalException(NULL, E_UNEXPECTED, Fatal_JsReentrancy_Error, 0);
     }
-#endif
 
     void Throw::InternalError()
     {
