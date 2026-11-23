@@ -189,10 +189,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     scriptContextCount = 0;
     isScriptActive = false;
 
-#ifdef ENABLE_CUSTOM_ENTROPY
-    entropy.Initialize();
-#endif
-
 #if ENABLE_NATIVE_CODEGEN
     this->bailOutRegisterSaveSpace = AnewArrayZ(this->GetThreadAlloc(), Js::Var, GetBailOutRegisterSaveSlotCount());
 #endif
@@ -426,9 +422,32 @@ ThreadContext::~ThreadContext()
 
 }
 
-void
-ThreadContext::SetJSRTRuntime(bool isJsrtRuntime)
-{
+const NativeLibraryEntryRecord::Entry *ThreadContext::PeekNativeLibraryEntry() const {
+    return this->nativeLibraryEntry.Peek();
+}
+void ThreadContext::PushNativeLibraryEntry(NativeLibraryEntryRecord::Entry *entry) {
+    this->nativeLibraryEntry.Push(entry);
+}
+void ThreadContext::PopNativeLibraryEntry() { this->nativeLibraryEntry.Pop(); }
+bool ThreadContext::IsProfilingUserCode() const { return isProfilingUserCode; }
+void ThreadContext::SetIsProfilingUserCode(bool value) { isProfilingUserCode = value; }
+bool ThreadContext::IsOptimizedForManyInstances() const { return isOptimizedForManyInstances; }
+void ThreadContext::OptimizeForManyInstances(const bool optimizeForManyInstances) {
+    Assert(!recycler ||
+           optimizeForManyInstances == isOptimizedForManyInstances); // mode cannot be changed after recycler is created
+    isOptimizedForManyInstances = optimizeForManyInstances;
+}
+
+#if ENABLE_NATIVE_CODEGEN
+bool ThreadContext::IsBgJitEnabled() const { return bgJit; }
+
+void ThreadContext::EnableBgJit(const bool enableBgJit) {
+    Assert(!jobProcessor || enableBgJit == bgJit);
+    bgJit = enableBgJit;
+}
+#endif
+
+void ThreadContext::SetJSRTRuntime(bool isJsrtRuntime) {
     assert(!isJsrtRuntime_);
     isJsrtRuntime_ = isJsrtRuntime;
 }
@@ -1258,6 +1277,7 @@ ThreadContext::SetForceOneIdleCollection()
     }
 
 }
+bool ThreadContext::IsInThreadServiceCallback() const { return threadService.IsInCallback(); }
 
 bool
 ThreadContext::IsOnStack(void const *ptr)
@@ -2070,6 +2090,43 @@ ThreadContext::CollectionCallBack(RecyclerCollectCallBackFlags flags)
     while (i.Next())
     {
         i.Data().callback(i.Data().context, flags);
+    }
+}
+void ThreadContext::SetNoJsReentrancy(bool val) { noJsReentrancy = val; }
+bool ThreadContext::GetNoJsReentrancy() const { return noJsReentrancy; }
+void ThreadContext::AssertJsReentrancy() {
+    if (GetNoJsReentrancy()) {
+        Js::Throw::FatalJsReentrancyError();
+    }
+}
+void ThreadContext::CheckAndResetReentrancySafeOrHandled() {
+    AssertOrFailFast(reentrancySafeOrHandled || isInReentrancySafeRegion);
+    SetReentrancySafeOrHandled(false);
+}
+void ThreadContext::SetReentrancySafeOrHandled(bool val) { reentrancySafeOrHandled = val; }
+bool ThreadContext::GetReentrancySafeOrHandled() const { return reentrancySafeOrHandled; }
+void ThreadContext::SetIsInReentrancySafeRegion(bool val) { isInReentrancySafeRegion = val; }
+bool ThreadContext::GetIsInReentrancySafeRegion() const { return isInReentrancySafeRegion; }
+bool ThreadContext::IsEntryPointToBuiltInOperationIdCacheInitialized() const {
+    return entryPointToBuiltInOperationIdCache.Count() != 0;
+}
+bool ThreadContext::GetBuiltInOperationIdFromEntryPoint(Js::JavascriptMethod entryPoint, uint *id) const {
+    return entryPointToBuiltInOperationIdCache.TryGetValue(entryPoint, id);
+}
+void ThreadContext::SetBuiltInOperationIdForEntryPoint(Js::JavascriptMethod entryPoint, uint id) {
+    entryPointToBuiltInOperationIdCache.Add(entryPoint, id);
+}
+void ThreadContext::ResetEntryPointToBuiltInOperationIdCache() { entryPointToBuiltInOperationIdCache.ResetNoDelete(); }
+uint8_t ThreadContext::LoopDepth() const { return loopDepth; }
+void ThreadContext::SetLoopDepth(const uint8_t loopDepth) { this->loopDepth = loopDepth; }
+void ThreadContext::IncrementLoopDepth() {
+    if (loopDepth != UCHAR_MAX) {
+        ++loopDepth;
+    }
+}
+void ThreadContext::DecrementLoopDepth() {
+    if (loopDepth != 0) {
+        --loopDepth;
     }
 }
 
@@ -3663,6 +3720,14 @@ const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16
     return propertyRecord;
 }
 
+Js::ImplicitCallFlags *ThreadContext::GetAddressOfImplicitCallFlags() { return &implicitCallFlags; }
+DisableImplicitFlags *ThreadContext::GetAddressOfDisableImplicitFlags() { return &disableImplicitFlags; }
+Js::ImplicitCallFlags ThreadContext::GetImplicitCallFlags() const { return implicitCallFlags; }
+void ThreadContext::SetImplicitCallFlags(Js::ImplicitCallFlags flags) {
+    // Note: this action is inlined into JITed code in Lowerer::GenerateCallProfiling.
+    //    if you change this, you might want to add it there too.
+    implicitCallFlags = flags;
+}
 void ThreadContext::ClearImplicitCallFlags()
 {
     SetImplicitCallFlags(Js::ImplicitCall_None);
@@ -3672,6 +3737,9 @@ void ThreadContext::ClearImplicitCallFlags(Js::ImplicitCallFlags flags)
 {
     Assert((flags & Js::ImplicitCall_None) == 0);
     SetImplicitCallFlags(static_cast<Js::ImplicitCallFlags>(implicitCallFlags & ~flags));
+}
+void ThreadContext::AddImplicitCallFlags(Js::ImplicitCallFlags flags) {
+    SetImplicitCallFlags((Js::ImplicitCallFlags)(implicitCallFlags | flags));
 }
 
 void ThreadContext::CheckAndResetImplicitCallAccessorFlag()
@@ -3720,6 +3788,7 @@ ThreadContext::RecordImplicitException()
     bool hasImplicitCallHappened = IsDisableImplicitCall() && (GetImplicitCallFlags() & ~Js::ImplicitCall_Exception);
     return !hasImplicitCallHappened;
 }
+DisableImplicitFlags ThreadContext::GetDisableImplicitFlags() const { return disableImplicitFlags; }
 
 void ThreadContext::SetThreadServiceWrapper(ThreadServiceWrapper* inThreadServiceWrapper)
 {
@@ -3732,19 +3801,24 @@ ThreadServiceWrapper* ThreadContext::GetThreadServiceWrapper()
     return threadServiceWrapper;
 }
 
+void ThreadContext::SetDisableImplicitFlags(DisableImplicitFlags flags) { disableImplicitFlags = flags; }
+bool ThreadContext::IsDisableImplicitCall() const { return (disableImplicitFlags & DisableImplicitCallFlag) != 0; }
+bool ThreadContext::IsDisableImplicitException() const {
+    return (disableImplicitFlags & DisableImplicitExceptionFlag) != 0;
+}
+void ThreadContext::DisableImplicitCall() {
+    disableImplicitFlags = (DisableImplicitFlags)(disableImplicitFlags | DisableImplicitCallFlag);
+}
+void ThreadContext::ClearDisableImplicitFlags() { disableImplicitFlags = DisableImplicitNoFlag; }
 uint ThreadContext::GetRandomNumber()
 {
-#ifdef ENABLE_CUSTOM_ENTROPY
-    return (uint)GetEntropy().GetRand();
-#else
-    uint randomNumber = 0;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<unsigned int> dist;
-    randomNumber = dist(gen);
+    uint randomNumber = dist(gen);
     return randomNumber;
-#endif
 }
+bool ThreadContext::DoSpecialMarkOnScanStack() { return this->DoRedeferFunctionBodies(); }
 
 Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)
 {
@@ -3756,9 +3830,9 @@ Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)
 // Regex helpers
 //
 
-UnifiedRegex::StandardChars<uint8_t>* ThreadContext::GetStandardChars(__inout_opt uint8_t* dummy)
+UnifiedRegex::StandardChars<uint8_t>* ThreadContext::GetStandardChars(uint8_t* dummy)
 {
-    if (standardUTF8Chars == 0)
+    if (standardUTF8Chars == nullptr)
     {
         ArenaAllocator* allocator = GetThreadAlloc();
         standardUTF8Chars = Anew(allocator, UnifiedRegex::UTF8StandardChars, allocator);
@@ -3766,9 +3840,9 @@ UnifiedRegex::StandardChars<uint8_t>* ThreadContext::GetStandardChars(__inout_op
     return standardUTF8Chars;
 }
 
-UnifiedRegex::StandardChars<char16_t>* ThreadContext::GetStandardChars(__inout_opt char16_t* dummy)
+UnifiedRegex::StandardChars<char16_t>* ThreadContext::GetStandardChars(char16_t* dummy)
 {
-    if (standardUnicodeChars == 0)
+    if (standardUnicodeChars == nullptr)
     {
         ArenaAllocator* allocator = GetThreadAlloc();
         standardUnicodeChars = Anew(allocator, UnifiedRegex::UnicodeStandardChars, allocator);
@@ -3818,6 +3892,7 @@ ThreadContext::AddDynamicObjectEnumeratorCache(Js::DynamicType const * dynamicTy
 {
     this->dynamicObjectEnumeratorCacheMap.Item(dynamicType, cache);
 }
+bool ThreadContext::IsScriptActive() const { return isScriptActive; }
 
 InterruptPoller::InterruptPoller(ThreadContext *tc) :
     threadContext(tc),
@@ -3844,6 +3919,10 @@ void InterruptPoller::CheckInterruptPoll()
     }
 }
 
+void ThreadContext::SetIsScriptActive(bool isActive) { isScriptActive = isActive; }
+bool ThreadContext::IsExecutionDisabled() const {
+    return this->GetStackLimitForCurrentThread() == Js::Constants::StackLimitForScriptInterrupt;
+}
 bool ThreadContext::TestThreadContextFlag(ThreadContextFlags contextFlag) const
 {
     return (this->threadContextFlags & contextFlag) != 0;

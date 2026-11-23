@@ -1663,47 +1663,17 @@ public:
         this->recyclableData->propagateException = propagateToDebugger;
     }
 
-#ifdef ENABLE_CUSTOM_ENTROPY
-    Entropy& GetEntropy()
-    {
-        return entropy;
-    }
-#endif
-
-    Js::ImplicitCallFlags * GetAddressOfImplicitCallFlags()
-    {
-        return &implicitCallFlags;
-    }
-
-    DisableImplicitFlags * GetAddressOfDisableImplicitFlags()
-    {
-        return &disableImplicitFlags;
-    }
-
-    Js::ImplicitCallFlags GetImplicitCallFlags()
-    {
-        return implicitCallFlags;
-    }
-
-    void SetImplicitCallFlags(Js::ImplicitCallFlags flags)
-    {
-        //Note: this action is inlined into JITed code in Lowerer::GenerateCallProfiling.
-        //   if you change this, you might want to add it there too.
-        implicitCallFlags = flags;
-    }
-
+    Js::ImplicitCallFlags * GetAddressOfImplicitCallFlags();
+    DisableImplicitFlags * GetAddressOfDisableImplicitFlags();
+    Js::ImplicitCallFlags GetImplicitCallFlags() const;
+    void SetImplicitCallFlags(Js::ImplicitCallFlags flags);
     void ClearImplicitCallFlags();
     void ClearImplicitCallFlags(Js::ImplicitCallFlags flags);
-
-    void AddImplicitCallFlags(Js::ImplicitCallFlags flags)
-    {
-        SetImplicitCallFlags((Js::ImplicitCallFlags)(implicitCallFlags | flags));
-    }
-
+    void AddImplicitCallFlags(Js::ImplicitCallFlags flags);
     void CheckAndResetImplicitCallAccessorFlag();
 
     template <class Fn>
-    inline Js::Var ExecuteImplicitCall(Js::RecyclableObject * function, Js::ImplicitCallFlags flags, Fn implicitCall)
+    Js::Var ExecuteImplicitCall(Js::RecyclableObject * function, Js::ImplicitCallFlags flags, Fn implicitCall)
     {
         AutoReentrancyHandler autoReentrancyHandler(this);
 
@@ -1778,15 +1748,15 @@ public:
     bool HasNoSideEffect(Js::RecyclableObject * function) const;
     bool HasNoSideEffect(Js::RecyclableObject * function, Js::FunctionInfo::Attributes attr) const;
     bool RecordImplicitException();
-    DisableImplicitFlags GetDisableImplicitFlags() const { return disableImplicitFlags; }
-    void SetDisableImplicitFlags(DisableImplicitFlags flags) { disableImplicitFlags = flags; }
-    bool IsDisableImplicitCall() const { return (disableImplicitFlags & DisableImplicitCallFlag) != 0; }
-    bool IsDisableImplicitException() const { return (disableImplicitFlags & DisableImplicitExceptionFlag) != 0; }
-    void DisableImplicitCall() { disableImplicitFlags = (DisableImplicitFlags)(disableImplicitFlags | DisableImplicitCallFlag); }
-    void ClearDisableImplicitFlags() { disableImplicitFlags = DisableImplicitNoFlag; }
+    DisableImplicitFlags GetDisableImplicitFlags() const;
+    void SetDisableImplicitFlags(DisableImplicitFlags flags);
+    bool IsDisableImplicitCall() const;
+    bool IsDisableImplicitException() const;
+    void DisableImplicitCall();
+    void ClearDisableImplicitFlags();
 
     uint GetRandomNumber() override;
-    bool DoSpecialMarkOnScanStack() override { return this->DoRedeferFunctionBodies(); }
+    bool DoSpecialMarkOnScanStack() override;
     void OnScanStackCallback(void ** stackTop, size_t byteCount, void ** registers, size_t registersByteCount) override;
 
     void PostSweepRedeferralCallBack() override;
@@ -1820,25 +1790,22 @@ public:
     void * GetDynamicObjectEnumeratorCache(Js::DynamicType const * dynamicType);
     void AddDynamicObjectEnumeratorCache(Js::DynamicType const * dynamicType, void * cache);
 public:
-    bool IsScriptActive() const { return isScriptActive; }
-    void SetIsScriptActive(bool isActive) { isScriptActive = isActive; }
-    bool IsExecutionDisabled() const
-    {
-        return this->GetStackLimitForCurrentThread() == Js::Constants::StackLimitForScriptInterrupt;
-    }
+    bool IsScriptActive() const;
+    void SetIsScriptActive(bool isActive);
+    bool IsExecutionDisabled() const;
     bool TestThreadContextFlag(ThreadContextFlags threadContextFlag) const;
     void SetThreadContextFlag(ThreadContextFlags threadContextFlag);
 
     void SetForceOneIdleCollection();
 
-    bool IsInThreadServiceCallback() const { return threadService.IsInCallback(); }
+    bool IsInThreadServiceCallback() const;
 
-    const NativeLibraryEntryRecord::Entry* PeekNativeLibraryEntry() const { return this->nativeLibraryEntry.Peek(); }
-    void PushNativeLibraryEntry(_In_ NativeLibraryEntryRecord::Entry* entry) { this->nativeLibraryEntry.Push(entry); }
-    void PopNativeLibraryEntry() { this->nativeLibraryEntry.Pop(); }
+    const NativeLibraryEntryRecord::Entry* PeekNativeLibraryEntry() const;
+    void PushNativeLibraryEntry(_In_ NativeLibraryEntryRecord::Entry* entry);
+    void PopNativeLibraryEntry();
 
-    bool IsProfilingUserCode() const { return isProfilingUserCode; }
-    void SetIsProfilingUserCode(bool value) { isProfilingUserCode = value; }
+    bool IsProfilingUserCode() const;
+    void SetIsProfilingUserCode(bool value);
 
 #if DBG_DUMP
     uint scriptSiteCount;
@@ -1848,26 +1815,15 @@ public:
     //
     // Regex helpers
     //
-    UnifiedRegex::StandardChars<uint8_t>* GetStandardChars(__inout_opt uint8_t* dummy);
-    UnifiedRegex::StandardChars<char16_t>* GetStandardChars(__inout_opt char16_t* dummy);
+    UnifiedRegex::StandardChars<uint8_t>* GetStandardChars(uint8_t* dummy);
+    UnifiedRegex::StandardChars<char16_t>* GetStandardChars(char16_t* dummy);
 
-    bool IsOptimizedForManyInstances() const { return isOptimizedForManyInstances; }
-
-    void OptimizeForManyInstances(const bool optimizeForManyInstances)
-    {
-        Assert(!recycler || optimizeForManyInstances == isOptimizedForManyInstances); // mode cannot be changed after recycler is created
-        isOptimizedForManyInstances = optimizeForManyInstances;
-
-    }
+    bool IsOptimizedForManyInstances() const;
+    void OptimizeForManyInstances(bool optimizeForManyInstances);
 
 #if ENABLE_NATIVE_CODEGEN
-    bool IsBgJitEnabled() const { return bgJit; }
-
-    void EnableBgJit(const bool enableBgJit)
-    {
-        Assert(!jobProcessor || enableBgJit == bgJit);
-        bgJit = enableBgJit;
-    }
+    bool IsBgJitEnabled() const;
+    void EnableBgJit(bool enableBgJit);
 #endif
 
     void SetJSRTRuntime(bool isJsrtRuntime);
@@ -1888,78 +1844,23 @@ private:
     JsUtil::BaseDictionary<Js::JavascriptMethod, uint, ArenaAllocator, PowerOf2SizePolicy> entryPointToBuiltInOperationIdCache;
 
 public:
-    void SetNoJsReentrancy(bool val) { noJsReentrancy = val; }
-    bool GetNoJsReentrancy() { return noJsReentrancy; }
-    void AssertJsReentrancy()
-    {
-        if (GetNoJsReentrancy())
-        {
-            Js::Throw::FatalJsReentrancyError();
-        }
-    }
+    void SetNoJsReentrancy(bool val);
+    bool GetNoJsReentrancy() const;
+    void AssertJsReentrancy();
 
-public:
-    void CheckAndResetReentrancySafeOrHandled()
-    {
-        AssertOrFailFast(reentrancySafeOrHandled || isInReentrancySafeRegion);
-        SetReentrancySafeOrHandled(false);
-    }
+    void CheckAndResetReentrancySafeOrHandled();
+    void SetReentrancySafeOrHandled(bool val);
+    bool GetReentrancySafeOrHandled() const;
+    void SetIsInReentrancySafeRegion(bool val);
+    bool GetIsInReentrancySafeRegion() const;
 
-    void SetReentrancySafeOrHandled(bool val) { reentrancySafeOrHandled = val; }
-    bool GetReentrancySafeOrHandled() { return reentrancySafeOrHandled; }
-    void SetIsInReentrancySafeRegion(bool val) { isInReentrancySafeRegion = val; }
-    bool GetIsInReentrancySafeRegion() { return isInReentrancySafeRegion; }
+    bool IsEntryPointToBuiltInOperationIdCacheInitialized() const;
+    bool GetBuiltInOperationIdFromEntryPoint(Js::JavascriptMethod entryPoint, uint * id) const;
+    void SetBuiltInOperationIdForEntryPoint(Js::JavascriptMethod entryPoint, uint id);
+    void ResetEntryPointToBuiltInOperationIdCache();
 
-    template <typename Fn>
-    Js::Var SafeReentrantCall(Fn fn)
-    {
-        AutoReentrancyHandler autoReentrancyHandler(this);
-        return fn();
-    }
-
-    bool IsEntryPointToBuiltInOperationIdCacheInitialized()
-    {
-        return entryPointToBuiltInOperationIdCache.Count() != 0;
-    }
-
-    bool GetBuiltInOperationIdFromEntryPoint(Js::JavascriptMethod entryPoint, uint * id)
-    {
-        return entryPointToBuiltInOperationIdCache.TryGetValue(entryPoint, id);
-    }
-
-    void SetBuiltInOperationIdForEntryPoint(Js::JavascriptMethod entryPoint, uint id)
-    {
-        entryPointToBuiltInOperationIdCache.Add(entryPoint, id);
-    }
-
-    void ResetEntryPointToBuiltInOperationIdCache()
-    {
-        entryPointToBuiltInOperationIdCache.ResetNoDelete();
-    }
-
-    uint8_t LoopDepth() const
-    {
-        return loopDepth;
-    }
-
-    void SetLoopDepth(const uint8_t loopDepth)
-    {
-        this->loopDepth = loopDepth;
-    }
-
-    void IncrementLoopDepth()
-    {
-        if(loopDepth != UCHAR_MAX)
-        {
-            ++loopDepth;
-        }
-    }
-
-    void DecrementLoopDepth()
-    {
-        if(loopDepth != 0)
-        {
-            --loopDepth;
-        }
-    }
+    uint8_t LoopDepth() const;
+    void SetLoopDepth(uint8_t loopDepth);
+    void IncrementLoopDepth();
+    void DecrementLoopDepth();
 };
