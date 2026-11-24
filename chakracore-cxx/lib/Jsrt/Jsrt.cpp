@@ -133,9 +133,9 @@ JsErrorCode CreateContextCore(_In_ JsrtRuntime *runtime, _In_ bool inRecordMode,
     return JsNoError;
 }
 
-// A create runtime function that we can funnel to for regular and record or debug aware creation
-static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime,
-                                     std::unique_ptr<AllocationPolicyManager> policyManager) {
+JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes,
+                                              std::unique_ptr<JsrtRuntime> &runtimeHandle,
+                                              std::unique_ptr<AllocationPolicyManager> policyManager) {
     JsErrorCode runtimeResult = GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         const JsRuntimeAttributes JsRuntimeAttributesAll =
             (JsRuntimeAttributes)(
@@ -197,16 +197,12 @@ static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::u
         }
 
         threadContext->SetCurrentThreadId(ThreadContext::NoThread);
-        runtime = std::make_unique<JsrtRuntime>(std::move(threadContext));
+        runtimeHandle = std::make_unique<JsrtRuntime>(std::move(threadContext));
 
         return JsNoError;
     });
 
     return runtimeResult;
-}
-
-JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtimeHandle, std::unique_ptr<AllocationPolicyManager> policyManager) {
-    return CreateRuntimeCore(attributes, runtimeHandle, std::move(policyManager));
 }
 
 JsErrorCode JsPrivateDetachArrayBuffer(_In_ JsValueRef ref, _Out_ void** detachedState)
