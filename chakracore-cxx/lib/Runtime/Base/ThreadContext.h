@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "DataStructures/Dictionary.h"
 #include "Library/DelayFreeArrayBufferHelper.h"
 #include "Base/AutoReentrancyHandler.h"
 
@@ -611,8 +610,6 @@ class ThreadContext :
 private:
     struct PropertyGuardEntry;
     class ThreadContextImpl;
-    // TODO (hanhossain): move to impl
-    typedef JsUtil::WeaklyReferencedKeyDictionary<Js::Type, bool> TypeHashSet;
 
     std::shared_ptr<ThreadContextImpl> impl_;
 public:
@@ -1403,8 +1400,6 @@ public:
 
 private:
     BOOL ExecuteRecyclerCollectionFunctionCommon(Recycler * recycler, CollectionFunction function, CollectionFlags flags);
-
-    void DoInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId, TypeHashSet *const typeHashSet);
     void InitializePropertyMaps();
     void CreateNoCasePropertyMap();
 

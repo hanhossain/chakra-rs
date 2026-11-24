@@ -45,6 +45,9 @@ public:
 
 private:
     friend class ThreadContext;
+
+    using TypeHashSet = JsUtil::WeaklyReferencedKeyDictionary<Js::Type, bool>;
+
     struct RecyclableData {
         RecyclableData(Recycler *const recycler);
         WriteBarrierFieldTypeTraits<Js::TempArenaAllocatorObject *>::Type temporaryArenaAllocators[MaxTemporaryArenaAllocators];
@@ -115,6 +118,8 @@ private:
     };
     JsUtil::Stack<HostScriptContext *> *host_script_context_stack_;
     RecyclerRootPtr<RecyclableData> recyclableData;
+
+    static void DoInvalidateProtoTypePropertyCaches(Js::PropertyId propertyId, TypeHashSet *typeHashSet);
 };
 
 const Js::PropertyRecord * const ThreadContext::builtInPropertyRecords[] =
@@ -3661,10 +3666,10 @@ void ThreadContext::RegisterTypeWithProtoPropertyCache(const Js::PropertyId prop
     Assert(type);
 
     auto &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
-    TypeHashSet *typeHashSet = nullptr;
+    ThreadContextImpl::TypeHashSet *typeHashSet = nullptr;
     if(!typesWithProtoPropertyCache.TryGetValue(propertyId, &typeHashSet))
     {
-        typeHashSet = RecyclerNew(recycler, TypeHashSet, recycler);
+        typeHashSet = RecyclerNew(recycler, ThreadContextImpl::TypeHashSet, recycler);
         typesWithProtoPropertyCache.Add(propertyId, typeHashSet);
     }
 
@@ -3683,10 +3688,10 @@ void ThreadContext::InternalInvalidateProtoTypePropertyCaches(const Js::Property
     // Get the hash set of registered types associated with the property ID, invalidate each type in the hash set, and
     // remove the property ID and its hash set from the map
     auto &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
-    TypeHashSet *typeHashSet = nullptr;
+    ThreadContextImpl::TypeHashSet *typeHashSet = nullptr;
     if(typesWithProtoPropertyCache.Count() != 0 && typesWithProtoPropertyCache.TryGetValueAndRemove(propertyId, &typeHashSet))
     {
-        DoInvalidateProtoTypePropertyCaches(propertyId, typeHashSet);
+        ThreadContextImpl::DoInvalidateProtoTypePropertyCaches(propertyId, typeHashSet);
     }
 }
 
@@ -3695,17 +3700,16 @@ void ThreadContext::InvalidateAllProtoTypePropertyCaches()
     auto &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
     if (typesWithProtoPropertyCache.Count() > 0)
     {
-        typesWithProtoPropertyCache.Map([this](Js::PropertyId propertyId, TypeHashSet * typeHashSet)
+        typesWithProtoPropertyCache.Map([](Js::PropertyId propertyId, ThreadContextImpl::TypeHashSet * typeHashSet)
         {
-            DoInvalidateProtoTypePropertyCaches(propertyId, typeHashSet);
+            ThreadContextImpl::DoInvalidateProtoTypePropertyCaches(propertyId, typeHashSet);
         });
         typesWithProtoPropertyCache.Clear();
     }
 }
 bool ThreadContext::HasUnhandledException() const { return hasUnhandledException; }
 
-void ThreadContext::DoInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId, TypeHashSet *const typeHashSet)
-{
+void ThreadContext::ThreadContextImpl::DoInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId, TypeHashSet *const typeHashSet) {
     Assert(propertyId != Js::Constants::NoProperty);
     Assert(typeHashSet);
 
