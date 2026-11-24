@@ -613,10 +613,6 @@ private:
     class ThreadContextImpl;
     // TODO (hanhossain): move to impl
     typedef JsUtil::WeaklyReferencedKeyDictionary<Js::Type, bool> TypeHashSet;
-    // TODO (hanhossain): move to impl
-    typedef JsUtil::BaseDictionary<Js::PropertyId, TypeHashSet *, Recycler, PowerOf2SizePolicy> PropertyIdToTypeHashSetDictionary;
-    // TODO (hanhossain): move to impl
-    typedef JsUtil::WeaklyReferencedKeyDictionary<const Js::PropertyRecord, PropertyGuardEntry*, Js::PropertyRecordPointerComparer> PropertyGuardDictionary;
 
     std::shared_ptr<ThreadContextImpl> impl_;
 public:
@@ -713,75 +709,6 @@ private:
     };
 
     typedef JsUtil::BaseDictionary<const char16_t*, SourceDynamicProfileManagerCache*, Recycler, PowerOf2SizePolicy> SourceProfileManagersByUrlMap;
-
-    struct RecyclableData
-    {
-        RecyclableData(Recycler *const recycler);
-        typename WriteBarrierFieldTypeTraits<Js::TempArenaAllocatorObject *>::Type temporaryArenaAllocators[MaxTemporaryArenaAllocators];
-        typename WriteBarrierFieldTypeTraits<Js::TempGuestArenaAllocatorObject *>::Type temporaryGuestArenaAllocators[MaxTemporaryArenaAllocators];
-
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type pendingFinallyException;
-
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type exceptionObject;
-        typename WriteBarrierFieldTypeTraits<bool>::Type propagateException;
-
-        // We throw a JS catchable SO exception if we detect we might overflow the stack. Allocating this (JS)
-        // object though might really overflow the stack. So use this thread global to identify them from the throw point
-        // to where they are caught; where the stack has been unwound and it is safer to allocate the real exception
-        // object and throw.
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type soErrorObject;
-
-        // We can't allocate an out of memory object...  So use this static as a way to identify
-        // them from the throw point to where they are caught.
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type oomErrorObject;
-
-        // This is for JsRT scenario where a runtime is not usable after a suspend request, before a resume runtime call is made
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type terminatedErrorObject;
-
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type unhandledExceptionObject;
-
-        // Used to temporarily keep throwing exception object alive (thrown but not yet caught)
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type tempUncaughtException;
-
-        // Contains types that have property caches that need to be tracked, as the caches may need to be cleared. Types that
-        // contain a property cache for a property that is on a prototype object will be tracked in this map since those caches
-        // need to be cleared if for instance, the property is deleted from the prototype object.
-        //
-        // It is expected that over time, types that are deleted will eventually be removed by the weak reference hash sets when
-        // they're searching through a bucket while registering a type or enumerating types to invalidate, or when a property ID
-        // is reclaimed. If none of those happen, then this collection may contain weak reference handles to deleted objects
-        // that would not get removed, but it would also not get any bigger.
-        typename WriteBarrierFieldTypeTraits<PropertyIdToTypeHashSetDictionary>::Type typesWithProtoPropertyCache;
-
-#if ENABLE_NATIVE_CODEGEN
-        // The property guard dictionary contains property guards which need to be invalidated in response to properties changing
-        // from writable to read-only and vice versa, properties being shadowed or unshadowed on prototypes, etc.  The dictionary
-        // holds only weak references to property guards and their lifetimes are controlled by their creators (typically entry points).
-        // When a guard is no longer needed it is garbage collected, but the weak references and dictionary entries remain, until
-        // the guards for a given property get invalidated.
-        // TODO: Create and use a self-cleaning weak reference dictionary, which would periodically remove any unused weak references.
-        typename WriteBarrierFieldTypeTraits<PropertyGuardDictionary>::Type propertyGuards;
-#endif
-
-        typename WriteBarrierFieldTypeTraits<PropertyNoCaseSetType *>::Type caseInvariantPropertySet;
-
-        typename WriteBarrierFieldTypeTraits<JsUtil::List<Js::PropertyRecord const*>*>::Type boundPropertyStrings; // Recycler allocated list of property strings that we need to strongly reference so that they're not reclaimed
-
-        typename WriteBarrierFieldTypeTraits<SourceProfileManagersByUrlMap*>::Type sourceProfileManagersByUrl;
-
-        // Used to register recyclable data that needs to be kept alive while jitting
-        typedef JsUtil::DoublyLinkedList<Js::CodeGenRecyclableData, Recycler> CodeGenRecyclableDataList;
-        typename WriteBarrierFieldTypeTraits<CodeGenRecyclableDataList>::Type codeGenRecyclableDatas;
-
-        // Used to root old entry points so that they're not prematurely collected
-        typename WriteBarrierFieldTypeTraits<Js::FunctionEntryPointInfo*>::Type oldEntryPointInfo;
-
-        // Used to store a mapping of string to Symbol for cross-realm Symbol registration
-        // See ES6 (draft 22) 19.4.2.2
-        typename WriteBarrierFieldTypeTraits<SymbolRegistrationMap*>::Type symbolRegistrationMap;
-
-        typename WriteBarrierFieldTypeTraits<uint>::Type constructorCacheInvalidationCount;
-    };
 
     static ThreadContext * globalListLast;
 

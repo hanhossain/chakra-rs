@@ -45,6 +45,74 @@ public:
 
 private:
     friend class ThreadContext;
+    struct RecyclableData {
+        RecyclableData(Recycler *const recycler);
+        WriteBarrierFieldTypeTraits<Js::TempArenaAllocatorObject *>::Type temporaryArenaAllocators[MaxTemporaryArenaAllocators];
+        WriteBarrierFieldTypeTraits<Js::TempGuestArenaAllocatorObject *>::Type temporaryGuestArenaAllocators[MaxTemporaryArenaAllocators];
+        WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type pendingFinallyException;
+        WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type exceptionObject;
+        WriteBarrierFieldTypeTraits<bool>::Type propagateException;
+
+        // We throw a JS catchable SO exception if we detect we might overflow the stack. Allocating this (JS)
+        // object though might really overflow the stack. So use this thread global to identify them from the throw point
+        // to where they are caught; where the stack has been unwound and it is safer to allocate the real exception
+        // object and throw.
+        WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type soErrorObject;
+
+        // We can't allocate an out of memory object...  So use this static as a way to identify
+        // them from the throw point to where they are caught.
+        WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type oomErrorObject;
+
+        // This is for JsRT scenario where a runtime is not usable after a suspend request, before a resume runtime call
+        // is made
+        WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type terminatedErrorObject;
+
+        WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type unhandledExceptionObject;
+
+        // Used to temporarily keep throwing exception object alive (thrown but not yet caught)
+        WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type tempUncaughtException;
+
+        // Contains types that have property caches that need to be tracked, as the caches may need to be cleared. Types that
+        // contain a property cache for a property that is on a prototype object will be tracked in this map since those caches
+        // need to be cleared if for instance, the property is deleted from the prototype object.
+        //
+        // It is expected that over time, types that are deleted will eventually be removed by the weak reference hash sets when
+        // they're searching through a bucket while registering a type or enumerating types to invalidate, or when a property ID
+        // is reclaimed. If none of those happen, then this collection may contain weak reference handles to deleted objects
+        // that would not get removed, but it would also not get any bigger.
+        WriteBarrierFieldTypeTraits<JsUtil::BaseDictionary<Js::PropertyId, TypeHashSet *, Recycler,
+                                                           PowerOf2SizePolicy>>::Type typesWithProtoPropertyCache;
+
+#if ENABLE_NATIVE_CODEGEN
+        // The property guard dictionary contains property guards which need to be invalidated in response to properties changing
+        // from writable to read-only and vice versa, properties being shadowed or unshadowed on prototypes, etc.  The dictionary
+        // holds only weak references to property guards and their lifetimes are controlled by their creators (typically entry points).
+        // When a guard is no longer needed it is garbage collected, but the weak references and dictionary entries remain, until
+        // the guards for a given property get invalidated.
+        // TODO: Create and use a self-cleaning weak reference dictionary, which would periodically remove any unused
+        // weak references.
+        WriteBarrierFieldTypeTraits<JsUtil::WeaklyReferencedKeyDictionary<
+            const Js::PropertyRecord, PropertyGuardEntry *, Js::PropertyRecordPointerComparer>>::Type propertyGuards;
+#endif
+
+        WriteBarrierFieldTypeTraits<PropertyNoCaseSetType *>::Type caseInvariantPropertySet;
+        WriteBarrierFieldTypeTraits<JsUtil::List<Js::PropertyRecord const*>*>::Type boundPropertyStrings; // Recycler allocated list of property strings that we need to strongly reference so that they're not reclaimed
+
+        WriteBarrierFieldTypeTraits<SourceProfileManagersByUrlMap*>::Type sourceProfileManagersByUrl;
+
+        // Used to register recyclable data that needs to be kept alive while jitting
+        typedef JsUtil::DoublyLinkedList<Js::CodeGenRecyclableData, Recycler> CodeGenRecyclableDataList;
+        WriteBarrierFieldTypeTraits<CodeGenRecyclableDataList>::Type codeGenRecyclableDatas;
+
+        // Used to root old entry points so that they're not prematurely collected
+        WriteBarrierFieldTypeTraits<Js::FunctionEntryPointInfo*>::Type oldEntryPointInfo;
+
+        // Used to store a mapping of string to Symbol for cross-realm Symbol registration
+        // See ES6 (draft 22) 19.4.2.2
+        WriteBarrierFieldTypeTraits<SymbolRegistrationMap*>::Type symbolRegistrationMap;
+
+        WriteBarrierFieldTypeTraits<uint>::Type constructorCacheInvalidationCount;
+    };
     JsUtil::Stack<HostScriptContext *> *host_script_context_stack_;
     RecyclerRootPtr<RecyclableData> recyclableData;
 };
@@ -77,18 +145,14 @@ public:
     PropertyGuardEntry(Recycler* recycler) : sharedGuard(nullptr), uniqueGuards(recycler), entryPoints(nullptr) {}
 };
 
-ThreadContext::RecyclableData::RecyclableData(Recycler *const recycler) :
-    pendingFinallyException(nullptr),
-    soErrorObject(nullptr, nullptr, nullptr, true),
-    oomErrorObject(nullptr, nullptr, nullptr, true),
-    terminatedErrorObject(nullptr, nullptr, nullptr),
-    typesWithProtoPropertyCache(recycler),
+ThreadContext::ThreadContextImpl::RecyclableData::RecyclableData(Recycler *const recycler)
+    : pendingFinallyException(nullptr), propagateException(false), soErrorObject(nullptr, nullptr, nullptr, true),
+      oomErrorObject(nullptr, nullptr, nullptr, true), terminatedErrorObject(nullptr, nullptr, nullptr),
+      typesWithProtoPropertyCache(recycler),
 #if ENABLE_NATIVE_CODEGEN
-    propertyGuards(recycler, 128),
+      propertyGuards(recycler, 128),
 #endif
-    oldEntryPointInfo(nullptr),
-    constructorCacheInvalidationCount(0)
-{
+      oldEntryPointInfo(nullptr), constructorCacheInvalidationCount(0) {
 }
 
 void ThreadContext::ShutdownThreads() {
@@ -591,7 +655,7 @@ Recycler* ThreadContext::EnsureRecycler()
         newRecycler->Initialize(isOptimizedForManyInstances, &threadService); // use in-thread GC when optimizing for many instances
         newRecycler->SetCollectionWrapper(this);
 
-        impl_->recyclableData.Root(RecyclerNewZ(newRecycler, RecyclableData, newRecycler), newRecycler);
+        impl_->recyclableData.Root(RecyclerNewZ(newRecycler, ThreadContextImpl::RecyclableData, newRecycler), newRecycler);
 
         // Assign the recycler to the ThreadContext after everything is initialized, because an OOM during initialization would
         // result in only partial initialization, so the 'recycler' member variable should remain null to cause full
@@ -2745,7 +2809,7 @@ void
 ThreadContext::ClearInvalidatedUniqueGuards()
 {
     // If a propertyGuard was invalidated, make sure to remove it's entry from unique property guard table of other property records.
-    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
+    auto &guards = impl_->recyclableData->propertyGuards;
 
     guards.Map([](Js::PropertyRecord const * propertyRecord, PropertyGuardEntry* entry, const RecyclerWeakReference<const Js::PropertyRecord>* weakRef)
     {
@@ -3124,7 +3188,7 @@ ThreadContext::AutoDisableExpiration::~AutoDisableExpiration() {
 ThreadContext::PropertyGuardEntry*
 ThreadContext::EnsurePropertyGuardEntry(const Js::PropertyRecord* propertyRecord, bool& foundExistingEntry)
 {
-    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
+    auto &guards = impl_->recyclableData->propertyGuards;
     PropertyGuardEntry* entry = nullptr;
 
     foundExistingEntry = guards.TryGetValue(propertyRecord, &entry);
@@ -3343,7 +3407,7 @@ void
 ThreadContext::InvalidatePropertyGuards(Js::PropertyId propertyId)
 {
     const Js::PropertyRecord* propertyRecord = GetPropertyName(propertyId);
-    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
+    auto &guards = impl_->recyclableData->propertyGuards;
     PropertyGuardEntry* entry = nullptr;
     if (guards.TryGetValueAndRemove(propertyRecord, &entry))
     {
@@ -3354,7 +3418,7 @@ ThreadContext::InvalidatePropertyGuards(Js::PropertyId propertyId)
 void
 ThreadContext::InvalidateAllPropertyGuards()
 {
-    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
+    auto &guards = impl_->recyclableData->propertyGuards;
     if (guards.Count() > 0)
     {
         guards.Map([this](Js::PropertyRecord const * propertyRecord, PropertyGuardEntry* entry, const RecyclerWeakReference<const Js::PropertyRecord>* weakRef)
@@ -3596,7 +3660,7 @@ void ThreadContext::RegisterTypeWithProtoPropertyCache(const Js::PropertyId prop
     Assert(IsActivePropertyId(propertyId));
     Assert(type);
 
-    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
+    auto &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
     TypeHashSet *typeHashSet = nullptr;
     if(!typesWithProtoPropertyCache.TryGetValue(propertyId, &typeHashSet))
     {
@@ -3618,7 +3682,7 @@ void ThreadContext::InternalInvalidateProtoTypePropertyCaches(const Js::Property
 {
     // Get the hash set of registered types associated with the property ID, invalidate each type in the hash set, and
     // remove the property ID and its hash set from the map
-    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
+    auto &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
     TypeHashSet *typeHashSet = nullptr;
     if(typesWithProtoPropertyCache.Count() != 0 && typesWithProtoPropertyCache.TryGetValueAndRemove(propertyId, &typeHashSet))
     {
@@ -3628,7 +3692,7 @@ void ThreadContext::InternalInvalidateProtoTypePropertyCaches(const Js::Property
 
 void ThreadContext::InvalidateAllProtoTypePropertyCaches()
 {
-    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
+    auto &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
     if (typesWithProtoPropertyCache.Count() > 0)
     {
         typesWithProtoPropertyCache.Map([this](Js::PropertyId propertyId, TypeHashSet * typeHashSet)
