@@ -649,71 +649,32 @@ public:
         void * context;
     };
 
-    struct WorkerThread
-    {
-        // Abstract notion to hold onto threadHandle of worker thread
-        HANDLE threadHandle;
-        WorkerThread(HANDLE handle = nullptr) :threadHandle(handle){};
-    };
-
     struct AutoRestoreImplicitFlags
     {
         ThreadContext * threadContext;
         Js::ImplicitCallFlags savedImplicitCallFlags;
         DisableImplicitFlags savedDisableImplicitFlags;
-        AutoRestoreImplicitFlags(ThreadContext *threadContext, Js::ImplicitCallFlags implicitCallFlags, DisableImplicitFlags disableImplicitFlags) :
-            threadContext(threadContext),
-            savedImplicitCallFlags(implicitCallFlags),
-            savedDisableImplicitFlags(disableImplicitFlags)
-        {
-        }
-
-        ~AutoRestoreImplicitFlags()
-        {
-            threadContext->SetImplicitCallFlags((Js::ImplicitCallFlags)(savedImplicitCallFlags));
-            threadContext->SetDisableImplicitFlags((DisableImplicitFlags)savedDisableImplicitFlags);
-        }
+        AutoRestoreImplicitFlags(ThreadContext *threadContext, Js::ImplicitCallFlags implicitCallFlags, DisableImplicitFlags disableImplicitFlags);
+        ~AutoRestoreImplicitFlags();
     };
 
-    void SetCurrentThreadId(uint32_t threadId) { this->currentThreadId = threadId; }
-    uint32_t GetCurrentThreadId() const { return this->currentThreadId; }
-    // Rental threading is always enabled for JSRT. Maybe that means not thread bound?
-    void SetIsThreadBound()
-    {
-        this->isThreadBound = true;
-    }
-    bool IsJSRT() const { return !this->isThreadBound; }
-    bool IsThreadBound() const override { return this->isThreadBound; }
+    void SetCurrentThreadId(uint32_t threadId);
+    uint32_t GetCurrentThreadId() const;
+    // Rental threading is always enabled for JSRT (i.e. not bound to a specific thread)
+    void SetIsThreadBound();
+    bool IsJSRT() const;
+    bool IsThreadBound() const override;
     void SetStackProber(StackProber * stackProber);
 
-    template <class Fn>
-    Js::ImplicitCallFlags TryWithDisabledImplicitCall(Fn fn)
-    {
-        DisableImplicitFlags prevDisableImplicitFlags = this->GetDisableImplicitFlags();
-        Js::ImplicitCallFlags savedImplicitCallFlags = this->GetImplicitCallFlags();
+    Js::ImplicitCallFlags TryWithDisabledImplicitCall(std::function<void()> fn);
 
-        this->DisableImplicitCall();
-        this->SetImplicitCallFlags(Js::ImplicitCallFlags::ImplicitCall_None);
-        fn();
+    void * GetAddressOfStackLimitForCurrentThread() const;
 
-        Js::ImplicitCallFlags curImplicitCallFlags = this->GetImplicitCallFlags();
-
-        this->SetDisableImplicitFlags(prevDisableImplicitFlags);
-        this->SetImplicitCallFlags(savedImplicitCallFlags);
-
-        return curImplicitCallFlags;
-    }
-
-    void * GetAddressOfStackLimitForCurrentThread() const
-    {
-        return &this->stackLimitForCurrentThread;
-    }
-
-    IActiveScriptProfilerHeapEnum* GetHeapEnum();
+    IActiveScriptProfilerHeapEnum * GetHeapEnum();
     void SetHeapEnum(IActiveScriptProfilerHeapEnum* newHeapEnum);
     void ClearHeapEnum();
 
-    Js::PropertyRecord const * GetPropertyRecord(Js::PropertyId propertyId);
+    Js::PropertyRecord const *GetPropertyRecord(Js::PropertyId propertyId);
 
     bool IsNumericProperty(Js::PropertyId propertyId) override;
 
@@ -721,28 +682,13 @@ public:
 #if _M_AMD64
     // auxiliary SIMD values in memory to help JIT'ed code. E.g. used for Int8x16 shuffle.
     _x86_SIMDValue X86_TEMP_SIMD[SIMD_TEMP_SIZE];
-    _x86_SIMDValue * GetSimdTempArea() { return X86_TEMP_SIMD; }
+    _x86_SIMDValue * GetSimdTempArea();
 #endif
 #endif
 
 public:
-    Js::PropertyRecord const * GetEmptyStringPropertyRecord()
-    {
-        if (!emptyStringPropertyRecord)
-        {
-            emptyStringPropertyRecord = propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(u"", 0));
-            if (emptyStringPropertyRecord == nullptr)
-            {
-                emptyStringPropertyRecord = this->UncheckedAddPropertyId(u"", 0, true);
-            }
-        }
-        return emptyStringPropertyRecord;
-    }
-
-    Js::PropertyId GetEmptyStringPropertyId()
-    {
-        return GetEmptyStringPropertyRecord()->GetPropertyId();
-    }
+    Js::PropertyRecord const * GetEmptyStringPropertyRecord();
+    Js::PropertyId GetEmptyStringPropertyId();
 
 private:
     const Js::PropertyRecord * emptyStringPropertyRecord;
@@ -752,7 +698,7 @@ private:
 
     static std::recursive_mutex s_csThreadContext;
 
-    StackProber * GetStackProber() const { return this->stackProber; }
+    StackProber * GetStackProber() const;
     size_t GetStackLimitForCurrentThread() const;
     void SetStackLimitForCurrentThread(size_t limit);
 
@@ -771,36 +717,9 @@ public:
     typedef JsUtil::WeaklyReferencedKeyDictionary<const Js::PropertyRecord, PropertyGuardEntry*, Js::PropertyRecordPointerComparer> PropertyGuardDictionary;
 
 private:
-    intptr_t m_prereservedRegionAddr;
-    intptr_t m_jitThunkStartAddr;
-
 #if ENABLE_NATIVE_CODEGEN
     BVSparse<HeapAllocator> * m_jitNumericProperties;
-    bool m_jitNeedsPropertyUpdate;
-public:
-    intptr_t GetPreReservedRegionAddr()
-    {
-        return m_prereservedRegionAddr;
-    }
-    intptr_t GetJITThunkStartAddr()
-    {
-        return m_jitThunkStartAddr;
-    }
-    BVSparse<HeapAllocator> * GetJITNumericProperties() const
-    {
-        return m_jitNumericProperties;
-    }
-    bool JITNeedsPropUpdate() const
-    {
-        return m_jitNeedsPropertyUpdate;
-    }
-    void ResetJITNeedsPropUpdate()
-    {
-        m_jitNeedsPropertyUpdate = false;
-    }
 #endif
-
-private:
     typedef JsUtil::BaseDictionary<uint, Js::SourceDynamicProfileManager*, Recycler, PowerOf2SizePolicy> SourceDynamicProfileManagerMap;
     typedef JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16_t>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer> SymbolRegistrationMap;
 
@@ -893,6 +812,7 @@ private:
     uint32_t currentThreadId;
     mutable size_t stackLimitForCurrentThread;
     StackProber * stackProber;
+    // Rental threading is always enabled for JSRT (i.e. not bound to a specific thread)
     bool isThreadBound;
     bool hasThrownPendingException;
     bool * hasBailedOutBitPtr;

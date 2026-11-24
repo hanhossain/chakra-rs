@@ -134,7 +134,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     temporaryArenaAllocatorCount(0),
     temporaryGuestArenaAllocatorCount(0),
     crefSContextForDiag(0),
-    m_prereservedRegionAddr(0),
     scriptContextList(nullptr),
     scriptContextEverRegistered(false),
 #if DBG_DUMP || defined(PROFILE_EXEC)
@@ -167,7 +166,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #if ENABLE_NATIVE_CODEGEN
     preReservedVirtualAllocator(),
     m_jitNumericProperties(nullptr),
-    m_jitNeedsPropertyUpdate(false),
 #if DYNAMIC_INTERPRETER_THUNK || defined(ASMJS_PLAT)
     thunkPageAllocators(allocationPolicyManager, /* allocXData */ false, /* virtualAllocator */ nullptr),
 #endif
@@ -232,6 +230,23 @@ ThreadContext::ThreadContext(std::unique_ptr<AllocationPolicyManager> allocation
                              bool enableExperimentalFeatures)
     : ThreadContext(allocationPolicyManager.release(), nullptr, enableExperimentalFeatures) {}
 
+ThreadContext::AutoRestoreImplicitFlags::AutoRestoreImplicitFlags(ThreadContext *threadContext,
+                                                                  Js::ImplicitCallFlags implicitCallFlags,
+                                                                  DisableImplicitFlags disableImplicitFlags)
+    : threadContext(threadContext), savedImplicitCallFlags(implicitCallFlags),
+      savedDisableImplicitFlags(disableImplicitFlags) {}
+
+ThreadContext::AutoRestoreImplicitFlags::~AutoRestoreImplicitFlags() {
+    threadContext->SetImplicitCallFlags((Js::ImplicitCallFlags)(savedImplicitCallFlags));
+    threadContext->SetDisableImplicitFlags((DisableImplicitFlags)savedDisableImplicitFlags);
+}
+
+
+void ThreadContext::SetCurrentThreadId(uint32_t threadId) { this->currentThreadId = threadId; }
+uint32_t ThreadContext::GetCurrentThreadId() const { return this->currentThreadId; }
+void ThreadContext::SetIsThreadBound() { this->isThreadBound = true; }
+bool ThreadContext::IsJSRT() const { return !this->isThreadBound; }
+bool ThreadContext::IsThreadBound() const { return this->isThreadBound; }
 void ThreadContext::SetStackProber(StackProber * stackProber)
 {
     this->stackProber = stackProber;
@@ -240,6 +255,21 @@ void ThreadContext::SetStackProber(StackProber * stackProber)
     {
         this->stackLimitForCurrentThread = stackProber->GetScriptStackLimit();
     }
+}
+Js::ImplicitCallFlags ThreadContext::TryWithDisabledImplicitCall(std::function<void()> fn) {
+    DisableImplicitFlags prevDisableImplicitFlags = this->GetDisableImplicitFlags();
+    Js::ImplicitCallFlags savedImplicitCallFlags = this->GetImplicitCallFlags();
+
+    this->DisableImplicitCall();
+    this->SetImplicitCallFlags(Js::ImplicitCallFlags::ImplicitCall_None);
+    fn();
+
+    Js::ImplicitCallFlags curImplicitCallFlags = this->GetImplicitCallFlags();
+
+    this->SetDisableImplicitFlags(prevDisableImplicitFlags);
+    this->SetImplicitCallFlags(savedImplicitCallFlags);
+
+    return curImplicitCallFlags;
 }
 
 size_t ThreadContext::GetScriptStackLimit() const
@@ -285,10 +315,8 @@ ThreadContext::GetCRTBaseAddressDifference() const
     return 0;
 }
 
-IActiveScriptProfilerHeapEnum* ThreadContext::GetHeapEnum()
-{
-    return heapEnum;
-}
+void *ThreadContext::GetAddressOfStackLimitForCurrentThread() const { return &this->stackLimitForCurrentThread; }
+IActiveScriptProfilerHeapEnum *ThreadContext::GetHeapEnum() { return heapEnum; }
 
 void ThreadContext::SetHeapEnum(IActiveScriptProfilerHeapEnum* newHeapEnum)
 {
@@ -667,17 +695,28 @@ ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNam
     LeavePinnedScope();
 }
 
-Js::PropertyRecord const *
-ThreadContext::GetPropertyRecord(Js::PropertyId propertyId)
-{
+Js::PropertyRecord const *ThreadContext::GetPropertyRecord(Js::PropertyId propertyId) {
     return GetPropertyNameLocked(propertyId);
 }
 
-bool
-ThreadContext::IsNumericProperty(Js::PropertyId propertyId)
-{
-    return GetPropertyRecord(propertyId)->IsNumeric();
+bool ThreadContext::IsNumericProperty(Js::PropertyId propertyId) { return GetPropertyRecord(propertyId)->IsNumeric(); }
+
+#ifdef ENABLE_WASM_SIMD
+#if _M_AMD64
+_x86_SIMDValue *ThreadContext::GetSimdTempArea() { return X86_TEMP_SIMD; }
+#endif
+#endif
+
+Js::PropertyRecord const *ThreadContext::GetEmptyStringPropertyRecord() {
+    if (!emptyStringPropertyRecord) {
+        emptyStringPropertyRecord = propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(u"", 0));
+        if (emptyStringPropertyRecord == nullptr) {
+            emptyStringPropertyRecord = this->UncheckedAddPropertyId(u"", 0, true);
+        }
+    }
+    return emptyStringPropertyRecord;
 }
+Js::PropertyId ThreadContext::GetEmptyStringPropertyId() { return GetEmptyStringPropertyRecord()->GetPropertyId(); }
 
 const Js::PropertyRecord *
 ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNameLength)
@@ -843,7 +882,6 @@ ThreadContext::AddPropertyRecordInternal(const Js::PropertyRecord * propertyReco
         if (propertyRecord->IsNumeric())
         {
             m_jitNumericProperties->Set(propertyRecord->GetPropertyId());
-            m_jitNeedsPropertyUpdate = true;
         }
     }
 #endif
@@ -1011,7 +1049,6 @@ void ThreadContext::InvalidatePropertyRecord(const Js::PropertyRecord * property
     if (propertyRecord->IsNumeric() && m_jitNumericProperties)
     {
         m_jitNumericProperties->Clear(propertyRecord->GetPropertyId());
-        m_jitNeedsPropertyUpdate = true;
     }
 #endif
     this->propertyMap->Remove(propertyRecord);
@@ -1376,20 +1413,17 @@ ThreadContext::IsOnStack(void const *ptr)
 #endif
 }
 
- size_t
- ThreadContext::GetStackLimitForCurrentThread() const
-{
+StackProber *ThreadContext::GetStackProber() const { return this->stackProber; }
+
+size_t ThreadContext::GetStackLimitForCurrentThread() const {
     size_t limit = this->stackLimitForCurrentThread;
     Assert(limit == Js::Constants::StackLimitForScriptInterrupt
         || !this->GetStackProber()
         || limit == this->GetStackProber()->GetScriptStackLimit());
     return limit;
 }
-void
-ThreadContext::SetStackLimitForCurrentThread(size_t limit)
-{
-    this->stackLimitForCurrentThread = limit;
-}
+
+void ThreadContext::SetStackLimitForCurrentThread(size_t limit) { this->stackLimitForCurrentThread = limit; }
 
 //Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
 bool
