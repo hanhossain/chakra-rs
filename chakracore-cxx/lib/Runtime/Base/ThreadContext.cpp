@@ -41,11 +41,12 @@ thread_local uint ThreadContext::activeScriptSiteCount = 0;
 
 class ThreadContext::ThreadContextImpl {
 public:
-    ThreadContextImpl() = default;
+    ThreadContextImpl() : host_script_context_stack_(nullptr) {}
 
 private:
     friend class ThreadContext;
-    JsUtil::Stack<HostScriptContext*>* host_script_context_stack_;
+    JsUtil::Stack<HostScriptContext *> *host_script_context_stack_;
+    RecyclerRootPtr<RecyclableData> recyclableData;
 };
 
 const Js::PropertyRecord * const ThreadContext::builtInPropertyRecords[] =
@@ -391,16 +392,16 @@ ThreadContext::~ThreadContext()
 
         // If all scriptContext's have been closed, then the sourceProfileManagersByUrl
         // should have been released
-        AssertMsg(this->recyclableData->sourceProfileManagersByUrl == nullptr ||
-            this->recyclableData->sourceProfileManagersByUrl->Count() == 0, "There seems to have been a refcounting imbalance.");
+        AssertMsg(impl_->recyclableData->sourceProfileManagersByUrl == nullptr ||
+            impl_->recyclableData->sourceProfileManagersByUrl->Count() == 0, "There seems to have been a refcounting imbalance.");
 
-        this->recyclableData->sourceProfileManagersByUrl = nullptr;
-        this->recyclableData->oldEntryPointInfo = nullptr;
+        impl_->recyclableData->sourceProfileManagersByUrl = nullptr;
+        impl_->recyclableData->oldEntryPointInfo = nullptr;
 
-        if (this->recyclableData->symbolRegistrationMap != nullptr)
+        if (impl_->recyclableData->symbolRegistrationMap != nullptr)
         {
-            this->recyclableData->symbolRegistrationMap->Clear();
-            this->recyclableData->symbolRegistrationMap = nullptr;
+            impl_->recyclableData->symbolRegistrationMap->Clear();
+            impl_->recyclableData->symbolRegistrationMap = nullptr;
         }
 
         if (this->propertyMap != nullptr)
@@ -417,7 +418,7 @@ ThreadContext::~ThreadContext()
         }
 #endif
         // Unpin the memory for leak report so we don't report this as a leak.
-        recyclableData.Unroot(recycler);
+        impl_->recyclableData.Unroot(recycler);
         HeapDelete(recycler);
     }
 
@@ -590,7 +591,7 @@ Recycler* ThreadContext::EnsureRecycler()
         newRecycler->Initialize(isOptimizedForManyInstances, &threadService); // use in-thread GC when optimizing for many instances
         newRecycler->SetCollectionWrapper(this);
 
-        this->recyclableData.Root(RecyclerNewZ(newRecycler, RecyclableData, newRecycler), newRecycler);
+        impl_->recyclableData.Root(RecyclerNewZ(newRecycler, RecyclableData, newRecycler), newRecycler);
 
         // Assign the recycler to the ThreadContext after everything is initialized, because an OOM during initialization would
         // result in only partial initialization, so the 'recycler' member variable should remain null to cause full
@@ -612,9 +613,9 @@ Recycler* ThreadContext::EnsureRecycler()
         catch(...)
         {
             // Initialization failed, undo what was done above. Callees that throw must clean up after themselves.
-            if (this->recyclableData != nullptr)
+            if (impl_->recyclableData != nullptr)
             {
-                this->recyclableData.Unroot(this->recycler);
+                impl_->recyclableData.Unroot(this->recycler);
             }
 
             {
@@ -753,14 +754,14 @@ ThreadContext::UncheckedAddPropertyId(const char16_t* propertyName, int property
 void ThreadContext::InitializePropertyMaps()
 {
     Assert(this->recycler != nullptr);
-    Assert(this->recyclableData != nullptr);
+    Assert(impl_->recyclableData != nullptr);
     Assert(this->propertyMap == nullptr);
     Assert(this->caseInvariantPropertySet == nullptr);
 
     try
     {
         this->propertyMap = HeapNew(PropertyMap, &HeapAllocator::Instance, TotalNumberOfBuiltInProperties + 700);
-        this->recyclableData->boundPropertyStrings = RecyclerNew(this->recycler, JsUtil::List<Js::PropertyRecord const*>, this->recycler);
+        impl_->recyclableData->boundPropertyStrings = RecyclerNew(this->recycler, JsUtil::List<Js::PropertyRecord const*>, this->recycler);
 
         memset(propertyNamesDirect, 0, 128*sizeof(Js::PropertyRecord *));
 
@@ -953,9 +954,9 @@ ThreadContext::BindPropertyRecord(const Js::PropertyRecord * propertyRecord)
 {
     if (!propertyRecord->IsBound())
     {
-        Assert(!this->recyclableData->boundPropertyStrings->Contains(propertyRecord));
+        Assert(!impl_->recyclableData->boundPropertyStrings->Contains(propertyRecord));
 
-        this->recyclableData->boundPropertyStrings->Add(propertyRecord);
+        impl_->recyclableData->boundPropertyStrings->Add(propertyRecord);
 
         // Cast around constness to set propertyRecord as bound
         const_cast<Js::PropertyRecord *>(propertyRecord)->isBound = true;
@@ -1079,7 +1080,7 @@ void ThreadContext::CreateNoCasePropertyMap()
     // Prevent the set from being reclaimed
     // Individual items in the set can be reclaimed though since they're lists of weak references
     // The lists themselves can be reclaimed when all the weak references in them are cleared
-    this->recyclableData->caseInvariantPropertySet = caseInvariantPropertySet;
+    impl_->recyclableData->caseInvariantPropertySet = caseInvariantPropertySet;
 
     // Note that we are allocating from the recycler below, so we may cause a GC at any time, which
     // could cause PropertyRecords to be collected and removed from the propertyMap.
@@ -1183,10 +1184,10 @@ void
 ThreadContext::RegisterCodeGenRecyclableData(Js::CodeGenRecyclableData *const codeGenRecyclableData)
 {
     Assert(codeGenRecyclableData);
-    Assert(recyclableData);
+    Assert(impl_->recyclableData);
 
     // Linking must not be done concurrently with unlinking (caller must use lock)
-    recyclableData->codeGenRecyclableDatas.LinkToEnd(codeGenRecyclableData);
+    impl_->recyclableData->codeGenRecyclableDatas.LinkToEnd(codeGenRecyclableData);
 }
 
 void
@@ -1194,7 +1195,7 @@ ThreadContext::UnregisterCodeGenRecyclableData(Js::CodeGenRecyclableData *const 
 {
     Assert(codeGenRecyclableData);
 
-    if(!recyclableData)
+    if(!impl_->recyclableData)
     {
         // The thread context's recyclable data may have already been released to the recycler if we're shutting down
         return;
@@ -1203,7 +1204,7 @@ ThreadContext::UnregisterCodeGenRecyclableData(Js::CodeGenRecyclableData *const 
     // Unlinking may be done from a background thread, but not concurrently with linking (caller must use lock).  Partial unlink
     // does not zero the previous and next links for the unlinked node so that the recycler can scan through the node from the
     // main thread.
-    recyclableData->codeGenRecyclableDatas.UnlinkPartial(codeGenRecyclableData);
+    impl_->recyclableData->codeGenRecyclableDatas.UnlinkPartial(codeGenRecyclableData);
 }
 #if ENABLE_NATIVE_CODEGEN
 intptr_t ThreadContext::GetBailOutRegisterSaveSpaceAddr() const { return (intptr_t)bailOutRegisterSaveSpace; }
@@ -1304,8 +1305,8 @@ ThreadContext::EnterScriptEnd(Js::ScriptEntryExitRecord * record, bool doCleanup
         if (Js::Configuration::Global.flags.FreeRejittedCode)
         {
             // Since we're no longer in script, old entry points can now be collected
-            Js::FunctionEntryPointInfo* current = this->recyclableData->oldEntryPointInfo;
-            this->recyclableData->oldEntryPointInfo = nullptr;
+            Js::FunctionEntryPointInfo* current = impl_->recyclableData->oldEntryPointInfo;
+            impl_->recyclableData->oldEntryPointInfo = nullptr;
 
             // Clear out the next pointers so older entry points wont be held on
             // as a false positive
@@ -1356,16 +1357,16 @@ bool ThreadContext::IsInThreadServiceCallback() const { return threadService.IsI
 void ThreadContext::SetHasUnhandledException() { hasUnhandledException = true; }
 void ThreadContext::ResetHasUnhandledException() { hasUnhandledException = false; }
 void ThreadContext::SetUnhandledExceptionObject(Js::JavascriptExceptionObject *exceptionObject) {
-    recyclableData->unhandledExceptionObject = exceptionObject;
+    impl_->recyclableData->unhandledExceptionObject = exceptionObject;
 }
 Js::JavascriptExceptionObject *ThreadContext::GetUnhandledExceptionObject() const {
-    return recyclableData->unhandledExceptionObject;
+    return impl_->recyclableData->unhandledExceptionObject;
 }
 void ThreadContext::SaveTempUncaughtException(Js::JavascriptExceptionObject *exceptionObject) {
-    Js::JavascriptExceptionObject::Insert(&recyclableData->tempUncaughtException, exceptionObject);
+    Js::JavascriptExceptionObject::Insert(&impl_->recyclableData->tempUncaughtException, exceptionObject);
 }
 void ThreadContext::ClearTempUncaughtException(Js::JavascriptExceptionObject *exceptionObject) {
-    Js::JavascriptExceptionObject::Remove(&recyclableData->tempUncaughtException, exceptionObject);
+    Js::JavascriptExceptionObject::Remove(&impl_->recyclableData->tempUncaughtException, exceptionObject);
 }
 bool ThreadContext::HasCatchHandler() const { return hasCatchHandler; }
 void ThreadContext::SetHasCatchHandler(bool hasCatchHandler) { this->hasCatchHandler = hasCatchHandler; }
@@ -1375,13 +1376,13 @@ void ThreadContext::QueueFreeOldEntryPointInfoIfInScript(Js::FunctionEntryPointI
     if (this->IsInScript()) {
         // Add it to the list only if it's not already in it
         if (oldEntryPointInfo->nextEntryPoint == nullptr && !oldEntryPointInfo->IsCleanedUp()) {
-            oldEntryPointInfo->nextEntryPoint = recyclableData->oldEntryPointInfo;
-            recyclableData->oldEntryPointInfo = oldEntryPointInfo;
+            oldEntryPointInfo->nextEntryPoint = impl_->recyclableData->oldEntryPointInfo;
+            impl_->recyclableData->oldEntryPointInfo = oldEntryPointInfo;
         }
     }
 }
 bool ThreadContext::IsOldEntryPointInfo(Js::ProxyEntryPointInfo *entryPointInfo) {
-    Js::FunctionEntryPointInfo *current = this->recyclableData->oldEntryPointInfo;
+    Js::FunctionEntryPointInfo *current = this->impl_->recyclableData->oldEntryPointInfo;
     while (current != nullptr) {
         if (current == entryPointInfo)
             return true;
@@ -1972,8 +1973,8 @@ ThreadContext::GetTemporaryAllocator(const char16_t* name)
     if (temporaryArenaAllocatorCount != 0)
     {
         temporaryArenaAllocatorCount--;
-        Js::TempArenaAllocatorObject * allocator = recyclableData->temporaryArenaAllocators[temporaryArenaAllocatorCount];
-        recyclableData->temporaryArenaAllocators[temporaryArenaAllocatorCount] = nullptr;
+        Js::TempArenaAllocatorObject * allocator = impl_->recyclableData->temporaryArenaAllocators[temporaryArenaAllocatorCount];
+        impl_->recyclableData->temporaryArenaAllocators[temporaryArenaAllocatorCount] = nullptr;
         return allocator;
     }
 
@@ -1986,7 +1987,7 @@ ThreadContext::ReleaseTemporaryAllocator(Js::TempArenaAllocatorObject * tempAllo
     if (temporaryArenaAllocatorCount < MaxTemporaryArenaAllocators)
     {
         tempAllocator->GetAllocator()->Reset();
-        recyclableData->temporaryArenaAllocators[temporaryArenaAllocatorCount] = tempAllocator;
+        impl_->recyclableData->temporaryArenaAllocators[temporaryArenaAllocatorCount] = tempAllocator;
         temporaryArenaAllocatorCount++;
         return;
     }
@@ -2003,9 +2004,9 @@ ThreadContext::GetTemporaryGuestAllocator(const char16_t* name)
     if (temporaryGuestArenaAllocatorCount != 0)
     {
         temporaryGuestArenaAllocatorCount--;
-        Js::TempGuestArenaAllocatorObject * allocator = recyclableData->temporaryGuestArenaAllocators[temporaryGuestArenaAllocatorCount];
+        Js::TempGuestArenaAllocatorObject * allocator = impl_->recyclableData->temporaryGuestArenaAllocators[temporaryGuestArenaAllocatorCount];
         allocator->AdviseInUse();
-        recyclableData->temporaryGuestArenaAllocators[temporaryGuestArenaAllocatorCount] = nullptr;
+        impl_->recyclableData->temporaryGuestArenaAllocators[temporaryGuestArenaAllocatorCount] = nullptr;
         return allocator;
     }
 
@@ -2018,7 +2019,7 @@ ThreadContext::ReleaseTemporaryGuestAllocator(Js::TempGuestArenaAllocatorObject 
     if (temporaryGuestArenaAllocatorCount < MaxTemporaryArenaAllocators)
     {
         tempGuestAllocator->AdviseNotInUse();
-        recyclableData->temporaryGuestArenaAllocators[temporaryGuestArenaAllocatorCount] = tempGuestAllocator;
+        impl_->recyclableData->temporaryGuestArenaAllocators[temporaryGuestArenaAllocatorCount] = tempGuestAllocator;
         temporaryGuestArenaAllocatorCount++;
         return;
     }
@@ -2744,7 +2745,7 @@ void
 ThreadContext::ClearInvalidatedUniqueGuards()
 {
     // If a propertyGuard was invalidated, make sure to remove it's entry from unique property guard table of other property records.
-    PropertyGuardDictionary &guards = this->recyclableData->propertyGuards;
+    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
 
     guards.Map([](Js::PropertyRecord const * propertyRecord, PropertyGuardEntry* entry, const RecyclerWeakReference<const Js::PropertyRecord>* weakRef)
     {
@@ -2867,10 +2868,10 @@ ThreadContext::ClearEquivalentTypeCaches()
 
 bool ThreadContext::IsNoScriptScope() const { return this->noScriptScope; }
 void ThreadContext::SetPendingFinallyException(Js::JavascriptExceptionObject *exceptionObj) {
-    recyclableData->pendingFinallyException = exceptionObj;
+    impl_->recyclableData->pendingFinallyException = exceptionObj;
 }
 Js::JavascriptExceptionObject *ThreadContext::GetPendingFinallyException() const {
-    return recyclableData->pendingFinallyException;
+    return impl_->recyclableData->pendingFinallyException;
 }
 
 Js::EntryPointInfo **
@@ -3123,7 +3124,7 @@ ThreadContext::AutoDisableExpiration::~AutoDisableExpiration() {
 ThreadContext::PropertyGuardEntry*
 ThreadContext::EnsurePropertyGuardEntry(const Js::PropertyRecord* propertyRecord, bool& foundExistingEntry)
 {
-    PropertyGuardDictionary &guards = this->recyclableData->propertyGuards;
+    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
     PropertyGuardEntry* entry = nullptr;
 
     foundExistingEntry = guards.TryGetValue(propertyRecord, &entry);
@@ -3282,13 +3283,13 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
     // the unique Guards will be cleared anyway.
     if (!isAllPropertyGuardsInvalidation)
     {
-        this->recyclableData->constructorCacheInvalidationCount += count;
-        if (this->recyclableData->constructorCacheInvalidationCount > ConstructorCacheInvalidationThreshold)
+        impl_->recyclableData->constructorCacheInvalidationCount += count;
+        if (impl_->recyclableData->constructorCacheInvalidationCount > ConstructorCacheInvalidationThreshold)
         {
             // TODO: In future, we should compact the uniqueGuards dictionary so this function can be called from PreCollectionCallback
             // instead
             this->ClearInvalidatedUniqueGuards();
-            this->recyclableData->constructorCacheInvalidationCount = 0;
+            impl_->recyclableData->constructorCacheInvalidationCount = 0;
         }
     }
 
@@ -3342,7 +3343,7 @@ void
 ThreadContext::InvalidatePropertyGuards(Js::PropertyId propertyId)
 {
     const Js::PropertyRecord* propertyRecord = GetPropertyName(propertyId);
-    PropertyGuardDictionary &guards = this->recyclableData->propertyGuards;
+    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
     PropertyGuardEntry* entry = nullptr;
     if (guards.TryGetValueAndRemove(propertyRecord, &entry))
     {
@@ -3353,7 +3354,7 @@ ThreadContext::InvalidatePropertyGuards(Js::PropertyId propertyId)
 void
 ThreadContext::InvalidateAllPropertyGuards()
 {
-    PropertyGuardDictionary &guards = this->recyclableData->propertyGuards;
+    PropertyGuardDictionary &guards = impl_->recyclableData->propertyGuards;
     if (guards.Count() > 0)
     {
         guards.Map([this](Js::PropertyRecord const * propertyRecord, PropertyGuardEntry* entry, const RecyclerWeakReference<const Js::PropertyRecord>* weakRef)
@@ -3595,7 +3596,7 @@ void ThreadContext::RegisterTypeWithProtoPropertyCache(const Js::PropertyId prop
     Assert(IsActivePropertyId(propertyId));
     Assert(type);
 
-    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = recyclableData->typesWithProtoPropertyCache;
+    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
     TypeHashSet *typeHashSet = nullptr;
     if(!typesWithProtoPropertyCache.TryGetValue(propertyId, &typeHashSet))
     {
@@ -3617,7 +3618,7 @@ void ThreadContext::InternalInvalidateProtoTypePropertyCaches(const Js::Property
 {
     // Get the hash set of registered types associated with the property ID, invalidate each type in the hash set, and
     // remove the property ID and its hash set from the map
-    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = recyclableData->typesWithProtoPropertyCache;
+    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
     TypeHashSet *typeHashSet = nullptr;
     if(typesWithProtoPropertyCache.Count() != 0 && typesWithProtoPropertyCache.TryGetValueAndRemove(propertyId, &typeHashSet))
     {
@@ -3627,7 +3628,7 @@ void ThreadContext::InternalInvalidateProtoTypePropertyCaches(const Js::Property
 
 void ThreadContext::InvalidateAllProtoTypePropertyCaches()
 {
-    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = recyclableData->typesWithProtoPropertyCache;
+    PropertyIdToTypeHashSetDictionary &typesWithProtoPropertyCache = impl_->recyclableData->typesWithProtoPropertyCache;
     if (typesWithProtoPropertyCache.Count() > 0)
     {
         typesWithProtoPropertyCache.Map([this](Js::PropertyId propertyId, TypeHashSet * typeHashSet)
@@ -3834,10 +3835,10 @@ BOOL ThreadContext::IsNativeAddress(void * pCodeAddr, Js::ScriptContext* current
 #if ENABLE_PROFILE_INFO
 void ThreadContext::EnsureSourceProfileManagersByUrlMap()
 {
-    if(this->recyclableData->sourceProfileManagersByUrl == nullptr)
+    if(impl_->recyclableData->sourceProfileManagersByUrl == nullptr)
     {
         this->EnsureRecycler();
-        this->recyclableData->sourceProfileManagersByUrl = RecyclerNew(GetRecycler(), SourceProfileManagersByUrlMap, GetRecycler());
+        impl_->recyclableData->sourceProfileManagersByUrl = RecyclerNew(GetRecycler(), SourceProfileManagersByUrlMap, GetRecycler());
     }
 }
 
@@ -3851,9 +3852,9 @@ Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_
       Js::SourceDynamicProfileManager* profileManager = nullptr;
       SourceDynamicProfileManagerCache* managerCache = nullptr;
       bool newCache = false;
-      if(!this->recyclableData->sourceProfileManagersByUrl->TryGetValue(url, &managerCache))
+      if(!impl_->recyclableData->sourceProfileManagersByUrl->TryGetValue(url, &managerCache))
       {
-          if(this->recyclableData->sourceProfileManagersByUrl->Count() >= INMEMORY_CACHE_MAX_URL)
+          if(impl_->recyclableData->sourceProfileManagersByUrl->Count() >= INMEMORY_CACHE_MAX_URL)
           {
               return nullptr;
           }
@@ -3895,7 +3896,7 @@ Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_
           size_t lengthInChars = std::u16string(url).length() + 1;
           char16_t* urlCopy = RecyclerNewArrayLeaf(GetRecycler(), char16_t, lengthInChars);
           js_memcpy_s(urlCopy, lengthInChars * sizeof(char16_t), url, lengthInChars * sizeof(char16_t));
-          this->recyclableData->sourceProfileManagersByUrl->Add(urlCopy, managerCache);
+          impl_->recyclableData->sourceProfileManagersByUrl->Add(urlCopy, managerCache);
       }
       return profileManager;
 }
@@ -3906,9 +3907,9 @@ Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_
 uint ThreadContext::ReleaseSourceDynamicProfileManagers(const char16_t* url)
 {
     // If we've already freed the recyclable data, we're shutting down the thread context so skip clean up
-    if (this->recyclableData == nullptr) return 0;
+    if (impl_->recyclableData == nullptr) return 0;
 
-    SourceDynamicProfileManagerCache* managerCache = this->recyclableData->sourceProfileManagersByUrl->Lookup(url, nullptr);
+    SourceDynamicProfileManagerCache* managerCache = impl_->recyclableData->sourceProfileManagersByUrl->Lookup(url, nullptr);
     uint refCount = 0;
     if(managerCache)  // manager cache may be null we exceeded -INMEMORY_CACHE_MAX_URL
     {
@@ -3916,7 +3917,7 @@ uint ThreadContext::ReleaseSourceDynamicProfileManagers(const char16_t* url)
         Output::Flush();
         if(refCount == 0)
         {
-            this->recyclableData->sourceProfileManagersByUrl->Remove(url);
+            impl_->recyclableData->sourceProfileManagersByUrl->Remove(url);
         }
     }
     return refCount;
@@ -3925,10 +3926,10 @@ uint ThreadContext::ReleaseSourceDynamicProfileManagers(const char16_t* url)
 
 void ThreadContext::EnsureSymbolRegistrationMap()
 {
-    if (this->recyclableData->symbolRegistrationMap == nullptr)
+    if (impl_->recyclableData->symbolRegistrationMap == nullptr)
     {
         this->EnsureRecycler();
-        this->recyclableData->symbolRegistrationMap = RecyclerNew(GetRecycler(), SymbolRegistrationMap, GetRecycler());
+        impl_->recyclableData->symbolRegistrationMap = RecyclerNew(GetRecycler(), SymbolRegistrationMap, GetRecycler());
     }
 }
 
@@ -3938,7 +3939,7 @@ const Js::PropertyRecord* ThreadContext::GetSymbolFromRegistrationMap(const char
 
     Js::HashedCharacterBuffer<char16_t> propertyName = Js::HashedCharacterBuffer<char16_t>(stringKey, stringLength);
 
-    return this->recyclableData->symbolRegistrationMap->LookupWithKey(&propertyName, nullptr);
+    return impl_->recyclableData->symbolRegistrationMap->LookupWithKey(&propertyName, nullptr);
 }
 
 const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16_t* stringKey, charcount_t stringLength)
@@ -3954,7 +3955,7 @@ const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16
     // at the null character, so we use the Js::HashedCharacterBuffer as key. We allocate the key in the recycler memory as it needs to be around
     // for the lifetime of the map.
     Js::HashedCharacterBuffer<char16_t> * propertyName = RecyclerNew(GetRecycler(), Js::HashedCharacterBuffer<char16_t>, propertyRecord->GetBuffer(), propertyRecord->GetLength());
-    this->recyclableData->symbolRegistrationMap->Add(propertyName, propertyRecord);
+    impl_->recyclableData->symbolRegistrationMap->Add(propertyName, propertyRecord);
 
     return propertyRecord;
 }
@@ -3962,18 +3963,18 @@ void ThreadContext::ClearPendingSOError() { this->GetPendingSOErrorObject()->Cle
 
 void ThreadContext::ClearPendingOOMError() { this->GetPendingOOMErrorObject()->ClearError(); }
 Js::JavascriptExceptionObject *ThreadContext::GetPendingSOErrorObject() {
-    Assert(recyclableData->soErrorObject.IsPendingExceptionObject());
-    return &recyclableData->soErrorObject;
+    Assert(impl_->recyclableData->soErrorObject.IsPendingExceptionObject());
+    return &impl_->recyclableData->soErrorObject;
 }
 Js::JavascriptExceptionObject *ThreadContext::GetPendingOOMErrorObject() {
-    Assert(recyclableData->oomErrorObject.IsPendingExceptionObject());
-    return &recyclableData->oomErrorObject;
+    Assert(impl_->recyclableData->oomErrorObject.IsPendingExceptionObject());
+    return &impl_->recyclableData->oomErrorObject;
 }
 Js::JavascriptExceptionObject *ThreadContext::GetPendingTerminatedErrorObject() {
-    return &recyclableData->terminatedErrorObject;
+    return &impl_->recyclableData->terminatedErrorObject;
 }
-Js::JavascriptExceptionObject *ThreadContext::GetRecordedException() { return recyclableData->exceptionObject; }
-bool ThreadContext::GetPropagateException() const { return recyclableData->propagateException; }
+Js::JavascriptExceptionObject *ThreadContext::GetRecordedException() { return impl_->recyclableData->exceptionObject; }
+bool ThreadContext::GetPropagateException() const { return impl_->recyclableData->propagateException; }
 void ThreadContext::SetHasThrownPendingException() {
     Assert(this->IsInScript());
     this->hasThrownPendingException = true;
@@ -3981,8 +3982,8 @@ void ThreadContext::SetHasThrownPendingException() {
 bool *ThreadContext::GetHasBailedOutBitPtr() { return this->hasBailedOutBitPtr; }
 void ThreadContext::SetHasBailedOutBitPtr(bool *setValue) { this->hasBailedOutBitPtr = setValue; }
 void ThreadContext::SetRecordedException(Js::JavascriptExceptionObject *exceptionObject, bool propagateToDebugger) {
-    this->recyclableData->exceptionObject = exceptionObject;
-    this->recyclableData->propagateException = propagateToDebugger;
+    impl_->recyclableData->exceptionObject = exceptionObject;
+    impl_->recyclableData->propagateException = propagateToDebugger;
 }
 Js::ImplicitCallFlags *ThreadContext::GetAddressOfImplicitCallFlags() { return &implicitCallFlags; }
 DisableImplicitFlags *ThreadContext::GetAddressOfDisableImplicitFlags() { return &disableImplicitFlags; }

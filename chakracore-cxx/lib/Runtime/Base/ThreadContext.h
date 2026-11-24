@@ -611,6 +611,13 @@ class ThreadContext :
 private:
     struct PropertyGuardEntry;
     class ThreadContextImpl;
+    // TODO (hanhossain): move to impl
+    typedef JsUtil::WeaklyReferencedKeyDictionary<Js::Type, bool> TypeHashSet;
+    // TODO (hanhossain): move to impl
+    typedef JsUtil::BaseDictionary<Js::PropertyId, TypeHashSet *, Recycler, PowerOf2SizePolicy> PropertyIdToTypeHashSetDictionary;
+    // TODO (hanhossain): move to impl
+    typedef JsUtil::WeaklyReferencedKeyDictionary<const Js::PropertyRecord, PropertyGuardEntry*, Js::PropertyRecordPointerComparer> PropertyGuardDictionary;
+
     std::shared_ptr<ThreadContextImpl> impl_;
 public:
     static void GlobalInitialize();
@@ -685,9 +692,6 @@ public:
 
     typedef JsUtil::BaseHashSet<Js::CaseInvariantPropertyListWithHashCode*, Recycler, PowerOf2SizePolicy, Js::CaseInvariantPropertyListWithHashCode*, JsUtil::NoCaseComparer, JsUtil::SimpleDictionaryEntry>
         PropertyNoCaseSetType;
-    typedef JsUtil::WeaklyReferencedKeyDictionary<Js::Type, bool> TypeHashSet;
-    typedef JsUtil::BaseDictionary<Js::PropertyId, TypeHashSet *, Recycler, PowerOf2SizePolicy> PropertyIdToTypeHashSetDictionary;
-    typedef JsUtil::WeaklyReferencedKeyDictionary<const Js::PropertyRecord, PropertyGuardEntry*, Js::PropertyRecordPointerComparer> PropertyGuardDictionary;
 
 private:
 #if ENABLE_NATIVE_CODEGEN
@@ -865,7 +869,6 @@ private:
     CustomHeap::InProcCodePageAllocators codePageAllocators;
 #endif
 
-    RecyclerRootPtr<RecyclableData> recyclableData;
     uint temporaryArenaAllocatorCount;
     uint temporaryGuestArenaAllocatorCount;
 
