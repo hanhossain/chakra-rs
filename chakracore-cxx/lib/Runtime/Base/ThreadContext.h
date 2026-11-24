@@ -53,34 +53,6 @@ const int LS_MAX_STACK_SIZE_KB = 300;
 
 class ThreadContext;
 
-class InterruptPoller
-{
-    // Interface with a polling object located in the hosting layer.
-
-public:
-    InterruptPoller(ThreadContext *tc);
-
-    virtual ~InterruptPoller() { }
-
-    void CheckInterruptPoll();
-    void ResetStatementCount() { lastResetTick = lastPollTick; }
-    void StartScript() { lastResetTick = lastPollTick = ::GetTickCount(); }
-    void EndScript() { lastResetTick = lastPollTick = 0;}
-    bool IsDisabled() const { return isDisabled; }
-    void SetDisabled(bool disable) { isDisabled = disable; }
-
-    virtual void TryInterruptPoll(Js::ScriptContext *scriptContext) = 0;
-
-    // Default: throw up QC dialog after 5M statements == 2 minutes
-    static const uint32_t TicksToStatements = (5000000 / 120000);
-
-protected:
-    ThreadContext *threadContext;
-    uint32_t lastPollTick;
-    uint32_t lastResetTick;
-    bool isDisabled;
-};
-
 #define PROBE_STACK(scriptContext, size) ((scriptContext)->GetThreadContext()->ProbeStack(size, scriptContext))
 #define PROBE_STACK_NO_DISPOSE(scriptContext, size) ((scriptContext)->GetThreadContext()->ProbeStackNoDispose(size, scriptContext))
 #define PROBE_STACK_PARTIAL_INITIALIZED_INTERPRETER_FRAME(scriptContext, size) ((scriptContext)->GetThreadContext()->ProbeStack(size, scriptContext, __builtin_return_address(0)))
@@ -1059,11 +1031,7 @@ public:
     void PushHostScriptContext(HostScriptContext* topProvider);
     HostScriptContext* PopHostScriptContext();
 
-    void SetInterruptPoller(InterruptPoller *poller);
-    InterruptPoller *GetInterruptPoller() const;
-    BOOL HasInterruptPoller() const;
     void CheckScriptInterrupt();
-    void CheckInterruptPoll();
 
     bool DoInterruptProbe(Js::FunctionBody *const func) const;
     bool DoInterruptProbe() const;
@@ -1513,8 +1481,6 @@ private:
     void DoInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId, TypeHashSet *const typeHashSet);
     void InitializePropertyMaps();
     void CreateNoCasePropertyMap();
-
-    InterruptPoller *interruptPoller;
 
     void CollectionCallBack(RecyclerCollectCallBackFlags flags);
 

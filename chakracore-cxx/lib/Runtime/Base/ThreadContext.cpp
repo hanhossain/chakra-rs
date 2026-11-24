@@ -119,7 +119,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #if ENABLE_NATIVE_CODEGEN
     jobProcessor(nullptr),
 #endif
-    interruptPoller(nullptr),
     expirableCollectModeGcCount(-1),
     expirableObjectList(nullptr),
     expirableObjectDisposeList(nullptr),
@@ -348,12 +347,6 @@ ThreadContext::~ThreadContext()
     {
         std::unique_lock autocs(ThreadContext::GetMutex());
         ThreadContext::Unlink(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
-    }
-
-    if (interruptPoller)
-    {
-        HeapDelete(interruptPoller);
-        interruptPoller = nullptr;
     }
 
 #if DBG
@@ -1222,11 +1215,6 @@ ThreadContext::EnterScriptStart(Js::ScriptEntryExitRecord * record, bool doClean
     {
         Assert(!this->hasThrownPendingException);
         RECORD_TIMESTAMP(lastScriptStartTime);
-        InterruptPoller *poller = this->interruptPoller;
-        if (poller)
-        {
-            poller->StartScript();
-        }
 
         recycler->SetIsInScript(true);
         if (doCleanup)
@@ -1287,11 +1275,6 @@ ThreadContext::EnterScriptEnd(Js::ScriptEntryExitRecord * record, bool doCleanup
     {
         RECORD_TIMESTAMP(lastScriptEndTime);
         this->GetRecycler()->SetIsInScript(false);
-        InterruptPoller *poller = this->interruptPoller;
-        if (poller)
-        {
-            poller->EndScript();
-        }
         ClosePendingScriptContexts();
         Assert(rootPendingClose == nullptr);
 
@@ -3712,7 +3695,6 @@ HostScriptContext* ThreadContext::PopHostScriptContext()
     // revisit the whole callRootLevel but probably not now.
     // Assert(HasPreviousHostScriptContext() || callRootLevel == 0);
 }
-void ThreadContext::SetInterruptPoller(InterruptPoller *poller) { interruptPoller = poller; }
 
 uint ThreadContext::GetScriptContextCount() const { return this->scriptContextCount; }
 Js::ScriptContext *ThreadContext::GetScriptContextList() const { return this->scriptContextList; }
@@ -4130,8 +4112,6 @@ UnifiedRegex::StandardChars<char16_t>* ThreadContext::GetStandardChars(char16_t*
     return standardUnicodeChars;
 }
 
-InterruptPoller *ThreadContext::GetInterruptPoller() const { return interruptPoller; }
-BOOL ThreadContext::HasInterruptPoller() const { return interruptPoller != nullptr; }
 void ThreadContext::CheckScriptInterrupt()
 {
     if (TestThreadContextFlag(ThreadContextFlagCanDisableExecution))
@@ -4142,25 +4122,8 @@ void ThreadContext::CheckScriptInterrupt()
             throw Js::ScriptAbortException();
         }
     }
-    else
-    {
-        this->CheckInterruptPoll();
-    }
 }
 
-void ThreadContext::CheckInterruptPoll()
-{
-    // Disable QC when implicit calls are disabled since the host can do anything before returning back, like servicing the
-    // message loop, which may in turn cause script code to be executed and implicit calls to be made
-    if (!IsDisableImplicitCall())
-    {
-        InterruptPoller *poller = this->interruptPoller;
-        if (poller)
-        {
-            poller->CheckInterruptPoll();
-        }
-    }
-}
 bool ThreadContext::DoInterruptProbe(Js::FunctionBody *const func) const {
     return (this->TestThreadContextFlag(ThreadContextFlagCanDisableExecution) &&
             !PHASE_OFF(Js::InterruptProbePhase, func)) ||
@@ -4180,31 +4143,6 @@ ThreadContext::AddDynamicObjectEnumeratorCache(Js::DynamicType const * dynamicTy
     this->dynamicObjectEnumeratorCacheMap.Item(dynamicType, cache);
 }
 bool ThreadContext::IsScriptActive() const { return isScriptActive; }
-
-InterruptPoller::InterruptPoller(ThreadContext *tc) :
-    threadContext(tc),
-    lastPollTick(0),
-    lastResetTick(0),
-    isDisabled(FALSE)
-{
-    tc->SetInterruptPoller(this);
-}
-
-void InterruptPoller::CheckInterruptPoll()
-{
-    if (!isDisabled)
-    {
-        Js::ScriptEntryExitRecord *entryExitRecord = this->threadContext->GetScriptEntryExit();
-        if (entryExitRecord)
-        {
-            Js::ScriptContext *scriptContext = entryExitRecord->scriptContext;
-            if (scriptContext)
-            {
-                this->TryInterruptPoll(scriptContext);
-            }
-        }
-    }
-}
 
 void ThreadContext::SetIsScriptActive(bool isActive) { isScriptActive = isActive; }
 bool ThreadContext::IsExecutionDisabled() const {
