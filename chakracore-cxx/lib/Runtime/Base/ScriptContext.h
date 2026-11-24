@@ -9,6 +9,7 @@
 #include "ThreadContext.h"
 #include "Common/RejitReason.h"
 #include "Core/ProfileInstrument.h"
+#include "DataStructures/Stack.h"
 
 #if DBG || ENABLE_REGEX_CONFIG_OPTIONS
 #define NEED_MISC_ALLOCATOR

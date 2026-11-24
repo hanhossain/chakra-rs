@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"
 #include "Library/DelayFreeArrayBufferHelper.h"
 #include "Base/AutoReentrancyHandler.h"
@@ -609,7 +608,10 @@ class ThreadContext :
     public JsUtil::DoublyLinkedListElement<ThreadContext>,
     public ThreadContextInfo
 {
+private:
     struct PropertyGuardEntry;
+    class ThreadContextImpl;
+    std::shared_ptr<ThreadContextImpl> impl_;
 public:
     static void GlobalInitialize();
     static const uint32_t NoThread = 0xFFFFFFFF;
@@ -931,9 +933,6 @@ private:
     // This counter will be used as addref when the script context is created, this way we maintain the life of diagnostic object.
     // Once no script context available , diagnostic will go away.
     int32_t crefSContextForDiag;
-
-    JsUtil::Stack<HostScriptContext*>* hostScriptContextStack;
-
     //
     // Regex globals
     //

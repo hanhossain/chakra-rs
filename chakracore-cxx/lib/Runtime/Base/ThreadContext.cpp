@@ -19,6 +19,7 @@
 #include "Language/JavascriptStackWalker.h"
 #include "Base/ScriptMemoryDumper.h"
 #include "Memory/RecyclerWatsonTelemetry.h"
+#include "DataStructures/Stack.h"
 #include <memory>
 
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
@@ -37,6 +38,15 @@ size_t ThreadContext::processNativeCodeSize = 0;
 ThreadContext * ThreadContext::globalListFirst = nullptr;
 ThreadContext * ThreadContext::globalListLast = nullptr;
 thread_local uint ThreadContext::activeScriptSiteCount = 0;
+
+class ThreadContext::ThreadContextImpl {
+public:
+    ThreadContextImpl() = default;
+
+private:
+    friend class ThreadContext;
+    JsUtil::Stack<HostScriptContext*>* host_script_context_stack_;
+};
 
 const Js::PropertyRecord * const ThreadContext::builtInPropertyRecords[] =
 {
@@ -95,6 +105,7 @@ DateTime::HiResTimer *ThreadContext::GetHiResTimer() { return &hTimer; }
 ArenaAllocator *ThreadContext::GetThreadAlloc() { return &threadAlloc; }
 std::recursive_mutex &ThreadContext::GetMutex() { return s_csThreadContext; }
 ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback, bool enableExperimentalFeatures) :
+    impl_(new ThreadContextImpl()),
     currentThreadId(::GetCurrentThreadId()),
     stackLimitForCurrentThread(0),
     stackProber(nullptr),
@@ -193,7 +204,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     , closedScriptContextCount(0)
     , visibilityState(VisibilityState::Undefined)
 {
-    hostScriptContextStack = Anew(GetThreadAlloc(), JsUtil::Stack<HostScriptContext*>, GetThreadAlloc());
+    impl_->host_script_context_stack_ = Anew(GetThreadAlloc(), JsUtil::Stack<HostScriptContext*>, GetThreadAlloc());
 
     functionCount = 0;
     sourceInfoCount = 0;
@@ -3670,12 +3681,12 @@ Js::OnlyWritablePropertyThreadRegistry *ThreadContext::GetOnlyWritablePropertyRe
 Js::DelayedFreeArrayBuffer *ThreadContext::GetScanStackCallback() { return &this->delayFreeCallback; }
 BOOL ThreadContext::HasPreviousHostScriptContext()
 {
-    return hostScriptContextStack->Count() != 0;
+    return impl_->host_script_context_stack_->Count() != 0;
 }
 
 HostScriptContext* ThreadContext::GetPreviousHostScriptContext()
 {
-    return hostScriptContextStack->Peek();
+    return impl_->host_script_context_stack_->Peek();
 }
 
 void ThreadContext::PushHostScriptContext(HostScriptContext* topProvider)
@@ -3684,12 +3695,12 @@ void ThreadContext::PushHostScriptContext(HostScriptContext* topProvider)
     // happening after the first round of enterscript as well. we might need to
     // revisit the whole callRootLevel but probably not now.
     // Assert(HasPreviousHostScriptContext() || callRootLevel == 0);
-    hostScriptContextStack->Push(topProvider);
+    impl_->host_script_context_stack_->Push(topProvider);
 }
 
 HostScriptContext* ThreadContext::PopHostScriptContext()
 {
-    return hostScriptContextStack->Pop();
+    return impl_->host_script_context_stack_->Pop();
     // script engine can be created coming from GetDispID, so push/pop can be
     // happening after the first round of enterscript as well. we might need to
     // revisit the whole callRootLevel but probably not now.
