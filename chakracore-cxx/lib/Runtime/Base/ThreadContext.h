@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Entropy.h"
 #include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"
 #include "Library/DelayFreeArrayBufferHelper.h"
@@ -932,8 +931,6 @@ private:
     // This counter will be used as addref when the script context is created, this way we maintain the life of diagnostic object.
     // Once no script context available , diagnostic will go away.
     int32_t crefSContextForDiag;
-
-    Entropy entropy;
 
     JsUtil::Stack<HostScriptContext*>* hostScriptContextStack;
 
