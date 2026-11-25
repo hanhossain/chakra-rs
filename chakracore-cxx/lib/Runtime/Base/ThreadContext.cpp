@@ -41,12 +41,13 @@ thread_local uint ThreadContext::activeScriptSiteCount = 0;
 
 class ThreadContext::ThreadContextImpl {
 public:
-    ThreadContextImpl() : host_script_context_stack_(nullptr) {}
+    ThreadContextImpl(ThreadContext *super) : super_(super), host_script_context_stack_(nullptr) {}
 
 private:
     friend class ThreadContext;
 
     using TypeHashSet = JsUtil::WeaklyReferencedKeyDictionary<Js::Type, bool>;
+    using ActiveFunctionSet = BVSparse<ArenaAllocator>;
 
     struct RecyclableData {
         RecyclableData(Recycler *const recycler);
@@ -116,10 +117,15 @@ private:
 
         WriteBarrierFieldTypeTraits<uint>::Type constructorCacheInvalidationCount;
     };
+    ThreadContext *super_;
     JsUtil::Stack<HostScriptContext *> *host_script_context_stack_;
     RecyclerRootPtr<RecyclableData> recyclableData;
+    // This instance holds list of delay-free array buffer - this will be used in
+    // scanning the stack in order to release any delay-free buffer.
+    Js::DelayedFreeArrayBuffer delayFreeCallback;
 
     static void DoInvalidateProtoTypePropertyCaches(Js::PropertyId propertyId, TypeHashSet *typeHashSet);
+    void GetActiveFunctions(ActiveFunctionSet * pActive);
 };
 
 const Js::PropertyRecord * const ThreadContext::builtInPropertyRecords[] =
@@ -175,7 +181,7 @@ DateTime::HiResTimer *ThreadContext::GetHiResTimer() { return &hTimer; }
 ArenaAllocator *ThreadContext::GetThreadAlloc() { return &threadAlloc; }
 std::recursive_mutex &ThreadContext::GetMutex() { return s_csThreadContext; }
 ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback, bool enableExperimentalFeatures) :
-    impl_(new ThreadContextImpl()),
+    impl_(new ThreadContextImpl(this)),
     currentThreadId(::GetCurrentThreadId()),
     stackLimitForCurrentThread(0),
     stackProber(nullptr),
@@ -1369,7 +1375,7 @@ ThreadContext::EnterScriptEnd(Js::ScriptEntryExitRecord * record, bool doCleanup
             this->hasThrownPendingException = false;
         }
 
-        delayFreeCallback.ClearAll();
+        impl_->delayFreeCallback.ClearAll();
 
         if (Js::Configuration::Global.flags.FreeRejittedCode)
         {
@@ -2476,12 +2482,12 @@ ThreadContext::OnScanStackCallback(void ** stackTop, size_t byteCount, void ** r
     // Scan the stack to match with current list of delayed free buffer. For those which are not found on the stack
     // will be released (ref-count decremented)
 
-    if (!this->delayFreeCallback.HasAnyItem())
+    if (!impl_->delayFreeCallback.HasAnyItem())
     {
         return;
     }
 
-    this->delayFreeCallback.ScanStack(stackTop, byteCount, registers, registersByteCount);
+    impl_->delayFreeCallback.ScanStack(stackTop, byteCount, registers, registersByteCount);
 }
 
 bool
@@ -2564,7 +2570,7 @@ ThreadContext::TryRedeferral()
     if (doRedefer)
     {
         pActiveFuncs = Anew(this->GetThreadAlloc(), ActiveFunctionSet, this->GetThreadAlloc());
-        this->GetActiveFunctions(pActiveFuncs);
+        impl_->GetActiveFunctions(pActiveFuncs);
 #if DBG
         this->redeferredFunctions = 0;
         this->recoveredBytes = 0;
@@ -2589,14 +2595,14 @@ ThreadContext::TryRedeferral()
 }
 
 void
-ThreadContext::GetActiveFunctions(ActiveFunctionSet * pActiveFuncs)
+ThreadContext::ThreadContextImpl::GetActiveFunctions(ActiveFunctionSet * pActiveFuncs)
 {
-    if (!this->IsInScript() || this->entryExitRecord == nullptr)
+    if (!super_->IsInScript() || super_->entryExitRecord == nullptr)
     {
         return;
     }
 
-    Js::JavascriptStackWalker walker(GetScriptContextList(), TRUE, NULL, true);
+    Js::JavascriptStackWalker walker(super_->GetScriptContextList(), TRUE, NULL, true);
     Js::JavascriptFunction *function = nullptr;
     while (walker.GetCallerWithoutInlinedFrames(&function))
     {
@@ -3747,7 +3753,7 @@ Js::NoSpecialPropertyThreadRegistry *ThreadContext::GetNoSpecialPropertyRegistry
 Js::OnlyWritablePropertyThreadRegistry *ThreadContext::GetOnlyWritablePropertyRegistry() {
     return &this->onlyWritablePropertyRegistry;
 }
-Js::DelayedFreeArrayBuffer *ThreadContext::GetScanStackCallback() { return &this->delayFreeCallback; }
+Js::DelayedFreeArrayBuffer *ThreadContext::GetScanStackCallback() { return &impl_->delayFreeCallback; }
 BOOL ThreadContext::HasPreviousHostScriptContext()
 {
     return impl_->host_script_context_stack_->Count() != 0;

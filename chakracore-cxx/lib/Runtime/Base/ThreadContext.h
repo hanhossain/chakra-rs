@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Library/DelayFreeArrayBufferHelper.h"
 #include "Base/AutoReentrancyHandler.h"
 
 #include <memory>
@@ -15,8 +14,6 @@ namespace Js
     class CodeGenRecyclableData;
     class DelayedFreeArrayBuffer;
 }
-
-typedef BVSparse<ArenaAllocator> ActiveFunctionSet;
 
 using namespace PlatformAgnostic;
 
@@ -737,10 +734,6 @@ private:
     IdleDecommitPageAllocator pageAllocator;
     Recycler* recycler;
 
-    // This instance holds list of delay-free array buffer - this will be used in 
-    // scanning the stack in order to release any delay-free buffer.
-    Js::DelayedFreeArrayBuffer delayFreeCallback;
-
     // Fake RecyclerWeakReference for built-in properties
     class StaticPropertyRecordReference : public RecyclerWeakReference<const Js::PropertyRecord>
     {
@@ -1090,7 +1083,6 @@ public:
     void UpdateRedeferralState();
     uint GetRedeferralCollectionInterval() const;
     uint GetRedeferralInactiveThreshold() const;
-    void GetActiveFunctions(ActiveFunctionSet * pActive);
 #if DBG
     uint redeferredFunctions;
     uint recoveredBytes;
