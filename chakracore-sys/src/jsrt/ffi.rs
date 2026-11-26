@@ -193,6 +193,11 @@ pub(super) mod bridge {
         fn FfiNew(needConcurrencySupport: bool) -> UniquePtr<AllocationPolicyManager>;
     }
 
+    unsafe extern "C++" {
+        include!("Base/FfiThreadContext.h");
+        type FfiThreadContext;
+    }
+
     extern "C++" {
         include!("ChakraCore.h");
         type JsContextRef = super::JsContextRef;
@@ -216,17 +221,20 @@ pub(super) mod bridge {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
     }
 
-    extern "C++" {
+    unsafe extern "C++" {
         include!("JsrtRuntime.h");
         type JsrtRuntime;
+
+        #[Self = JsrtRuntime]
+        unsafe fn FfiNew(thread_context: *mut FfiThreadContext) -> UniquePtr<JsrtRuntime>;
     }
 
     #[namespace = "chakracore::jsrt"]
     unsafe extern "C++" {
-        fn JsCreateRuntime(
+        unsafe fn JsCreateRuntime(
             attributes: JsRuntimeAttributes,
-            runtime: &mut UniquePtr<JsrtRuntime>,
             policyManager: UniquePtr<AllocationPolicyManager>,
+            threadContext: *mut *mut FfiThreadContext,
         ) -> JsErrorCode;
         unsafe fn JsCreateContext(
             runtime: *mut JsrtRuntime,

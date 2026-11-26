@@ -9,6 +9,7 @@
 #include "Base/FfiThreadContext.h"
 
 JsrtRuntime::JsrtRuntime(FfiThreadContext *thread_context) : thread_context_(thread_context) {
+    thread_context_->SetCurrentThreadId(ThreadContext::NoThread);
     thread_context_->SetJSRTRuntime(true);
 }
 
@@ -30,6 +31,9 @@ JsrtRuntime::~JsrtRuntime() {
     CloseContexts();
     delete thread_context_;
     scope.Invalidate();
+}
+std::unique_ptr<JsrtRuntime> JsrtRuntime::FfiNew(FfiThreadContext *thread_context) {
+    return std::make_unique<JsrtRuntime>(thread_context);
 }
 
 ThreadContext *JsrtRuntime::GetThreadContext() { return thread_context_->GetThreadContext(); }

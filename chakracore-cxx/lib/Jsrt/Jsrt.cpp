@@ -135,8 +135,7 @@ JsErrorCode CreateContextCore(_In_ JsrtRuntime *runtime, _In_ bool inRecordMode,
 }
 
 JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes,
-                                              std::unique_ptr<JsrtRuntime> &runtimeHandle,
-                                              std::unique_ptr<AllocationPolicyManager> policyManager) {
+                                              std::unique_ptr<AllocationPolicyManager> policyManager, FfiThreadContext **ffiThreadContext) {
     JsErrorCode runtimeResult = GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         const JsRuntimeAttributes JsRuntimeAttributesAll =
             (JsRuntimeAttributes)(
@@ -192,14 +191,7 @@ JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes,
             threadContext->SetThreadContextFlag(ThreadContextFlagDisableFatalOnOOM);
         }
 
-        if (Js::Configuration::Global.flags.PrimeRecycler)
-        {
-            threadContext->EnsureRecycler()->Prime();
-        }
-
-        threadContext->SetCurrentThreadId(ThreadContext::NoThread);
-        runtimeHandle = std::make_unique<JsrtRuntime>(new FfiThreadContext(threadContext.release()));
-
+        *ffiThreadContext = new FfiThreadContext(threadContext.release());
         return JsNoError;
     });
 

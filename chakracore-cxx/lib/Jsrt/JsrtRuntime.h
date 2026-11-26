@@ -32,6 +32,8 @@ public:
     JsrtRuntime(FfiThreadContext *thread_context);
     ~JsrtRuntime();
 
+    static std::unique_ptr<JsrtRuntime> FfiNew(FfiThreadContext *thread_context);
+
     ThreadContext * GetThreadContext();
     static void Uninitialize();
 

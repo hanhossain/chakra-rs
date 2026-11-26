@@ -8,6 +8,7 @@ public:
     ~FfiThreadContext();
 
     void SetJSRTRuntime(bool isJsrtRuntime);
+    void SetCurrentThreadId(uint32_t threadId);
     ThreadContext *GetThreadContext();
 private:
     ThreadContext *thread_context_;
