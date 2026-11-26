@@ -680,6 +680,8 @@ class JsrtRuntime;
     /// <param name="callbackState">The data argument to be passed to the callback.</param>
     using JsPromiseContinuationCallback = std::function<void(JsValueRef task, void *callbackState)>;
 
+class FfiThreadContext;
+
 namespace chakracore::jsrt
 {
 
@@ -695,7 +697,7 @@ namespace chakracore::jsrt
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime, std::unique_ptr<AllocationPolicyManager> policyManager);
+JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<AllocationPolicyManager> policyManager, std::unique_ptr<FfiThreadContext> &ffiThreadContext);
 
     /// <summary>
     ///     Adds a reference to a garbage collected object.

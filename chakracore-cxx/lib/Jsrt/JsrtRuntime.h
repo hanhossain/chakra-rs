@@ -10,6 +10,7 @@
 #include <memory>
 
 class JsrtContext;
+class FfiThreadContext;
 class ThreadContext;
 
 /// <summary>
@@ -28,21 +29,19 @@ class ThreadContext;
 class JsrtRuntime
 {
 public:
-    JsrtRuntime(std::unique_ptr<ThreadContext> threadContext);
+    JsrtRuntime(FfiThreadContext *thread_context);
     ~JsrtRuntime();
 
-    ThreadContext * GetThreadContext() { return this->threadContext.get(); }
+    static std::unique_ptr<JsrtRuntime> FfiNew(std::unique_ptr<FfiThreadContext> thread_context);
 
+    ThreadContext * GetThreadContext();
     static void Uninitialize();
-
-    // JsrtContext *GetFirstContext() { return contextList; }
-    // void SetFirstContext(JsrtContext *context) { contextList = context; }
 
     void Link(JsrtContext *context);
     void Unlink(JsrtContext *context);
 
 private:
     void CloseContexts();
-    std::unique_ptr<ThreadContext> threadContext;
+    FfiThreadContext *thread_context_;
     std::list<JsrtContext *> contextList{};
 };

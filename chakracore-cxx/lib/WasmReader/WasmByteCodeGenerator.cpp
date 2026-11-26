@@ -7,6 +7,7 @@
 
 #ifdef ENABLE_WASM
 #include "Language/WebAssemblySource.h"
+#include "Base/AutoDisableInterrupt.h"
 #include "ByteCode/WasmByteCodeWriter.h"
 #include "EmptyWasmByteCodeWriter.h"
 #include "ByteCode/ByteCodeDumper.h"

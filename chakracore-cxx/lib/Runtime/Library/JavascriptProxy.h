@@ -207,9 +207,6 @@ namespace Js
 
         Var ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices);
 
-
-        static PropertyId EnsureHandlerPropertyId(ScriptContext* scriptContext);
-
     private:
         JavascriptFunction* GetMethodHelper(PropertyId methodId, ScriptContext* requestContext);
         Var GetValueFromDescriptor(Var instance, PropertyDescriptor propertyDescriptor, ScriptContext* requestContext);

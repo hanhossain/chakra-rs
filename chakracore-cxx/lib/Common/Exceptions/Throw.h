@@ -24,9 +24,7 @@ namespace Js {
         static void FatalInternalError(int32_t hr = E_FAIL);
 
         static void FatalProjectionError();
-#if ENABLE_JS_REENTRANCY_CHECK
         static void FatalJsReentrancyError();
-#endif
         static void FatalJsBuiltInError();
 
         static bool ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message);

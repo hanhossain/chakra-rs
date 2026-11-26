@@ -18,6 +18,7 @@
 #include "Library/ScriptFunction.h"
 
 // Parser Includes
+#include "FfiThreadContext.h"
 #include "cmperr.h"     // For ERRnoMemory
 #include "screrror.h"   // For CompileScriptException
 
@@ -133,9 +134,8 @@ JsErrorCode CreateContextCore(_In_ JsrtRuntime *runtime, _In_ bool inRecordMode,
     return JsNoError;
 }
 
-// A create runtime function that we can funnel to for regular and record or debug aware creation
-static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime,
-                                     std::unique_ptr<AllocationPolicyManager> policyManager) {
+JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes,
+                                              std::unique_ptr<AllocationPolicyManager> policyManager, std::unique_ptr<FfiThreadContext> &ffiThreadContext) {
     JsErrorCode runtimeResult = GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         const JsRuntimeAttributes JsRuntimeAttributesAll =
             (JsRuntimeAttributes)(
@@ -157,63 +157,11 @@ static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::u
         bool enableExperimentalFeatures = (attributes & JsRuntimeAttributeEnableExperimentalFeatures) != 0;
         auto threadContext = std::make_unique<ThreadContext>(std::move(policyManager), enableExperimentalFeatures);
 
-        if ((attributes & JsRuntimeAttributeDisableBackgroundWork) != 0)
-        {
-            threadContext->OptimizeForManyInstances(true);
-#if ENABLE_NATIVE_CODEGEN
-            threadContext->EnableBgJit(false);
-#endif
-        }
-
-        if (!threadContext->IsRentalThreadingEnabledInJSRT()
-            || Js::Configuration::Global.flags.DisableRentalThreading
-            )
-        {
-            threadContext->SetIsThreadBound();
-        }
-
-        if (attributes & JsRuntimeAttributeAllowScriptInterrupt)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagCanDisableExecution);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableEval)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagEvalDisabled);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableNativeCodeGeneration)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagNoJIT);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableExecutablePageAllocation)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagNoJIT);
-            threadContext->SetThreadContextFlag(ThreadContextFlagNoDynamicThunks);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableFatalOnOOM)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagDisableFatalOnOOM);
-        }
-
-        if (Js::Configuration::Global.flags.PrimeRecycler)
-        {
-            threadContext->EnsureRecycler()->Prime();
-        }
-
-        threadContext->SetCurrentThreadId(ThreadContext::NoThread);
-        runtime = std::make_unique<JsrtRuntime>(std::move(threadContext));
-
+        ffiThreadContext = std::make_unique<FfiThreadContext>(threadContext.release());
         return JsNoError;
     });
 
     return runtimeResult;
-}
-
-JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtimeHandle, std::unique_ptr<AllocationPolicyManager> policyManager) {
-    return CreateRuntimeCore(attributes, runtimeHandle, std::move(policyManager));
 }
 
 JsErrorCode JsPrivateDetachArrayBuffer(_In_ JsValueRef ref, _Out_ void** detachedState)

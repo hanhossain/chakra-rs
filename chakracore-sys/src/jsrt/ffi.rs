@@ -193,6 +193,22 @@ pub(super) mod bridge {
         fn FfiNew(needConcurrencySupport: bool) -> UniquePtr<AllocationPolicyManager>;
     }
 
+    unsafe extern "C++" {
+        include!("Base/FfiThreadContext.h");
+        type FfiThreadContext;
+        fn SetThreadContextFlag(
+            self: Pin<&mut FfiThreadContext>,
+            threadContextFlag: ThreadContextFlags,
+        );
+        fn OptimizeForManyInstances(
+            self: Pin<&mut FfiThreadContext>,
+            optimizeForManyInstances: bool,
+        );
+        #[cfg(enable_native_codegen)]
+        fn EnableBgJit(self: Pin<&mut FfiThreadContext>, enableBgJit: bool);
+        type ThreadContextFlags;
+    }
+
     extern "C++" {
         include!("ChakraCore.h");
         type JsContextRef = super::JsContextRef;
@@ -216,17 +232,20 @@ pub(super) mod bridge {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
     }
 
-    extern "C++" {
+    unsafe extern "C++" {
         include!("JsrtRuntime.h");
         type JsrtRuntime;
+
+        #[Self = JsrtRuntime]
+        unsafe fn FfiNew(thread_context: UniquePtr<FfiThreadContext>) -> UniquePtr<JsrtRuntime>;
     }
 
     #[namespace = "chakracore::jsrt"]
     unsafe extern "C++" {
-        fn JsCreateRuntime(
+        unsafe fn JsCreateRuntime(
             attributes: JsRuntimeAttributes,
-            runtime: &mut UniquePtr<JsrtRuntime>,
             policyManager: UniquePtr<AllocationPolicyManager>,
+            threadContext: &mut UniquePtr<FfiThreadContext>,
         ) -> JsErrorCode;
         unsafe fn JsCreateContext(
             runtime: *mut JsrtRuntime,
@@ -665,6 +684,17 @@ pub(super) mod bridge {
         JsTypedArray = 11,
         /// The value is a JavaScript DataView object value.
         JsDataView = 12,
+    }
+
+    #[repr(i32)]
+    #[derive(BitOr)]
+    enum ThreadContextFlags {
+        ThreadContextFlagNoFlag = 0x00000000,
+        ThreadContextFlagCanDisableExecution = 0x00000001,
+        ThreadContextFlagEvalDisabled = 0x00000002,
+        ThreadContextFlagNoJIT = 0x00000004,
+        ThreadContextFlagDisableFatalOnOOM = 0x00000008,
+        ThreadContextFlagNoDynamicThunks = 0x00000010,
     }
 }
 

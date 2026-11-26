@@ -6,31 +6,38 @@
 #include "jsrtHelper.h"
 #include "Base/ThreadContextTlsEntry.h"
 #include "Base/ThreadBoundThreadContextManager.h"
-JsrtRuntime::JsrtRuntime(std::unique_ptr<ThreadContext> threadContext)
-{
-    this->threadContext = std::move(threadContext);
-    this->threadContext->SetJSRTRuntime(true);
+#include "Base/FfiThreadContext.h"
+
+JsrtRuntime::JsrtRuntime(FfiThreadContext *thread_context) : thread_context_(thread_context) {
+    thread_context_->SetCurrentThreadId(ThreadContext::NoThread);
+    thread_context_->SetJSRTRuntime(true);
 }
 
 JsrtRuntime::~JsrtRuntime() {
-    ThreadContextScope scope{threadContext.get()};
+    ThreadContextScope scope{thread_context_->GetThreadContext()};
 
     // Invoke and clear the callbacks while the contexts and runtime are still available
     {
-        Recycler *recycler = threadContext->GetRecycler();
+        Recycler *recycler = thread_context_->GetThreadContext()->GetRecycler();
         if (recycler != nullptr) {
             recycler->ClearObjectBeforeCollectCallbacks();
         }
     }
 
-    threadContext->MarkContextsForClose();
+    thread_context_->GetThreadContext()->MarkContextsForClose();
 
     // Close any open Contexts.
     // We need to do this before recycler shutdown, because ScriptEngine->Close won't work then.
     CloseContexts();
-    threadContext.reset();
+    delete thread_context_;
     scope.Invalidate();
 }
+
+std::unique_ptr<JsrtRuntime> JsrtRuntime::FfiNew(std::unique_ptr<FfiThreadContext> thread_context) {
+    return std::make_unique<JsrtRuntime>(thread_context.release());
+}
+
+ThreadContext *JsrtRuntime::GetThreadContext() { return thread_context_->GetThreadContext(); }
 
 // This is called at process detach.
 // threadcontext created from runtime should not be destroyed in ThreadBoundThreadContext

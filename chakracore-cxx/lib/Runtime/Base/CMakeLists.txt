@@ -3,9 +3,9 @@ add_library (Chakra.Runtime.Base OBJECT
     CharStringCache.cpp
     Constants.cpp
     CrossSite.cpp
-    # Entropy.cpp
     Exception.cpp
     ExpirableObject.cpp
+    FfiThreadContext.cpp
     FunctionBody.cpp
     FunctionExecutionStateMachine.cpp
     FunctionInfo.cpp
@@ -29,7 +29,11 @@ add_library (Chakra.Runtime.Base OBJECT
     Utf8SourceInfo.cpp
     VTuneChakraProfile.cpp
     jitprofiling.cpp
-    )
+    JsReentLock.cpp
+    AutoReentrancySafeRegion.cpp
+    AutoReentrancyHandler.cpp
+    AutoDisableInterrupt.cpp
+)
 
 target_include_directories (Chakra.Runtime.Base PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc

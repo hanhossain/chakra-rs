@@ -7,6 +7,8 @@
 #include "EHBailoutData.h"
 #include "Library/JavascriptRegularExpression.h"
 #include "Common/UInt16Math.h"
+#include "Base/AutoReentrancySafeRegion.h"
+
 #if DBG_DUMP
 #include "ByteCode/OpCodeUtilAsmJs.h"
 #endif
@@ -3279,24 +3281,25 @@ namespace Js
 
         RecyclableObject * function = OP_CallGetFunc(target);
 
-        BEGIN_SAFE_REENTRANT_REGION(this->scriptContext->GetThreadContext())
         {
-            if (playout->Return == Js::Constants::NoRegister)
+            AutoReentrancySafeRegion autoReentrancySafeRegion(this->scriptContext->GetThreadContext());
+            {
+                if (playout->Return == Js::Constants::NoRegister)
 
-            {
-                Arguments args(CallInfo(CallFlags_NotUsed, playout->ArgCount), m_outParams);
-                JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args);
-            }
-            else
-            {
-                Arguments args(CallInfo(CallFlags_Value, playout->ArgCount), m_outParams);
-                Var retVal = JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args);
-                SetRegRawPtr(playout->Return, retVal);
+                {
+                    Arguments args(CallInfo(CallFlags_NotUsed, playout->ArgCount), m_outParams);
+                    JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args);
+                }
+                else
+                {
+                    Arguments args(CallInfo(CallFlags_Value, playout->ArgCount), m_outParams);
+                    Var retVal = JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args);
+                    SetRegRawPtr(playout->Return, retVal);
+                }
             }
         }
-        END_SAFE_REENTRANT_REGION
 
-            PopOut(playout->ArgCount);
+        PopOut(playout->ArgCount);
     }
 
     template <class T>
@@ -3314,42 +3317,43 @@ namespace Js
         Js::ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
 
         ArgSlot argCount = playout->ArgCount;
-        BEGIN_SAFE_REENTRANT_REGION(threadContext)
         {
-            if (playout->Return == Js::Constants::NoRegister)
+            AutoReentrancySafeRegion autoReentrancySafeRegion(threadContext);
             {
-                flags |= CallFlags_NotUsed;
-                Arguments args(CallInfo((CallFlags)flags, argCount), m_outParams);
-                AssertMsg(static_cast<unsigned>(args.Info.Flags) == flags, "Flags don't fit into the CallInfo field?");
-                argCount = args.GetArgCountWithExtraArgs();
-                if (spreadIndices != nullptr)
+                if (playout->Return == Js::Constants::NoRegister)
                 {
-                    JavascriptFunction::CallSpreadFunction(function, args, spreadIndices);
+                    flags |= CallFlags_NotUsed;
+                    Arguments args(CallInfo((CallFlags)flags, argCount), m_outParams);
+                    AssertMsg(static_cast<unsigned>(args.Info.Flags) == flags, "Flags don't fit into the CallInfo field?");
+                    argCount = args.GetArgCountWithExtraArgs();
+                    if (spreadIndices != nullptr)
+                    {
+                        JavascriptFunction::CallSpreadFunction(function, args, spreadIndices);
+                    }
+                    else
+                    {
+                        JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args);
+                    }
                 }
                 else
                 {
-                    JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args);
-                }
-            }
-            else
-            {
-                flags |= CallFlags_Value;
-                Arguments args(CallInfo((CallFlags)flags, argCount), m_outParams);
-                AssertMsg(static_cast<unsigned>(args.Info.Flags) == flags, "Flags don't fit into the CallInfo field?");
-                argCount = args.GetArgCountWithExtraArgs();
-                if (spreadIndices != nullptr)
-                {
-                    SetReg((RegSlot)playout->Return, JavascriptFunction::CallSpreadFunction(function, args, spreadIndices));
-                }
-                else
-                {
-                    SetReg((RegSlot)playout->Return, JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args));
+                    flags |= CallFlags_Value;
+                    Arguments args(CallInfo((CallFlags)flags, argCount), m_outParams);
+                    AssertMsg(static_cast<unsigned>(args.Info.Flags) == flags, "Flags don't fit into the CallInfo field?");
+                    argCount = args.GetArgCountWithExtraArgs();
+                    if (spreadIndices != nullptr)
+                    {
+                        SetReg((RegSlot)playout->Return, JavascriptFunction::CallSpreadFunction(function, args, spreadIndices));
+                    }
+                    else
+                    {
+                        SetReg((RegSlot)playout->Return, JavascriptFunction::CallFunction<true>(function, function->GetEntryPoint(), args));
+                    }
                 }
             }
         }
-        END_SAFE_REENTRANT_REGION
 
-            threadContext->SetImplicitCallFlags(savedImplicitCallFlags);
+        threadContext->SetImplicitCallFlags(savedImplicitCallFlags);
         PopOut(argCount);
     }
 

@@ -1,5 +1,5 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::ffi::bridge::AllocationPolicyManager;
+use crate::jsrt::ffi::bridge::{AllocationPolicyManager, ThreadContextFlags};
 use crate::jsrt::{JsContext, JsContextRef, JsError, JsRuntimeAttributes, JsrtRuntime};
 use cxx::UniquePtr;
 
@@ -15,9 +15,60 @@ impl JsRuntime {
             attributes.contains(JsRuntimeAttributes::JsRuntimeAttributeDisableBackgroundWork);
         let policy_manager = AllocationPolicyManager::FfiNew(!disable_background_work);
 
-        let mut handle = UniquePtr::null();
-        bridge::JsCreateRuntime(attributes, &mut handle, policy_manager).as_result()?;
-        Ok(Self { handle })
+        unsafe {
+            let mut thread_context = UniquePtr::null();
+            bridge::JsCreateRuntime(attributes, policy_manager, &mut thread_context).as_result()?;
+            {
+                let mut thread_context = thread_context.pin_mut();
+
+                if attributes.contains(JsRuntimeAttributes::JsRuntimeAttributeDisableBackgroundWork)
+                {
+                    thread_context.as_mut().OptimizeForManyInstances(true);
+                    #[cfg(enable_native_codegen)]
+                    thread_context.as_mut().EnableBgJit(false);
+                }
+
+                if attributes.contains(JsRuntimeAttributes::JsRuntimeAttributeAllowScriptInterrupt)
+                {
+                    thread_context.as_mut().SetThreadContextFlag(
+                        ThreadContextFlags::ThreadContextFlagCanDisableExecution,
+                    );
+                }
+
+                if attributes.contains(JsRuntimeAttributes::JsRuntimeAttributeDisableEval) {
+                    thread_context
+                        .as_mut()
+                        .SetThreadContextFlag(ThreadContextFlags::ThreadContextFlagEvalDisabled);
+                }
+
+                if attributes
+                    .contains(JsRuntimeAttributes::JsRuntimeAttributeDisableNativeCodeGeneration)
+                {
+                    thread_context
+                        .as_mut()
+                        .SetThreadContextFlag(ThreadContextFlags::ThreadContextFlagNoJIT);
+                }
+
+                if attributes.contains(
+                    JsRuntimeAttributes::JsRuntimeAttributeDisableExecutablePageAllocation,
+                ) {
+                    thread_context.as_mut().SetThreadContextFlag(
+                        ThreadContextFlags::ThreadContextFlagNoJIT
+                            | ThreadContextFlags::ThreadContextFlagNoDynamicThunks,
+                    );
+                }
+
+                if attributes.contains(JsRuntimeAttributes::JsRuntimeAttributeDisableFatalOnOOM) {
+                    thread_context.as_mut().SetThreadContextFlag(
+                        ThreadContextFlags::ThreadContextFlagDisableFatalOnOOM,
+                    );
+                }
+            }
+
+            let handle = JsrtRuntime::FfiNew(thread_context);
+
+            Ok(Self { handle })
+        }
     }
 
     pub fn create_context(&self) -> Result<JsContext, JsError> {

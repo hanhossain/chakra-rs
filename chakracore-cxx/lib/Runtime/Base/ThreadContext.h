@@ -3,10 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Entropy.h"
-#include "DataStructures/Stack.h"
-#include "DataStructures/Dictionary.h"
-#include "Library/DelayFreeArrayBufferHelper.h"
+#include "Base/AutoReentrancyHandler.h"
+#include "Base/ThreadContextFlags.h"
 
 #include <memory>
 
@@ -17,8 +15,6 @@ namespace Js
     class CodeGenRecyclableData;
     class DelayedFreeArrayBuffer;
 }
-
-typedef BVSparse<ArenaAllocator> ActiveFunctionSet;
 
 using namespace PlatformAgnostic;
 
@@ -38,48 +34,9 @@ enum DisableImplicitFlags : uint8_t
     DisableImplicitCallAndExceptionFlag = DisableImplicitCallFlag | DisableImplicitExceptionFlag
 };
 
-enum ThreadContextFlags
-{
-    ThreadContextFlagNoFlag                        = 0x00000000,
-    ThreadContextFlagCanDisableExecution           = 0x00000001,
-    ThreadContextFlagEvalDisabled                  = 0x00000002,
-    ThreadContextFlagNoJIT                         = 0x00000004,
-    ThreadContextFlagDisableFatalOnOOM             = 0x00000008,
-    ThreadContextFlagNoDynamicThunks               = 0x00000010,
-};
-
 const int LS_MAX_STACK_SIZE_KB = 300;
 
 class ThreadContext;
-
-class InterruptPoller
-{
-    // Interface with a polling object located in the hosting layer.
-
-public:
-    InterruptPoller(ThreadContext *tc);
-
-    virtual ~InterruptPoller() { }
-
-    void CheckInterruptPoll();
-    void GetStatementCount(uint32_t *pluHi, uint32_t *pluLo);
-    void ResetStatementCount() { lastResetTick = lastPollTick; }
-    void StartScript() { lastResetTick = lastPollTick = ::GetTickCount(); }
-    void EndScript() { lastResetTick = lastPollTick = 0;}
-    bool IsDisabled() const { return isDisabled; }
-    void SetDisabled(bool disable) { isDisabled = disable; }
-
-    virtual void TryInterruptPoll(Js::ScriptContext *scriptContext) = 0;
-
-    // Default: throw up QC dialog after 5M statements == 2 minutes
-    static const uint32_t TicksToStatements = (5000000 / 120000);
-
-protected:
-    ThreadContext *threadContext;
-    uint32_t lastPollTick;
-    uint32_t lastResetTick;
-    bool isDisabled;
-};
 
 #define PROBE_STACK(scriptContext, size) ((scriptContext)->GetThreadContext()->ProbeStack(size, scriptContext))
 #define PROBE_STACK_NO_DISPOSE(scriptContext, size) ((scriptContext)->GetThreadContext()->ProbeStackNoDispose(size, scriptContext))
@@ -169,11 +126,6 @@ protected:
 
 #define END_SAFE_REENTRANT_CALL }
 
-#define BEGIN_SAFE_REENTRANT_REGION(threadContext) \
-    { \
-        AutoReentrancySafeRegion autoReentrancySafeRegion(threadContext);
-
-#define END_SAFE_REENTRANT_REGION }
 // Keep in sync with CollectGarbageCallBackFlags in scriptdirect.idl
 
 enum RecyclerCollectCallBackFlags
@@ -638,13 +590,16 @@ m_ESSharedArrayBuffer= COMPILE_DISABLE_ESSharedArrayBuffer? false : true;
     }
 };
 
-class AutoReentrancyHandler;
-
 class ThreadContext :
     public DefaultRecyclerCollectionWrapper,
     public JsUtil::DoublyLinkedListElement<ThreadContext>,
     public ThreadContextInfo
 {
+private:
+    struct PropertyGuardEntry;
+    class ThreadContextImpl;
+
+    std::shared_ptr<ThreadContextImpl> impl_;
 public:
     static void GlobalInitialize();
     static const uint32_t NoThread = 0xFFFFFFFF;
@@ -655,74 +610,32 @@ public:
         void * context;
     };
 
-    struct WorkerThread
-    {
-        // Abstract notion to hold onto threadHandle of worker thread
-        HANDLE threadHandle;
-        WorkerThread(HANDLE handle = nullptr) :threadHandle(handle){};
-    };
-
     struct AutoRestoreImplicitFlags
     {
         ThreadContext * threadContext;
         Js::ImplicitCallFlags savedImplicitCallFlags;
         DisableImplicitFlags savedDisableImplicitFlags;
-        AutoRestoreImplicitFlags(ThreadContext *threadContext, Js::ImplicitCallFlags implicitCallFlags, DisableImplicitFlags disableImplicitFlags) :
-            threadContext(threadContext),
-            savedImplicitCallFlags(implicitCallFlags),
-            savedDisableImplicitFlags(disableImplicitFlags)
-        {
-        }
-
-        ~AutoRestoreImplicitFlags()
-        {
-            threadContext->SetImplicitCallFlags((Js::ImplicitCallFlags)(savedImplicitCallFlags));
-            threadContext->SetDisableImplicitFlags((DisableImplicitFlags)savedDisableImplicitFlags);
-        }
+        AutoRestoreImplicitFlags(ThreadContext *threadContext, Js::ImplicitCallFlags implicitCallFlags, DisableImplicitFlags disableImplicitFlags);
+        ~AutoRestoreImplicitFlags();
     };
 
-    void SetCurrentThreadId(uint32_t threadId) { this->currentThreadId = threadId; }
-    uint32_t GetCurrentThreadId() const { return this->currentThreadId; }
-    void SetIsThreadBound()
-    {
-        this->isThreadBound = true;
-    }
-    bool IsJSRT() const { return !this->isThreadBound; }
-    bool IsThreadBound() const override { return this->isThreadBound; }
+    void SetCurrentThreadId(uint32_t threadId);
+    uint32_t GetCurrentThreadId() const;
+    // Rental threading is always enabled for JSRT (i.e. not bound to a specific thread)
+    void SetIsThreadBound();
+    bool IsJSRT() const;
+    bool IsThreadBound() const override;
     void SetStackProber(StackProber * stackProber);
-    static uint32_t GetStackLimitForCurrentThreadOffset() { return offsetof(ThreadContext, stackLimitForCurrentThread); }
 
-    template <class Fn>
-    Js::ImplicitCallFlags TryWithDisabledImplicitCall(Fn fn)
-    {
-        DisableImplicitFlags prevDisableImplicitFlags = this->GetDisableImplicitFlags();
-        Js::ImplicitCallFlags savedImplicitCallFlags = this->GetImplicitCallFlags();
+    Js::ImplicitCallFlags TryWithDisabledImplicitCall(std::function<void()> fn);
 
-        this->DisableImplicitCall();
-        this->SetImplicitCallFlags(Js::ImplicitCallFlags::ImplicitCall_None);
-        fn();
+    void * GetAddressOfStackLimitForCurrentThread() const;
 
-        Js::ImplicitCallFlags curImplicitCallFlags = this->GetImplicitCallFlags();
-
-        this->SetDisableImplicitFlags(prevDisableImplicitFlags);
-        this->SetImplicitCallFlags(savedImplicitCallFlags);
-
-        return curImplicitCallFlags;
-    }
-
-    void * GetAddressOfStackLimitForCurrentThread() const
-    {
-        return &this->stackLimitForCurrentThread;
-    }
-
-    // This is always on for JSRT APIs.
-    bool IsRentalThreadingEnabledInJSRT() const { return true; }
-
-    IActiveScriptProfilerHeapEnum* GetHeapEnum();
+    IActiveScriptProfilerHeapEnum * GetHeapEnum();
     void SetHeapEnum(IActiveScriptProfilerHeapEnum* newHeapEnum);
     void ClearHeapEnum();
 
-    Js::PropertyRecord const * GetPropertyRecord(Js::PropertyId propertyId);
+    Js::PropertyRecord const *GetPropertyRecord(Js::PropertyId propertyId);
 
     bool IsNumericProperty(Js::PropertyId propertyId) override;
 
@@ -730,28 +643,13 @@ public:
 #if _M_AMD64
     // auxiliary SIMD values in memory to help JIT'ed code. E.g. used for Int8x16 shuffle.
     _x86_SIMDValue X86_TEMP_SIMD[SIMD_TEMP_SIZE];
-    _x86_SIMDValue * GetSimdTempArea() { return X86_TEMP_SIMD; }
+    _x86_SIMDValue * GetSimdTempArea();
 #endif
 #endif
 
 public:
-    Js::PropertyRecord const * GetEmptyStringPropertyRecord()
-    {
-        if (!emptyStringPropertyRecord)
-        {
-            emptyStringPropertyRecord = propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(u"", 0));
-            if (emptyStringPropertyRecord == nullptr)
-            {
-                emptyStringPropertyRecord = this->UncheckedAddPropertyId(u"", 0, true);
-            }
-        }
-        return emptyStringPropertyRecord;
-    }
-
-    Js::PropertyId GetEmptyStringPropertyId()
-    {
-        return GetEmptyStringPropertyRecord()->GetPropertyId();
-    }
+    Js::PropertyRecord const * GetEmptyStringPropertyRecord();
+    Js::PropertyId GetEmptyStringPropertyId();
 
 private:
     const Js::PropertyRecord * emptyStringPropertyRecord;
@@ -761,30 +659,12 @@ private:
 
     static std::recursive_mutex s_csThreadContext;
 
-    StackProber * GetStackProber() const { return this->stackProber; }
+    StackProber * GetStackProber() const;
     size_t GetStackLimitForCurrentThread() const;
     void SetStackLimitForCurrentThread(size_t limit);
 
     // The current heap enumeration object being used during enumeration.
     IActiveScriptProfilerHeapEnum* heapEnum;
-
-    struct PropertyGuardEntry
-    {
-    public:
-        typedef JsUtil::BaseHashSet<RecyclerWeakReference<Js::PropertyGuard>*, Recycler, PowerOf2SizePolicy> PropertyGuardHashSet;
-        // we do not have WeaklyReferencedKeyHashSet - hence use uint8_t as a dummy value.
-        typedef JsUtil::WeaklyReferencedKeyDictionary<Js::EntryPointInfo, uint8_t> EntryPointDictionary;
-        // The sharedGuard is strongly referenced and will be kept alive by ThreadContext::propertyGuards until it's invalidated or
-        // the property record itself is collected.  If the code using the guard needs access to it after it's been invalidated, it
-        // (the code) is responsible for keeping it alive.
-        // Each unique guard, is weakly referenced, such that it can be reclaimed if not referenced elsewhere even without being
-        // invalidated.  The entry of a unique guard is removed from the table once the corresponding cache is invalidated.
-        typename WriteBarrierFieldTypeTraits<Js::PropertyGuard*>::Type sharedGuard;
-        typename WriteBarrierFieldTypeTraits<PropertyGuardHashSet>::Type uniqueGuards;
-        typename WriteBarrierFieldTypeTraits<EntryPointDictionary*>::Type entryPoints;
-
-        PropertyGuardEntry(Recycler* recycler) : sharedGuard(nullptr), uniqueGuards(recycler), entryPoints(nullptr) {}
-    };
 
 public:
     typedef JsUtil::BaseHashSet<const Js::PropertyRecord *, HeapAllocator, PowerOf2SizePolicy, const Js::PropertyRecord *,
@@ -793,41 +673,11 @@ public:
 
     typedef JsUtil::BaseHashSet<Js::CaseInvariantPropertyListWithHashCode*, Recycler, PowerOf2SizePolicy, Js::CaseInvariantPropertyListWithHashCode*, JsUtil::NoCaseComparer, JsUtil::SimpleDictionaryEntry>
         PropertyNoCaseSetType;
-    typedef JsUtil::WeaklyReferencedKeyDictionary<Js::Type, bool> TypeHashSet;
-    typedef JsUtil::BaseDictionary<Js::PropertyId, TypeHashSet *, Recycler, PowerOf2SizePolicy> PropertyIdToTypeHashSetDictionary;
-    typedef JsUtil::WeaklyReferencedKeyDictionary<const Js::PropertyRecord, PropertyGuardEntry*, Js::PropertyRecordPointerComparer> PropertyGuardDictionary;
 
 private:
-    intptr_t m_prereservedRegionAddr;
-    intptr_t m_jitThunkStartAddr;
-
 #if ENABLE_NATIVE_CODEGEN
     BVSparse<HeapAllocator> * m_jitNumericProperties;
-    bool m_jitNeedsPropertyUpdate;
-public:
-    intptr_t GetPreReservedRegionAddr()
-    {
-        return m_prereservedRegionAddr;
-    }
-    intptr_t GetJITThunkStartAddr()
-    {
-        return m_jitThunkStartAddr;
-    }
-    BVSparse<HeapAllocator> * GetJITNumericProperties() const
-    {
-        return m_jitNumericProperties;
-    }
-    bool JITNeedsPropUpdate() const
-    {
-        return m_jitNeedsPropertyUpdate;
-    }
-    void ResetJITNeedsPropUpdate()
-    {
-        m_jitNeedsPropertyUpdate = false;
-    }
 #endif
-
-private:
     typedef JsUtil::BaseDictionary<uint, Js::SourceDynamicProfileManager*, Recycler, PowerOf2SizePolicy> SourceDynamicProfileManagerMap;
     typedef JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16_t>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer> SymbolRegistrationMap;
 
@@ -845,91 +695,18 @@ private:
 
     typedef JsUtil::BaseDictionary<const char16_t*, SourceDynamicProfileManagerCache*, Recycler, PowerOf2SizePolicy> SourceProfileManagersByUrlMap;
 
-    struct RecyclableData
-    {
-        RecyclableData(Recycler *const recycler);
-        typename WriteBarrierFieldTypeTraits<Js::TempArenaAllocatorObject *>::Type temporaryArenaAllocators[MaxTemporaryArenaAllocators];
-        typename WriteBarrierFieldTypeTraits<Js::TempGuestArenaAllocatorObject *>::Type temporaryGuestArenaAllocators[MaxTemporaryArenaAllocators];
-
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type pendingFinallyException;
-
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject *>::Type exceptionObject;
-        typename WriteBarrierFieldTypeTraits<bool>::Type propagateException;
-
-        // We throw a JS catchable SO exception if we detect we might overflow the stack. Allocating this (JS)
-        // object though might really overflow the stack. So use this thread global to identify them from the throw point
-        // to where they are caught; where the stack has been unwound and it is safer to allocate the real exception
-        // object and throw.
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type soErrorObject;
-
-        // We can't allocate an out of memory object...  So use this static as a way to identify
-        // them from the throw point to where they are caught.
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type oomErrorObject;
-
-        // This is for JsRT scenario where a runtime is not usable after a suspend request, before a resume runtime call is made
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject>::Type terminatedErrorObject;
-
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type unhandledExceptionObject;
-
-        // Used to temporarily keep throwing exception object alive (thrown but not yet caught)
-        typename WriteBarrierFieldTypeTraits<Js::JavascriptExceptionObject*>::Type tempUncaughtException;
-
-        // Contains types that have property caches that need to be tracked, as the caches may need to be cleared. Types that
-        // contain a property cache for a property that is on a prototype object will be tracked in this map since those caches
-        // need to be cleared if for instance, the property is deleted from the prototype object.
-        //
-        // It is expected that over time, types that are deleted will eventually be removed by the weak reference hash sets when
-        // they're searching through a bucket while registering a type or enumerating types to invalidate, or when a property ID
-        // is reclaimed. If none of those happen, then this collection may contain weak reference handles to deleted objects
-        // that would not get removed, but it would also not get any bigger.
-        typename WriteBarrierFieldTypeTraits<PropertyIdToTypeHashSetDictionary>::Type typesWithProtoPropertyCache;
-
-#if ENABLE_NATIVE_CODEGEN
-        // The property guard dictionary contains property guards which need to be invalidated in response to properties changing
-        // from writable to read-only and vice versa, properties being shadowed or unshadowed on prototypes, etc.  The dictionary
-        // holds only weak references to property guards and their lifetimes are controlled by their creators (typically entry points).
-        // When a guard is no longer needed it is garbage collected, but the weak references and dictionary entries remain, until
-        // the guards for a given property get invalidated.
-        // TODO: Create and use a self-cleaning weak reference dictionary, which would periodically remove any unused weak references.
-        typename WriteBarrierFieldTypeTraits<PropertyGuardDictionary>::Type propertyGuards;
-#endif
-
-        typename WriteBarrierFieldTypeTraits<PropertyNoCaseSetType *>::Type caseInvariantPropertySet;
-
-        typename WriteBarrierFieldTypeTraits<JsUtil::List<Js::PropertyRecord const*>*>::Type boundPropertyStrings; // Recycler allocated list of property strings that we need to strongly reference so that they're not reclaimed
-
-        typename WriteBarrierFieldTypeTraits<SourceProfileManagersByUrlMap*>::Type sourceProfileManagersByUrl;
-
-        // Used to register recyclable data that needs to be kept alive while jitting
-        typedef JsUtil::DoublyLinkedList<Js::CodeGenRecyclableData, Recycler> CodeGenRecyclableDataList;
-        typename WriteBarrierFieldTypeTraits<CodeGenRecyclableDataList>::Type codeGenRecyclableDatas;
-
-        // Used to root old entry points so that they're not prematurely collected
-        typename WriteBarrierFieldTypeTraits<Js::FunctionEntryPointInfo*>::Type oldEntryPointInfo;
-
-        // Used to store a mapping of string to Symbol for cross-realm Symbol registration
-        // See ES6 (draft 22) 19.4.2.2
-        typename WriteBarrierFieldTypeTraits<SymbolRegistrationMap*>::Type symbolRegistrationMap;
-
-        typename WriteBarrierFieldTypeTraits<uint>::Type constructorCacheInvalidationCount;
-
-        // use for autoProxy called from Debug.setAutoProxyName. we need to keep the buffer from GetSz() alive.
-        typename WriteBarrierFieldTypeTraits<const char16_t*>::Type autoProxyName;
-    };
-
     static ThreadContext * globalListLast;
 
     ThreadContextFlags threadContextFlags;
     uint32_t currentThreadId;
     mutable size_t stackLimitForCurrentThread;
     StackProber * stackProber;
+    // Rental threading is always enabled for JSRT (i.e. not bound to a specific thread)
     bool isThreadBound;
     bool hasThrownPendingException;
     bool * hasBailedOutBitPtr;
 
-#if ENABLE_JS_REENTRANCY_CHECK
     bool noJsReentrancy;
-#endif
 private:
     bool reentrancySafeOrHandled;
     bool isInReentrancySafeRegion;
@@ -947,10 +724,6 @@ private:
     PageAllocator::BackgroundPageQueue backgroundPageQueue;
     IdleDecommitPageAllocator pageAllocator;
     Recycler* recycler;
-
-    // This instance holds list of delay-free array buffer - this will be used in 
-    // scanning the stack in order to release any delay-free buffer.
-    Js::DelayedFreeArrayBuffer delayFreeCallback;
 
     // Fake RecyclerWeakReference for built-in properties
     class StaticPropertyRecordReference : public RecyclerWeakReference<const Js::PropertyRecord>
@@ -1004,13 +777,10 @@ private:
     CustomHeap::InProcCodePageAllocators codePageAllocators;
 #endif
 
-    RecyclerRootPtr<RecyclableData> recyclableData;
     uint temporaryArenaAllocatorCount;
     uint temporaryGuestArenaAllocatorCount;
 
-#if DBG_DUMP || defined(PROFILE_EXEC)
     ScriptSite* topLevelScriptSite;
-#endif
 
     Js::ScriptContext *scriptContextList;
     bool scriptContextEverRegistered;
@@ -1074,11 +844,6 @@ private:
     // This counter will be used as addref when the script context is created, this way we maintain the life of diagnostic object.
     // Once no script context available , diagnostic will go away.
     int32_t crefSContextForDiag;
-
-    Entropy entropy;
-
-    JsUtil::Stack<HostScriptContext*>* hostScriptContextStack;
-
     //
     // Regex globals
     //
@@ -1095,10 +860,10 @@ private:
     // functionBody/entrypoints, or expanding the auxPtrs
     std::recursive_mutex csFunctionBody;
 
-#ifdef _M_X64
+#ifdef __x86_64__
     friend class Js::Amd64StackFrame;
     Js::Amd64ContextsManager amd64ContextsManager;
-    Js::Amd64ContextsManager* GetAmd64ContextsManager() { return &amd64ContextsManager; }
+    Js::Amd64ContextsManager* GetAmd64ContextsManager();
 #endif
 
     typedef JsUtil::BaseDictionary<Js::DynamicType const *, void *, HeapAllocator, PowerOf2SizePolicy> DynamicObjectEnumeratorCacheMap;
@@ -1115,19 +880,18 @@ private:
 public:
     static ThreadContext * globalListFirst;
 
-    static uint GetScriptSiteHolderCount() { return activeScriptSiteCount; }
-    static uint IncrementActiveScriptSiteCount() { return ++activeScriptSiteCount; }
-    static uint DecrementActiveScriptSiteCount() { return --activeScriptSiteCount; }
+    static uint GetScriptSiteHolderCount();
+    static uint IncrementActiveScriptSiteCount();
+    static uint DecrementActiveScriptSiteCount();
 
-    static ThreadContext * GetThreadContextList() { return globalListFirst; }
+    static ThreadContext *GetThreadContextList();
     void ValidateThreadContext();
 
-    bool IsInScript() const { return callRootLevel != 0; }
-    uint GetCallRootLevel() const { return callRootLevel; }
+    bool IsInScript() const;
+    uint GetCallRootLevel() const;
 
-    PageAllocator * GetPageAllocator() { return &pageAllocator; }
-
-    AllocationPolicyManager * GetAllocationPolicyManager() { return allocationPolicyManager; }
+    PageAllocator *GetPageAllocator();
+    AllocationPolicyManager *GetAllocationPolicyManager() const;
 
     // used for diagnosing abnormally high number of closed, but still formally reachable script contexts
     // at the time of failfast due to allocation limits.
@@ -1145,98 +909,55 @@ public:
     VisibilityState visibilityState;
 
 #if ENABLE_NATIVE_CODEGEN
-    PreReservedVirtualAllocWrapper * GetPreReservedVirtualAllocator() { return &preReservedVirtualAllocator; }
+    PreReservedVirtualAllocWrapper *GetPreReservedVirtualAllocator();
 #if DYNAMIC_INTERPRETER_THUNK || defined(ASMJS_PLAT)
-    CustomHeap::InProcCodePageAllocators * GetThunkPageAllocators() { return &thunkPageAllocators; }
+    CustomHeap::InProcCodePageAllocators *GetThunkPageAllocators();
 #endif
-    CustomHeap::InProcCodePageAllocators * GetCodePageAllocators() { return &codePageAllocators; }
-
+    CustomHeap::InProcCodePageAllocators *GetCodePageAllocators();
 #endif // ENABLE_NATIVE_CODEGEN
 
-    std::recursive_mutex& GetFunctionBodyMutex() { return csFunctionBody; }
+    std::recursive_mutex& GetFunctionBodyMutex();
+    Js::IsConcatSpreadableCache* GetIsConcatSpreadableCache();
 
-    Js::IsConcatSpreadableCache* GetIsConcatSpreadableCache() { return &isConcatSpreadableCache; }
-
-    void SetAbnormalExceptionRecord(EXCEPTION_POINTERS *exceptionInfo) { this->exceptionInfo = *exceptionInfo; }
-    void SetAbnormalExceptionCode(uint32_t exceptionInfo) { this->exceptionCode = exceptionInfo; }
-    uint32_t GetAbnormalExceptionCode() const { return this->exceptionCode; }
+    void SetAbnormalExceptionRecord(EXCEPTION_POINTERS *exceptionInfo);
+    void SetAbnormalExceptionCode(uint32_t exceptionInfo);
+    uint32_t GetAbnormalExceptionCode() const;
 
     void *tridentLoadAddress;
 
-    void* GetTridentLoadAddress() const { return tridentLoadAddress;  }
-    void SetTridentLoadAddress(void *loadAddress) { tridentLoadAddress = loadAddress; }
+    void* GetTridentLoadAddress() const;
+    void SetTridentLoadAddress(void *loadAddress);
 
-    Js::NoSpecialPropertyThreadRegistry* GetNoSpecialPropertyRegistry() { return &this->noSpecialPropertyRegistry; }
-    Js::OnlyWritablePropertyThreadRegistry* GetOnlyWritablePropertyRegistry() { return &this->onlyWritablePropertyRegistry; }
+    Js::NoSpecialPropertyThreadRegistry* GetNoSpecialPropertyRegistry();
+    Js::OnlyWritablePropertyThreadRegistry* GetOnlyWritablePropertyRegistry();
 
-    Js::DelayedFreeArrayBuffer * GetScanStackCallback()
-    {
-        return &this->delayFreeCallback;
-    }
-
-#ifdef ENABLE_DIRECTCALL_TELEMETRY
-    DirectCallTelemetry directCallTelemetry;
-#endif
+    Js::DelayedFreeArrayBuffer *GetScanStackCallback();
 
     BOOL HasPreviousHostScriptContext();
     HostScriptContext* GetPreviousHostScriptContext() ;
     void PushHostScriptContext(HostScriptContext* topProvider);
     HostScriptContext* PopHostScriptContext();
 
-    void SetInterruptPoller(InterruptPoller *poller) { interruptPoller = poller; }
-    InterruptPoller *GetInterruptPoller() const { return interruptPoller; }
-    BOOL HasInterruptPoller() const { return interruptPoller != nullptr; }
     void CheckScriptInterrupt();
-    void CheckInterruptPoll();
 
-    bool DoInterruptProbe(Js::FunctionBody *const func) const
-    {
-        return
-            (this->TestThreadContextFlag(ThreadContextFlagCanDisableExecution) &&
-             !PHASE_OFF(Js::InterruptProbePhase, func)) ||
-            PHASE_ON(Js::InterruptProbePhase, func);
-    }
-
-    bool DoInterruptProbe() const
-    {
-        return
-            (this->TestThreadContextFlag(ThreadContextFlagCanDisableExecution) &&
-             !PHASE_OFF1(Js::InterruptProbePhase)) ||
-            PHASE_ON1(Js::InterruptProbePhase);
-    }
-
-    bool EvalDisabled() const
-    {
-        return this->TestThreadContextFlag(ThreadContextFlagEvalDisabled);
-    }
-
-    bool NoJIT() const
-    {
-        return this->TestThreadContextFlag(ThreadContextFlagNoJIT);
-    }
-
-    bool NoDynamicThunks() const
-    {
-        return this->TestThreadContextFlag(ThreadContextFlagNoDynamicThunks);
-    }
+    bool DoInterruptProbe(Js::FunctionBody *const func) const;
+    bool DoInterruptProbe() const;
+    bool EvalDisabled() const;
+    bool NoJIT() const;
+    bool NoDynamicThunks() const;
 
     Js::Var GetMemoryStat(Js::ScriptContext* scriptContext);
-    void SetAutoProxyName(const char16_t* objectName);
-    const char16_t* GetAutoProxyName() const { return recyclableData->autoProxyName; }
     Js::PropertyId handlerPropertyId = Js::Constants::NoProperty;
 
-    uint GetScriptContextCount() const { return this->scriptContextCount; }
-    Js::ScriptContext* GetScriptContextList() const { return this->scriptContextList; }
-    bool WasAnyScriptContextEverRegistered() const { return this->scriptContextEverRegistered; }
+    uint GetScriptContextCount() const;
+    Js::ScriptContext* GetScriptContextList() const;
+    bool WasAnyScriptContextEverRegistered() const;
 
-#if DBG_DUMP || defined(PROFILE_EXEC)
-    void SetTopLevelScriptSite(ScriptSite* topScriptSite) { this->topLevelScriptSite = topScriptSite; }
-    ScriptSite* GetTopLevelScriptSite () { return this->topLevelScriptSite; }
-#endif
-#if DBG || defined(PROFILE_EXEC)
+    void SetTopLevelScriptSite(ScriptSite* topScriptSite);
+    ScriptSite * GetTopLevelScriptSite () const;
+
     bool AsyncHostOperationStart(void *) override;
     void AsyncHostOperationEnd(bool wasInAsync, void *) override;
-#endif
 #if DBG
     void CheckJsReentrancyOnDispose() override;
     bool IsInAsyncHostOperation() const;
@@ -1245,7 +966,7 @@ public:
     BOOL ReserveStaticTypeIds(int first, int last);
     Js::TypeId ReserveTypeIds(int count);
     Js::TypeId CreateTypeId();
-    Js::TypeId GetNextTypeId() { return nextTypeId; }
+    Js::TypeId GetNextTypeId() const;
 
     // Lookup the well known type registered with a Js::TypeId.
     //  wellKnownType:  The well known type which we should register
@@ -1258,50 +979,27 @@ public:
         return wellKnownHostTypeIds[wellKnownType] == typeId;
     }
 
-    uint32_t GetNextPolymorphicCacheState()
-    {
-        return ++polymorphicCacheState;
-    };
+    uint32_t GetNextPolymorphicCacheState();
 
     ~ThreadContext();
     void MarkContextsForClose();
     void CloseForJSRT();
 
-    //Call back is called for one or more handles
-    //It does multiple callbacks (For example: separate call back for GC thread handle & JIT thread handles)
-//    template<class Fn>
-    //void ShutdownThreads(Fn callback);
-
-    void ShutdownThreads()
-    {
-#if ENABLE_NATIVE_CODEGEN
-        if (jobProcessor)
-        {
-            jobProcessor->Close();
-        }
-#endif
-        if (this->recycler != nullptr)
-        {
-            this->recycler->ShutdownThread();
-        }
-    }
-
-    DateTime::HiResTimer * GetHiResTimer() { return &hTimer; }
-    ArenaAllocator* GetThreadAlloc() { return &threadAlloc; }
-    static std::recursive_mutex& GetMutex() { return s_csThreadContext; }
+    void ShutdownThreads();
+    DateTime::HiResTimer * GetHiResTimer();
+    ArenaAllocator * GetThreadAlloc();
+    static std::recursive_mutex& GetMutex();
 
     ThreadContext(AllocationPolicyManager * allocationPolicyManager = nullptr, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback = nullptr, bool enableExperimentalFeatures = false);
     ThreadContext(std::unique_ptr<AllocationPolicyManager> allocationPolicyManager, bool enableExperimentalFeatures);
     static void Add(ThreadContext *threadContext);
 
-    ThreadConfiguration const * GetConfig() const { return &configuration; }
+    ThreadConfiguration const * GetConfig() const;
 
 public:
     static ThreadContext* GetContextForCurrentThread();
-
-    Recycler* GetRecycler() { return recycler; }
-
-    Recycler* EnsureRecycler();
+    Recycler* GetRecycler();
+    Recycler * EnsureRecycler();
 
     ThreadContext::CollectCallBack * AddRecyclerCollectCallBack(RecyclerCollectCallBackFunction callback, void * context);
     void RemoveRecyclerCollectCallBack(ThreadContext::CollectCallBack * collectCallBack);
@@ -1326,14 +1024,8 @@ public:
     void CleanNoCasePropertyMap();
     void ForceCleanPropertyMap();
 
-    const Js::PropertyRecord * GetOrAddPropertyRecord(JsUtil::CharacterBuffer<char16_t> propertyName)
-    {
-        return GetOrAddPropertyRecordImpl(propertyName, false);
-    }
-    const Js::PropertyRecord * GetOrAddPropertyRecordBind(JsUtil::CharacterBuffer<char16_t> propertyName)
-    {
-        return GetOrAddPropertyRecordImpl(propertyName, true);
-    }
+    const Js::PropertyRecord *GetOrAddPropertyRecord(JsUtil::CharacterBuffer<char16_t> propertyName);
+    const Js::PropertyRecord *GetOrAddPropertyRecordBind(JsUtil::CharacterBuffer<char16_t> propertyName);
     void AddBuiltInPropertyRecord(const Js::PropertyRecord *propertyRecord);
 
     void GetOrAddPropertyId(_In_ const char16_t* propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const** propertyRecord);
@@ -1360,33 +1052,21 @@ public:
     void InvalidatePropertyRecord(const Js::PropertyRecord * propertyRecord);
     Js::PropertyId GetNextPropertyId();
     Js::PropertyId GetMaxPropertyId();
-    uint GetHighestPropertyNameIndex() const;
 
     void SetThreadServiceWrapper(ThreadServiceWrapper*);
     ThreadServiceWrapper* GetThreadServiceWrapper();
 
-    uint NewFunctionNumber() { return ++functionCount; }
-    uint PeekNewFunctionNumber() { return functionCount + 1; }
+    uint NewFunctionNumber();
+    uint PeekNewFunctionNumber();
+    uint NewSourceInfoNumber();
 
-    uint NewSourceInfoNumber() { return ++sourceInfoCount; }
-
-    void AddCodeSize(size_t newCode)
-    {
-        ::InterlockedExchangeAdd(&nativeCodeSize, newCode);
-        ::InterlockedExchangeAdd(&processNativeCodeSize, newCode);
-    }
-    void AddSourceSize(size_t  newCode) { sourceCodeSize += newCode; }
-    void SubCodeSize(size_t  deadCode)
-    {
-        Assert(nativeCodeSize >= deadCode);
-        Assert(processNativeCodeSize >= deadCode);
-        ::InterlockedExchangeSubtract(&nativeCodeSize, deadCode);
-        ::InterlockedExchangeSubtract(&processNativeCodeSize, deadCode);
-    }
-    void SubSourceSize(size_t deadCode) { Assert(sourceCodeSize >= deadCode); sourceCodeSize -= deadCode; }
-    size_t  GetCodeSize() { return nativeCodeSize; }
-    static size_t  GetProcessCodeSize() { return processNativeCodeSize; }
-    size_t GetSourceSize() { return sourceCodeSize; }
+    void AddCodeSize(size_t newCode);
+    void AddSourceSize(size_t  newCode);
+    void SubCodeSize(size_t  deadCode);
+    void SubSourceSize(size_t deadCode);
+    size_t GetCodeSize() const;
+    static size_t GetProcessCodeSize();
+    size_t GetSourceSize() const;
 
     bool DoTryRedeferral() const;
     void TryRedeferral();
@@ -1394,30 +1074,29 @@ public:
     void UpdateRedeferralState();
     uint GetRedeferralCollectionInterval() const;
     uint GetRedeferralInactiveThreshold() const;
-    void GetActiveFunctions(ActiveFunctionSet * pActive);
 #if DBG
     uint redeferredFunctions;
     uint recoveredBytes;
 #endif
 
-    Js::ScriptEntryExitRecord * GetScriptEntryExit() const { return entryExitRecord; }
+    Js::ScriptEntryExitRecord * GetScriptEntryExit() const;
     void RegisterCodeGenRecyclableData(Js::CodeGenRecyclableData *const codeGenRecyclableData);
     void UnregisterCodeGenRecyclableData(Js::CodeGenRecyclableData *const codeGenRecyclableData);
 #if ENABLE_NATIVE_CODEGEN
     bool IsNativeAddressHelper(void * pCodeAddr, Js::ScriptContext* currentScriptContext);
     BOOL IsNativeAddress(void * pCodeAddr, Js::ScriptContext* currentScriptContext = nullptr);
     JsUtil::JobProcessor *GetJobProcessor();
-    Js::Var * GetBailOutRegisterSaveSpace() const { return bailOutRegisterSaveSpace; }
-    virtual intptr_t GetBailOutRegisterSaveSpaceAddr() const override { return (intptr_t)bailOutRegisterSaveSpace; }
+    Js::Var * GetBailOutRegisterSaveSpace() const;
+    intptr_t GetBailOutRegisterSaveSpaceAddr() const override;
 #endif
-    void ResetFunctionCount() { Assert(this->GetScriptSiteHolderCount() == 0); this->functionCount = 0; }
+    void ResetFunctionCount();
     void PushEntryExitRecord(Js::ScriptEntryExitRecord *);
     void PopEntryExitRecord(Js::ScriptEntryExitRecord *);
     uint EnterScriptStart(Js::ScriptEntryExitRecord *, bool doCleanup);
     void EnterScriptEnd(Js::ScriptEntryExitRecord *, bool doCleanup);
 
-    void * GetTryHandlerAddrOfReturnAddr() { return this->tryHandlerAddrOfReturnAddr; }
-    void SetTryHandlerAddrOfReturnAddr(void * addrOfReturnAddr) { this->tryHandlerAddrOfReturnAddr = addrOfReturnAddr; }
+    void * GetTryHandlerAddrOfReturnAddr() const;
+    void SetTryHandlerAddrOfReturnAddr(void * addrOfReturnAddr);
 
     template <bool leaveForHost>
     void LeaveScriptStart(void *);
@@ -1427,7 +1106,7 @@ public:
 
     void PushInterpreterFrame(Js::InterpreterStackFrame *interpreterFrame);
     Js::InterpreterStackFrame *PopInterpreterFrame();
-    Js::InterpreterStackFrame *GetLeafInterpreterFrame() const { return leafInterpreterFrame; }
+    Js::InterpreterStackFrame *GetLeafInterpreterFrame() const;
 
     Js::TempArenaAllocatorObject * GetTemporaryAllocator(const char16_t* name);
     void ReleaseTemporaryAllocator(Js::TempArenaAllocatorObject * tempAllocator);
@@ -1439,18 +1118,11 @@ public:
     void UnregisterScriptContext(Js::ScriptContext *scriptContext);
 
     // NoScriptScope
-    void SetNoScriptScope(bool noScriptScope) { this->noScriptScope = noScriptScope; }
-    bool IsNoScriptScope() { return this->noScriptScope; }
+    void SetNoScriptScope(bool noScriptScope);
+    bool IsNoScriptScope() const;
 
-    void SetPendingFinallyException(Js::JavascriptExceptionObject * exceptionObj)
-    {
-        recyclableData->pendingFinallyException = exceptionObj;
-    }
-
-    Js::JavascriptExceptionObject * GetPendingFinallyException()
-    {
-        return recyclableData->pendingFinallyException;
-    }
+    void SetPendingFinallyException(Js::JavascriptExceptionObject * exceptionObj);
+    Js::JavascriptExceptionObject * GetPendingFinallyException() const;
 
     Js::EntryPointInfo ** RegisterEquivalentTypeCacheEntryPoint(Js::EntryPointInfo * entryPoint);
     void UnregisterEquivalentTypeCacheEntryPoint(Js::EntryPointInfo ** entryPoint);
@@ -1508,17 +1180,8 @@ public:
     class AutoDisableExpiration
     {
     public:
-        AutoDisableExpiration(ThreadContext* threadContext):
-            _threadContext(threadContext),
-            _oldExpirationDisabled(threadContext->disableExpiration)
-        {
-            _threadContext->disableExpiration = true;
-        }
-
-        ~AutoDisableExpiration()
-        {
-            _threadContext->disableExpiration = _oldExpirationDisabled;
-        }
+        AutoDisableExpiration(ThreadContext* threadContext);
+        ~AutoDisableExpiration();
 
     private:
         ThreadContext* _threadContext;
@@ -1535,8 +1198,10 @@ public:
     bool AreAllProtoInlineCachesInvalidated();
     void InvalidateAllStoreFieldInlineCaches();
     bool AreAllStoreFieldInlineCachesInvalidated();
+#if ENABLE_NATIVE_CODEGEN
     void InvalidatePropertyGuards(Js::PropertyId propertyId);
     void InvalidateAllPropertyGuards();
+#endif
     void RegisterIsInstInlineCache(Js::IsInstInlineCache * inlineCache, Js::Var function);
     void UnregisterIsInstInlineCache(Js::IsInstInlineCache * inlineCache, Js::Var function);
 #if DBG
@@ -1554,7 +1219,9 @@ public:
     void InvalidateAllIsInstInlineCaches();
     bool AreAllIsInstInlineCachesInvalidated() const;
     void ClearInlineCachesWithDeadWeakRefs();
+#if ENABLE_NATIVE_CODEGEN
     void ClearInvalidatedUniqueGuards();
+#endif
     void ClearInlineCaches();
     void ClearIsInstInlineCaches();
     void ClearEnumeratorCaches();
@@ -1566,53 +1233,25 @@ public:
     void InternalInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId);
     void InvalidateAllProtoTypePropertyCaches();
 
-    BOOL HasUnhandledException() const { return hasUnhandledException; }
-    void SetHasUnhandledException() {hasUnhandledException = TRUE; }
-    void ResetHasUnhandledException() {hasUnhandledException = FALSE; }
-    void SetUnhandledExceptionObject(Js::JavascriptExceptionObject* exceptionObject) {recyclableData->unhandledExceptionObject  = exceptionObject; }
-    Js::JavascriptExceptionObject* GetUnhandledExceptionObject() const  { return recyclableData->unhandledExceptionObject; };
+    bool HasUnhandledException() const;
+    void SetHasUnhandledException();
+    void ResetHasUnhandledException();
+    void SetUnhandledExceptionObject(Js::JavascriptExceptionObject* exceptionObject);
+    Js::JavascriptExceptionObject* GetUnhandledExceptionObject() const;
 
     // To temporarily keep throwing exception object alive (thrown but not yet caught)
-    void SaveTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject)
-    {
-        Js::JavascriptExceptionObject::Insert(&recyclableData->tempUncaughtException, exceptionObject);
-    }
-    void ClearTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject)
-    {
-        Js::JavascriptExceptionObject::Remove(&recyclableData->tempUncaughtException, exceptionObject);
-    }
+    void SaveTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject);
+    void ClearTempUncaughtException(Js::JavascriptExceptionObject* exceptionObject);
 
 public:
-    bool HasCatchHandler() const { return hasCatchHandler; }
-    void SetHasCatchHandler(bool hasCatchHandler) { this->hasCatchHandler = hasCatchHandler; }
+    bool HasCatchHandler() const;
+    void SetHasCatchHandler(bool hasCatchHandler);
 
-    bool IsUserCode() const { return this->hasCatchHandlerToUserCode; }
-    void SetIsUserCode(bool set) { this->hasCatchHandlerToUserCode = set; }
+    bool IsUserCode() const;
+    void SetIsUserCode(bool set);
 
-    void QueueFreeOldEntryPointInfoIfInScript(Js::FunctionEntryPointInfo* oldEntryPointInfo)
-    {
-        if (this->IsInScript())
-        {
-            // Add it to the list only if it's not already in it
-            if (oldEntryPointInfo->nextEntryPoint == nullptr && !oldEntryPointInfo->IsCleanedUp())
-            {
-                oldEntryPointInfo->nextEntryPoint = recyclableData->oldEntryPointInfo;
-                recyclableData->oldEntryPointInfo = oldEntryPointInfo;
-            }
-        }
-    }
-
-    bool IsOldEntryPointInfo(Js::ProxyEntryPointInfo* entryPointInfo)
-    {
-        Js::FunctionEntryPointInfo* current = this->recyclableData->oldEntryPointInfo;
-        while (current != nullptr)
-        {
-            if (current == entryPointInfo)
-                return true;
-            current = current->nextEntryPoint;
-        }
-        return false;
-    }
+    void QueueFreeOldEntryPointInfoIfInScript(Js::FunctionEntryPointInfo* oldEntryPointInfo);
+    bool IsOldEntryPointInfo(Js::ProxyEntryPointInfo* entryPointInfo);
 
     static bool IsOnStack(void const *ptr);
     bool IsStackAvailable(size_t size, bool* isInterrupt = nullptr);
@@ -1624,10 +1263,7 @@ public:
     void ProbeStack(size_t size);
     static void ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);
     static void ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext);
-    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32_t u1, uint32_t u2)
-    {
-        ProbeCurrentStack(size, scriptContext);
-    }
+    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32_t u1, uint32_t u2);
 
 #if ENABLE_PROFILE_INFO
     void EnsureSourceProfileManagersByUrlMap();
@@ -1639,189 +1275,41 @@ public:
     const Js::PropertyRecord* GetSymbolFromRegistrationMap(const char16_t* stringKey, charcount_t stringLength);
     const Js::PropertyRecord* AddSymbolToRegistrationMap(const char16_t* stringKey, charcount_t stringLength);
 
-    inline void ClearPendingSOError()
-    {
-        this->GetPendingSOErrorObject()->ClearError();
-    }
+    void ClearPendingSOError();
+    void ClearPendingOOMError();
+    Js::JavascriptExceptionObject *GetPendingSOErrorObject();
+    Js::JavascriptExceptionObject *GetPendingOOMErrorObject();
+    Js::JavascriptExceptionObject *GetPendingTerminatedErrorObject();
+    Js::JavascriptExceptionObject* GetRecordedException();
 
-    inline void ClearPendingOOMError()
-    {
-        this->GetPendingOOMErrorObject()->ClearError();
-    }
+    bool GetPropagateException() const;
+    void SetHasThrownPendingException();
+    bool * GetHasBailedOutBitPtr();
+    void SetHasBailedOutBitPtr(bool *setValue);
+    void SetRecordedException(Js::JavascriptExceptionObject* exceptionObject, bool propagateToDebugger = false);
 
-    Js::JavascriptExceptionObject *GetPendingSOErrorObject()
-    {
-        Assert(recyclableData->soErrorObject.IsPendingExceptionObject());
-        return &recyclableData->soErrorObject;
-    }
-
-    Js::JavascriptExceptionObject *GetPendingOOMErrorObject()
-    {
-        Assert(recyclableData->oomErrorObject.IsPendingExceptionObject());
-        return &recyclableData->oomErrorObject;
-    }
-
-    Js::JavascriptExceptionObject *GetPendingTerminatedErrorObject()
-    {
-        return &recyclableData->terminatedErrorObject;
-    }
-
-    Js::JavascriptExceptionObject* GetRecordedException()
-    {
-        return recyclableData->exceptionObject;
-    }
-
-    bool GetPropagateException()
-    {
-        return recyclableData->propagateException;
-    }
-
-    void SetHasThrownPendingException()
-    {
-        Assert(this->IsInScript());
-        this->hasThrownPendingException = true;
-    }
-
-    bool * GetHasBailedOutBitPtr()
-    {
-        return this->hasBailedOutBitPtr;
-    }
-
-    void SetHasBailedOutBitPtr(bool *setValue)
-    {
-        this->hasBailedOutBitPtr = setValue;
-    }
-
-    void SetRecordedException(Js::JavascriptExceptionObject* exceptionObject, bool propagateToDebugger = false)
-    {
-        this->recyclableData->exceptionObject = exceptionObject;
-        this->recyclableData->propagateException = propagateToDebugger;
-    }
-
-#ifdef ENABLE_CUSTOM_ENTROPY
-    Entropy& GetEntropy()
-    {
-        return entropy;
-    }
-#endif
-
-    Js::ImplicitCallFlags * GetAddressOfImplicitCallFlags()
-    {
-        return &implicitCallFlags;
-    }
-
-    DisableImplicitFlags * GetAddressOfDisableImplicitFlags()
-    {
-        return &disableImplicitFlags;
-    }
-
-    Js::ImplicitCallFlags GetImplicitCallFlags()
-    {
-        return implicitCallFlags;
-    }
-
-    void SetImplicitCallFlags(Js::ImplicitCallFlags flags)
-    {
-        //Note: this action is inlined into JITed code in Lowerer::GenerateCallProfiling.
-        //   if you change this, you might want to add it there too.
-        implicitCallFlags = flags;
-    }
-
+    Js::ImplicitCallFlags * GetAddressOfImplicitCallFlags();
+    DisableImplicitFlags * GetAddressOfDisableImplicitFlags();
+    Js::ImplicitCallFlags GetImplicitCallFlags() const;
+    void SetImplicitCallFlags(Js::ImplicitCallFlags flags);
     void ClearImplicitCallFlags();
     void ClearImplicitCallFlags(Js::ImplicitCallFlags flags);
-
-    void AddImplicitCallFlags(Js::ImplicitCallFlags flags)
-    {
-        SetImplicitCallFlags((Js::ImplicitCallFlags)(implicitCallFlags | flags));
-    }
-
+    void AddImplicitCallFlags(Js::ImplicitCallFlags flags);
     void CheckAndResetImplicitCallAccessorFlag();
 
-    template <class Fn>
-    inline Js::Var ExecuteImplicitCall(Js::RecyclableObject * function, Js::ImplicitCallFlags flags, Fn implicitCall)
-    {
-        AutoReentrancyHandler autoReentrancyHandler(this);
-
-        Js::FunctionInfo::Attributes attributes = Js::FunctionInfo::GetAttributes(function);
-
-        // we can hoist out const method if we know the function doesn't have side effect,
-        // and the value can be hoisted.
-        if (this->HasNoSideEffect(function, attributes))
-        {
-            // Has no side effect means the function does not change global value or
-            // will check for implicit call flags
-            Js::Var result = implicitCall();
-
-            // If the value is on stack we need to bailout so that it can be boxed.
-            // Instead of putting this in valueOf (or other builtins which have no side effect) adding
-            // the check here to cover any other scenario we might miss.
-            if (IsOnStack(result))
-            {
-                AddImplicitCallFlags(flags);
-            }
-            return result;
-        }
-
-        // Don't call the implicit call if disable implicit call
-        if (IsDisableImplicitCall())
-        {
-            AddImplicitCallFlags(flags);
-            // Return "undefined" just so we have a valid var, in case subsequent instructions are executed
-            // before we bail out.
-            return function->GetScriptContext()->GetLibrary()->GetUndefined();
-        }
-
-        if ((attributes & Js::FunctionInfo::HasNoSideEffect) != 0)
-        {
-            // Has no side effect means the function does not change global value or
-            // will check for implicit call flags
-            Js::Var result = implicitCall();
-
-            // If the value is on stack we need to bailout so that it can be boxed.
-            // Instead of putting this in valueOf (or other builtins which have no side effect) adding
-            // the check here to cover any other scenario we might miss.
-            if (IsOnStack(result))
-            {
-                AddImplicitCallFlags(flags);
-            }
-            return result;
-        }
-
-        // Save and restore implicit flags around the implicit call
-        struct RestoreFlags
-        {
-            ThreadContext * const ctx;
-            const Js::ImplicitCallFlags flags;
-            const Js::ImplicitCallFlags savedFlags;
-
-            RestoreFlags(ThreadContext *ctx, Js::ImplicitCallFlags flags) :
-                ctx(ctx),
-                flags(flags),
-                savedFlags(ctx->GetImplicitCallFlags())
-            {
-            }
-
-            ~RestoreFlags()
-            {
-                ctx->SetImplicitCallFlags(static_cast<Js::ImplicitCallFlags>(savedFlags | flags));
-            }
-        };
-
-        RestoreFlags restoreFlags(this, flags);
-        return implicitCall();
-    }
+    Js::Var ExecuteImplicitCall(Js::RecyclableObject *function, Js::ImplicitCallFlags flags, std::function<Js::Var()> implicitCall);
     bool HasNoSideEffect(Js::RecyclableObject * function) const;
     bool HasNoSideEffect(Js::RecyclableObject * function, Js::FunctionInfo::Attributes attr) const;
     bool RecordImplicitException();
-    DisableImplicitFlags GetDisableImplicitFlags() const { return disableImplicitFlags; }
-    void SetDisableImplicitFlags(DisableImplicitFlags flags) { disableImplicitFlags = flags; }
-    bool IsDisableImplicitCall() const { return (disableImplicitFlags & DisableImplicitCallFlag) != 0; }
-    bool IsDisableImplicitException() const { return (disableImplicitFlags & DisableImplicitExceptionFlag) != 0; }
-    void DisableImplicitCall() { disableImplicitFlags = (DisableImplicitFlags)(disableImplicitFlags | DisableImplicitCallFlag); }
-    void ClearDisableImplicitFlags() { disableImplicitFlags = DisableImplicitNoFlag; }
+    DisableImplicitFlags GetDisableImplicitFlags() const;
+    void SetDisableImplicitFlags(DisableImplicitFlags flags);
+    bool IsDisableImplicitCall() const;
+    bool IsDisableImplicitException() const;
+    void DisableImplicitCall();
+    void ClearDisableImplicitFlags();
 
     uint GetRandomNumber() override;
-    bool DoSpecialMarkOnScanStack() override { return this->DoRedeferFunctionBodies(); }
+    bool DoSpecialMarkOnScanStack() override;
     void OnScanStackCallback(void ** stackTop, size_t byteCount, void ** registers, size_t registersByteCount) override;
 
     void PostSweepRedeferralCallBack() override;
@@ -1855,28 +1343,22 @@ public:
     void * GetDynamicObjectEnumeratorCache(Js::DynamicType const * dynamicType);
     void AddDynamicObjectEnumeratorCache(Js::DynamicType const * dynamicType, void * cache);
 public:
-    bool IsScriptActive() const { return isScriptActive; }
-    void SetIsScriptActive(bool isActive) { isScriptActive = isActive; }
-    bool IsExecutionDisabled() const
-    {
-        return this->GetStackLimitForCurrentThread() == Js::Constants::StackLimitForScriptInterrupt;
-    }
-    void DisableExecution();
-    void EnableExecution();
+    bool IsScriptActive() const;
+    void SetIsScriptActive(bool isActive);
+    bool IsExecutionDisabled() const;
     bool TestThreadContextFlag(ThreadContextFlags threadContextFlag) const;
     void SetThreadContextFlag(ThreadContextFlags threadContextFlag);
-    void ClearThreadContextFlag(ThreadContextFlags threadContextFlag);
 
     void SetForceOneIdleCollection();
 
-    bool IsInThreadServiceCallback() const { return threadService.IsInCallback(); }
+    bool IsInThreadServiceCallback() const;
 
-    const NativeLibraryEntryRecord::Entry* PeekNativeLibraryEntry() const { return this->nativeLibraryEntry.Peek(); }
-    void PushNativeLibraryEntry(_In_ NativeLibraryEntryRecord::Entry* entry) { this->nativeLibraryEntry.Push(entry); }
-    void PopNativeLibraryEntry() { this->nativeLibraryEntry.Pop(); }
+    const NativeLibraryEntryRecord::Entry* PeekNativeLibraryEntry() const;
+    void PushNativeLibraryEntry(_In_ NativeLibraryEntryRecord::Entry* entry);
+    void PopNativeLibraryEntry();
 
-    bool IsProfilingUserCode() const { return isProfilingUserCode; }
-    void SetIsProfilingUserCode(bool value) { isProfilingUserCode = value; }
+    bool IsProfilingUserCode() const;
+    void SetIsProfilingUserCode(bool value);
 
 #if DBG_DUMP
     uint scriptSiteCount;
@@ -1886,38 +1368,23 @@ public:
     //
     // Regex helpers
     //
-    UnifiedRegex::StandardChars<uint8_t>* GetStandardChars(__inout_opt uint8_t* dummy);
-    UnifiedRegex::StandardChars<char16_t>* GetStandardChars(__inout_opt char16_t* dummy);
+    UnifiedRegex::StandardChars<uint8_t>* GetStandardChars(uint8_t* dummy);
+    UnifiedRegex::StandardChars<char16_t>* GetStandardChars(char16_t* dummy);
 
-    bool IsOptimizedForManyInstances() const { return isOptimizedForManyInstances; }
-
-    void OptimizeForManyInstances(const bool optimizeForManyInstances)
-    {
-        Assert(!recycler || optimizeForManyInstances == isOptimizedForManyInstances); // mode cannot be changed after recycler is created
-        isOptimizedForManyInstances = optimizeForManyInstances;
-
-    }
+    bool IsOptimizedForManyInstances() const;
+    void OptimizeForManyInstances(bool optimizeForManyInstances);
 
 #if ENABLE_NATIVE_CODEGEN
-    bool IsBgJitEnabled() const { return bgJit; }
-
-    void EnableBgJit(const bool enableBgJit)
-    {
-        Assert(!jobProcessor || enableBgJit == bgJit);
-        bgJit = enableBgJit;
-    }
+    bool IsBgJitEnabled() const;
+    void EnableBgJit(bool enableBgJit);
 #endif
 
     void SetJSRTRuntime(bool isJsrtRuntime);
 
 private:
     BOOL ExecuteRecyclerCollectionFunctionCommon(Recycler * recycler, CollectionFunction function, CollectionFlags flags);
-
-    void DoInvalidateProtoTypePropertyCaches(const Js::PropertyId propertyId, TypeHashSet *const typeHashSet);
     void InitializePropertyMaps();
     void CreateNoCasePropertyMap();
-
-    InterruptPoller *interruptPoller;
 
     void CollectionCallBack(RecyclerCollectCallBackFlags flags);
 
@@ -1925,196 +1392,24 @@ private:
 private:
     JsUtil::BaseDictionary<Js::JavascriptMethod, uint, ArenaAllocator, PowerOf2SizePolicy> entryPointToBuiltInOperationIdCache;
 
-#if ENABLE_JS_REENTRANCY_CHECK
 public:
-    void SetNoJsReentrancy(bool val) { noJsReentrancy = val; }
-    bool GetNoJsReentrancy() { return noJsReentrancy; }
-    void AssertJsReentrancy()
-    {
-        if (GetNoJsReentrancy())
-        {
-            Js::Throw::FatalJsReentrancyError();
-        }
-    }
-#else
-    void AssertJsReentrancy() {}
-#endif
+    void SetNoJsReentrancy(bool val);
+    bool GetNoJsReentrancy() const;
+    void AssertJsReentrancy();
 
-public:
-    void CheckAndResetReentrancySafeOrHandled()
-    {
-        AssertOrFailFast(reentrancySafeOrHandled || isInReentrancySafeRegion);
-        SetReentrancySafeOrHandled(false);
-    }
+    void CheckAndResetReentrancySafeOrHandled();
+    void SetReentrancySafeOrHandled(bool val);
+    bool GetReentrancySafeOrHandled() const;
+    void SetIsInReentrancySafeRegion(bool val);
+    bool GetIsInReentrancySafeRegion() const;
 
-    void SetReentrancySafeOrHandled(bool val) { reentrancySafeOrHandled = val; }
-    bool GetReentrancySafeOrHandled() { return reentrancySafeOrHandled; }
-    void SetIsInReentrancySafeRegion(bool val) { isInReentrancySafeRegion = val; }
-    bool GetIsInReentrancySafeRegion() { return isInReentrancySafeRegion; }
+    bool IsEntryPointToBuiltInOperationIdCacheInitialized() const;
+    bool GetBuiltInOperationIdFromEntryPoint(Js::JavascriptMethod entryPoint, uint * id) const;
+    void SetBuiltInOperationIdForEntryPoint(Js::JavascriptMethod entryPoint, uint id);
+    void ResetEntryPointToBuiltInOperationIdCache();
 
-    template <typename Fn>
-    Js::Var SafeReentrantCall(Fn fn)
-    {
-        AutoReentrancyHandler autoReentrancyHandler(this);
-        return fn();
-    }
-
-    bool IsEntryPointToBuiltInOperationIdCacheInitialized()
-    {
-        return entryPointToBuiltInOperationIdCache.Count() != 0;
-    }
-
-    bool GetBuiltInOperationIdFromEntryPoint(Js::JavascriptMethod entryPoint, uint * id)
-    {
-        return entryPointToBuiltInOperationIdCache.TryGetValue(entryPoint, id);
-    }
-
-    void SetBuiltInOperationIdForEntryPoint(Js::JavascriptMethod entryPoint, uint id)
-    {
-        entryPointToBuiltInOperationIdCache.Add(entryPoint, id);
-    }
-
-    void ResetEntryPointToBuiltInOperationIdCache()
-    {
-        entryPointToBuiltInOperationIdCache.ResetNoDelete();
-    }
-
-    uint8_t LoopDepth() const
-    {
-        return loopDepth;
-    }
-
-    void SetLoopDepth(const uint8_t loopDepth)
-    {
-        this->loopDepth = loopDepth;
-    }
-
-    void IncrementLoopDepth()
-    {
-        if(loopDepth != UCHAR_MAX)
-        {
-            ++loopDepth;
-        }
-    }
-
-    void DecrementLoopDepth()
-    {
-        if(loopDepth != 0)
-        {
-            --loopDepth;
-        }
-    }
+    uint8_t LoopDepth() const;
+    void SetLoopDepth(uint8_t loopDepth);
+    void IncrementLoopDepth();
+    void DecrementLoopDepth();
 };
-
-extern void(*InitializeAdditionalProperties)(ThreadContext *threadContext);
-
-// This is for protecting a region of code, where we can't recover and be consistent upon failures (mainly due to OOM and SO).
-// FailFast on that.
-class AutoDisableInterrupt
-{
-public:
-    AutoDisableInterrupt(ThreadContext *threadContext, bool explicitCompletion = true)
-        : m_operationCompleted(false), m_interruptDisableState(false), m_threadContext(threadContext), m_explicitCompletion(explicitCompletion)
-    {
-        if (m_threadContext->HasInterruptPoller())
-        {
-            m_interruptDisableState = m_threadContext->GetInterruptPoller()->IsDisabled();
-            m_threadContext->GetInterruptPoller()->SetDisabled(true);
-        }
-    }
-    ~AutoDisableInterrupt()
-    {
-        if (m_threadContext->HasInterruptPoller())
-        {
-            m_threadContext->GetInterruptPoller()->SetDisabled(m_interruptDisableState);
-        }
-
-        if (m_explicitCompletion && !m_operationCompleted)
-        {
-            AssertOrFailFast(false);
-        }
-    }
-    void RequireExplicitCompletion() { m_explicitCompletion = true; }
-    void Completed() { m_operationCompleted = true; }
-
-private:
-    ThreadContext * m_threadContext;
-    bool m_operationCompleted;
-    bool m_interruptDisableState;
-    bool m_explicitCompletion;
-};
-
-class AutoReentrancyHandler
-{
-    ThreadContext * m_threadContext;
-    bool m_savedReentrancySafeOrHandled;
-
-public:
-    AutoReentrancyHandler(ThreadContext * threadContext)
-    {
-        m_threadContext = threadContext;
-        m_savedReentrancySafeOrHandled = threadContext->GetReentrancySafeOrHandled();
-        threadContext->SetReentrancySafeOrHandled(true);
-    }
-
-    ~AutoReentrancyHandler()
-    {
-        m_threadContext->SetReentrancySafeOrHandled(m_savedReentrancySafeOrHandled);
-    }
-};
-
-class AutoReentrancySafeRegion
-{
-    ThreadContext * m_threadContext;
-    bool m_savedIsInReentrancySafeRegion;
-
-public:
-    AutoReentrancySafeRegion(ThreadContext * threadContext)
-    {
-        m_threadContext = threadContext;
-        m_savedIsInReentrancySafeRegion = threadContext->GetIsInReentrancySafeRegion();
-        threadContext->SetIsInReentrancySafeRegion(true);
-    }
-
-    ~AutoReentrancySafeRegion()
-    {
-        m_threadContext->SetIsInReentrancySafeRegion(m_savedIsInReentrancySafeRegion);
-    }
-};
-
-#if ENABLE_JS_REENTRANCY_CHECK
-class JsReentLock
-{
-    ThreadContext *m_threadContext;
-#if DBG
-    Js::Var m_arrayObject;
-    Js::Var m_arrayObject2; // This is for adding the second object in the mutation equation.
-#endif
-
-    bool m_savedNoJsReentrancy;
-
-public:
-    JsReentLock(ThreadContext *threadContext)
-#if DBG
-        : m_arrayObject(nullptr), m_arrayObject2(nullptr)
-#endif
-    {
-        m_savedNoJsReentrancy = threadContext->GetNoJsReentrancy();
-        threadContext->SetNoJsReentrancy(true);
-        m_threadContext = threadContext;
-    }
-
-    void unlock() { m_threadContext->SetNoJsReentrancy(m_savedNoJsReentrancy); }
-    void relock() { m_threadContext->SetNoJsReentrancy(true); }
-
-#if DBG
-    void setObjectForMutation(Js::Var object);
-    void setSecondObjectForMutation(Js::Var object);
-#endif
-
-    ~JsReentLock()
-    {
-        m_threadContext->SetNoJsReentrancy(m_savedNoJsReentrancy);
-    }
-};
-#endif

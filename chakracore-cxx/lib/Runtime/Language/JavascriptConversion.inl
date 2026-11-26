@@ -11,9 +11,6 @@
 #include "Core/JitHelperUtils.h"
 #include "Library/JavascriptBoolean.h"
 
-#if defined(_M_X64)
-#endif
-
 namespace Js {
 
     inline BOOL JavascriptConversion::ToBoolean(Var aValue,ScriptContext* scriptContext)

@@ -10,6 +10,7 @@
 #include "ByteCode/ByteCodeSerializer.h"
 #include "errstr.h"
 #include "ByteCode/ByteCodeDumper.h"
+#include "Base/JsReentLock.h"
 
 #define IfFailAssertMsgAndThrowHr(op, msg) \
     if (FAILED(hr=(op))) \
@@ -113,12 +114,10 @@ namespace Js
             Js::Var args[] = { scriptContext->GetLibrary()->GetUndefined(), scriptContext->GetLibrary()->GetEngineInterfaceObject() };
             Js::CallInfo callInfo(Js::CallFlags_Value, std::size(args));
 
-#if ENABLE_JS_REENTRANCY_CHECK
             // Create a Reentrancy lock to make sure we correctly restore the lock at the end of BuiltIns initialization
             JsReentLock lock(scriptContext->GetThreadContext());
             // Clear ReentrancyLock bit as initialization code doesn't have any side effect
             scriptContext->GetThreadContext()->SetNoJsReentrancy(false);
-#endif
             // specify which set of BuiltIns are currently being loaded
             current = file;
 
