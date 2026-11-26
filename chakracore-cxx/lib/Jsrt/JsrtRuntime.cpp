@@ -32,8 +32,9 @@ JsrtRuntime::~JsrtRuntime() {
     delete thread_context_;
     scope.Invalidate();
 }
-std::unique_ptr<JsrtRuntime> JsrtRuntime::FfiNew(FfiThreadContext *thread_context) {
-    return std::make_unique<JsrtRuntime>(thread_context);
+
+std::unique_ptr<JsrtRuntime> JsrtRuntime::FfiNew(std::unique_ptr<FfiThreadContext> thread_context) {
+    return std::make_unique<JsrtRuntime>(thread_context.release());
 }
 
 ThreadContext *JsrtRuntime::GetThreadContext() { return thread_context_->GetThreadContext(); }

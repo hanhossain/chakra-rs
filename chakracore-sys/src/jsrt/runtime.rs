@@ -1,8 +1,7 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::ffi::bridge::{AllocationPolicyManager, FfiThreadContext, ThreadContextFlags};
+use crate::jsrt::ffi::bridge::{AllocationPolicyManager, ThreadContextFlags};
 use crate::jsrt::{JsContext, JsContextRef, JsError, JsRuntimeAttributes, JsrtRuntime};
 use cxx::UniquePtr;
-use std::pin::Pin;
 
 pub struct JsRuntime {
     handle: UniquePtr<JsrtRuntime>,
@@ -17,15 +16,10 @@ impl JsRuntime {
         let policy_manager = AllocationPolicyManager::FfiNew(!disable_background_work);
 
         unsafe {
-            let mut thread_context: *mut FfiThreadContext = std::ptr::null_mut();
-            bridge::JsCreateRuntime(
-                attributes,
-                policy_manager,
-                &raw mut thread_context as *mut _,
-            )
-            .as_result()?;
+            let mut thread_context = UniquePtr::null();
+            bridge::JsCreateRuntime(attributes, policy_manager, &mut thread_context).as_result()?;
             {
-                let mut thread_context = Pin::new_unchecked(&mut *thread_context);
+                let mut thread_context = thread_context.pin_mut();
 
                 if attributes.contains(JsRuntimeAttributes::JsRuntimeAttributeDisableBackgroundWork)
                 {

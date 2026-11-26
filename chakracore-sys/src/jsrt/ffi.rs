@@ -238,7 +238,7 @@ pub(super) mod bridge {
         type JsrtRuntime;
 
         #[Self = JsrtRuntime]
-        unsafe fn FfiNew(thread_context: *mut FfiThreadContext) -> UniquePtr<JsrtRuntime>;
+        unsafe fn FfiNew(thread_context: UniquePtr<FfiThreadContext>) -> UniquePtr<JsrtRuntime>;
     }
 
     #[namespace = "chakracore::jsrt"]
@@ -246,7 +246,7 @@ pub(super) mod bridge {
         unsafe fn JsCreateRuntime(
             attributes: JsRuntimeAttributes,
             policyManager: UniquePtr<AllocationPolicyManager>,
-            threadContext: *mut *mut FfiThreadContext,
+            threadContext: &mut UniquePtr<FfiThreadContext>,
         ) -> JsErrorCode;
         unsafe fn JsCreateContext(
             runtime: *mut JsrtRuntime,
