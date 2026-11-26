@@ -24,8 +24,7 @@ impl JsRuntime {
                 if attributes.contains(JsRuntimeAttributes::JsRuntimeAttributeDisableBackgroundWork)
                 {
                     thread_context.as_mut().OptimizeForManyInstances(true);
-                    // TODO (hanhossain): this should follow ENABLE_NATIVE_CODEGEN
-                    #[cfg(target_arch = "x86_64")]
+                    #[cfg(enable_native_codegen)]
                     thread_context.as_mut().EnableBgJit(false);
                 }
 

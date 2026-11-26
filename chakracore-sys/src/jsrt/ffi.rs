@@ -204,8 +204,7 @@ pub(super) mod bridge {
             self: Pin<&mut FfiThreadContext>,
             optimizeForManyInstances: bool,
         );
-        // TODO (hanhossain): this should follow ENABLE_NATIVE_CODEGEN
-        #[cfg(target_arch = "x86_64")]
+        #[cfg(enable_native_codegen)]
         fn EnableBgJit(self: Pin<&mut FfiThreadContext>, enableBgJit: bool);
         type ThreadContextFlags;
     }

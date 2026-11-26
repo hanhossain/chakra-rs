@@ -25,6 +25,14 @@ fn main() {
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap();
     let target_arch = std::env::var("CARGO_CFG_TARGET_ARCH").unwrap();
 
+    println!("cargo::rustc-check-cfg=cfg(disable_jit)");
+    println!("cargo::rustc-check-cfg=cfg(enable_native_codegen)");
+    if target_arch == "x86_64" {
+        println!("cargo::rustc-cfg=enable_native_codegen");
+    } else {
+        println!("cargo::rustc-cfg=disable_jit");
+    }
+
     cxx_bridge
         .std("c++23")
         .flag("-fcolor-diagnostics")
