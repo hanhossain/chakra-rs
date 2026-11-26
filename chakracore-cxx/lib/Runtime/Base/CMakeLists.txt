@@ -5,6 +5,7 @@ add_library (Chakra.Runtime.Base OBJECT
     CrossSite.cpp
     Exception.cpp
     ExpirableObject.cpp
+    FfiThreadContext.cpp
     FunctionBody.cpp
     FunctionExecutionStateMachine.cpp
     FunctionInfo.cpp

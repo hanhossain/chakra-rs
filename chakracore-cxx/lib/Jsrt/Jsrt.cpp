@@ -18,6 +18,7 @@
 #include "Library/ScriptFunction.h"
 
 // Parser Includes
+#include "FfiThreadContext.h"
 #include "cmperr.h"     // For ERRnoMemory
 #include "screrror.h"   // For CompileScriptException
 
@@ -197,7 +198,7 @@ JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes,
         }
 
         threadContext->SetCurrentThreadId(ThreadContext::NoThread);
-        runtimeHandle = std::make_unique<JsrtRuntime>(std::move(threadContext));
+        runtimeHandle = std::make_unique<JsrtRuntime>(new FfiThreadContext(threadContext.release()));
 
         return JsNoError;
     });
