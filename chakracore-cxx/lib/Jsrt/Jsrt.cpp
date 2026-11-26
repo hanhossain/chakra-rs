@@ -157,40 +157,6 @@ JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes,
         bool enableExperimentalFeatures = (attributes & JsRuntimeAttributeEnableExperimentalFeatures) != 0;
         auto threadContext = std::make_unique<ThreadContext>(std::move(policyManager), enableExperimentalFeatures);
 
-        if ((attributes & JsRuntimeAttributeDisableBackgroundWork) != 0)
-        {
-            threadContext->OptimizeForManyInstances(true);
-#if ENABLE_NATIVE_CODEGEN
-            threadContext->EnableBgJit(false);
-#endif
-        }
-
-        if (attributes & JsRuntimeAttributeAllowScriptInterrupt)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagCanDisableExecution);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableEval)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagEvalDisabled);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableNativeCodeGeneration)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagNoJIT);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableExecutablePageAllocation)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagNoJIT);
-            threadContext->SetThreadContextFlag(ThreadContextFlagNoDynamicThunks);
-        }
-
-        if (attributes & JsRuntimeAttributeDisableFatalOnOOM)
-        {
-            threadContext->SetThreadContextFlag(ThreadContextFlagDisableFatalOnOOM);
-        }
-
         *ffiThreadContext = new FfiThreadContext(threadContext.release());
         return JsNoError;
     });

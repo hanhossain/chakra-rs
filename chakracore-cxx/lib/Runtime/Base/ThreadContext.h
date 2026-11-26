@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Base/AutoReentrancyHandler.h"
+#include "Base/ThreadContextFlags.h"
 
 #include <memory>
 
@@ -31,16 +32,6 @@ enum DisableImplicitFlags : uint8_t
     DisableImplicitCallFlag             = 0x01,
     DisableImplicitExceptionFlag        = 0x02,
     DisableImplicitCallAndExceptionFlag = DisableImplicitCallFlag | DisableImplicitExceptionFlag
-};
-
-enum ThreadContextFlags
-{
-    ThreadContextFlagNoFlag                        = 0x00000000,
-    ThreadContextFlagCanDisableExecution           = 0x00000001,
-    ThreadContextFlagEvalDisabled                  = 0x00000002,
-    ThreadContextFlagNoJIT                         = 0x00000004,
-    ThreadContextFlagDisableFatalOnOOM             = 0x00000008,
-    ThreadContextFlagNoDynamicThunks               = 0x00000010,
 };
 
 const int LS_MAX_STACK_SIZE_KB = 300;

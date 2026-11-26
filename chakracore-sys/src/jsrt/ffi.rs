@@ -196,6 +196,18 @@ pub(super) mod bridge {
     unsafe extern "C++" {
         include!("Base/FfiThreadContext.h");
         type FfiThreadContext;
+        fn SetThreadContextFlag(
+            self: Pin<&mut FfiThreadContext>,
+            threadContextFlag: ThreadContextFlags,
+        );
+        fn OptimizeForManyInstances(
+            self: Pin<&mut FfiThreadContext>,
+            optimizeForManyInstances: bool,
+        );
+        // TODO (hanhossain): this should follow ENABLE_NATIVE_CODEGEN
+        #[cfg(target_arch = "x86_64")]
+        fn EnableBgJit(self: Pin<&mut FfiThreadContext>, enableBgJit: bool);
+        type ThreadContextFlags;
     }
 
     extern "C++" {
@@ -673,6 +685,17 @@ pub(super) mod bridge {
         JsTypedArray = 11,
         /// The value is a JavaScript DataView object value.
         JsDataView = 12,
+    }
+
+    #[repr(i32)]
+    #[derive(BitOr)]
+    enum ThreadContextFlags {
+        ThreadContextFlagNoFlag = 0x00000000,
+        ThreadContextFlagCanDisableExecution = 0x00000001,
+        ThreadContextFlagEvalDisabled = 0x00000002,
+        ThreadContextFlagNoJIT = 0x00000004,
+        ThreadContextFlagDisableFatalOnOOM = 0x00000008,
+        ThreadContextFlagNoDynamicThunks = 0x00000010,
     }
 }
 
